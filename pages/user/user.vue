@@ -66,7 +66,9 @@
 		    <view class="lists">
 		        <u-cell-group>
 		            <!-- 列出多个功能项，点击时跳转到相应页面 -->
-		            <u-cell  title="课程打卡" is-link url="/pages/course/course"></u-cell>
+
+		            <u-cell  title="课程打卡" is-link 
+								:url="userInfo.studentId ? '/pages/course/course' : '/pages/veri/veri'"></u-cell>
 		            <u-cell  title="博雅打卡" is-link url="/pages/componentsB/tag/tag"></u-cell>
 		        </u-cell-group>
 		    </view>
@@ -104,26 +106,11 @@
 	import {reactive,ref} from "vue"
 	import {onLoad} from '@dcloudio/uni-app'
 	import { getUserInfo, login,modifyUserInfo } from "../../api/api"
-	import { useUserStore } from '../../stores/index'
-	// const userStore = useUserStore()
-	const extraIcon1 = reactive({
-	    color: '#666666',
-	    size: '22',
-	    type: 'auth'
-	})
-	const extraIcon2 = reactive({
-	    color: '#666666',
-	    size: '22',
-	    type: 'cart'
-	})
-	const extraIcon3 = reactive({
-	    color: '#666666',
-	    size: '22',
-	    type: 'chatboxes'
-	})
 	const userInfo = reactive({
 	    nickName: '',
-	    avatarUrl: ''
+	    avatarUrl: '',
+		studentId: '',
+		gender:''
 	})
 	// 控制弹出层的显示
 	const show = ref(false)
@@ -181,10 +168,12 @@
 							// userStore.setToken(token)
 	                        // 根据token获取用户信息并显示到页面上
 	                        const res = await getUserInfo()
-							console.log("res",res)
+							
 	                        userInfo.avatarUrl = res.avatar
 	                        userInfo.nickName = res.username
-							
+							userInfo.studentId=res.studentId
+							userInfo.gender=res.gender
+							console.log("userInfo",userInfo)
 	                    }
 	                })
 	            }

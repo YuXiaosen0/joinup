@@ -1,4 +1,4 @@
-import http from "./http";
+import http from "./http.js";
 import {useUserStore} from '../stores/user.js'
 //首页信息
 export const getIndexList = () => {
@@ -30,4 +30,24 @@ export const searchList = async (params) => {
   // const response = await request('/api/search', params);
   // return response;
   return null
-};
+}
+export const signClass = (id) => {
+	return http(`/course/sign?courseScheduleId=${id}`,'r','POST')
+}
+// 获取课程信息
+export const getCourseInfo = (data) => {
+	return http(`/course/list?date=${data}`,'d','GET')
+}
+
+// 获取签到任务列表
+export const getSign = (status) => {
+	return http(`/course/task/list?status=${status}`,'d','GET')
+}
+//添加签到任务
+export const addSign = (courseId) => {
+	return http(`/course/task/add`,{courseId},'POST')
+}
+//删除签到任务,传入任务id
+export const deleteSign = (Id) => {
+	return http(`/course/task/${Id}`,'r','DELETE')
+}

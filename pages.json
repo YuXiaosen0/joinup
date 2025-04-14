@@ -32,6 +32,13 @@
 			{
 				"navigationBarTitleText" : ""
 			}
+		},
+		{
+			"path" : "pages/veri/veri",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
 		}
 	],
 	"easycom": {

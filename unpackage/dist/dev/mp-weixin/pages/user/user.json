@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "",
+  "usingComponents": {
+    "uni-icons": "../../uni_modules/uni-icons/components/uni-icons/uni-icons",
+    "u-cell": "../../uni_modules/uview-plus/components/u-cell/u-cell",
+    "u-cell-group": "../../uni_modules/uview-plus/components/u-cell-group/u-cell-group",
+    "up-popup": "../../uni_modules/uview-plus/components/u-popup/u-popup"
+  }
+}

@@ -1,0 +1,89 @@
+
+.auth-container.data-v-08418ad3 {
+	padding: 40rpx;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf2 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* 垂直布局 */
+    justify-content: center; /* 垂直居中 */
+    align-items: center; /* 水平居中 */
+    gap: 40rpx; /* 图片和卡片之间的间距 */
+}
+.logo-container.data-v-08418ad3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo.data-v-08418ad3 {
+  width: 400rpx; /* 图片宽度 */
+  height: 400rpx; /* 图片高度 */
+  object-fit: contain; /* 保持图片比例 */
+}
+.auth-header.data-v-08418ad3 {
+  margin-bottom: 60rpx;
+  text-align: center;
+}
+.auth-title.data-v-08418ad3 {
+  font-size: 42rpx;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 16rpx;
+}
+.auth-subtitle.data-v-08418ad3 {
+  font-size: 28rpx;
+  color: #7d7d7d;
+  line-height: 1.6;
+}
+.auth-card.data-v-08418ad3 {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  width: 100%;
+  max-width: 650rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+}
+.input-row.data-v-08418ad3 {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+.email-input.data-v-08418ad3, .code-input.data-v-08418ad3 {
+  flex: 1;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 24rpx;
+}
+.input-placeholder.data-v-08418ad3 {
+  color: #bdbdbd;
+  font-size: 28rpx;
+}
+.code-btn.data-v-08418ad3 {
+  background: #1890ff;
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  padding: 0 30rpx;
+  font-size: 28rpx;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+.code-btn[disabled].data-v-08418ad3 {
+  background: #d9d9d9;
+  color: #999;
+}
+.verify-btn.data-v-08418ad3 {
+  background: #1890ff;
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  padding: 0 30rpx;
+  font-size: 28rpx;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+.code-btn.data-v-08418ad3:active, 
+.verify-btn.data-v-08418ad3:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+}

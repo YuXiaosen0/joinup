@@ -1,0 +1,183 @@
+
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 顶部导航 */
+.header {
+  background-color: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+.nav-tabs {
+  display: flex;
+  padding: 20rpx 0;
+}
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 30rpx;
+  color: #666;
+  padding: 20rpx 0;
+  position: relative;
+}
+.tab.active {
+  color: #07C160;
+  font-weight: bold;
+}
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80rpx;
+  height: 6rpx;
+  background-color: #07C160;
+  border-radius: 3rpx;
+}
+
+/* 课程卡片 */
+.course-list {
+  margin-bottom: 100rpx;
+}
+.course-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+.course-info {
+  margin-bottom: 20rpx;
+}
+.course-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+.course-time, .course-college, .course-position, .course-identifier {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 6rpx;
+}
+.course-actions {
+  display: flex;
+  justify-content: space-between;
+}
+.action-btn {
+  flex: 1;
+  margin: 0 10rpx;
+  font-size: 28rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  border-radius: 35rpx;
+}
+.select-btn {
+  background-color: #07C160;
+  color: #fff;
+}
+.cancel-btn {
+  background-color: #FF4D4F;
+  color: #fff;
+}
+.appointment-btn {
+  background-color: #1890FF;
+  color: #fff;
+}
+.disabled-btn {
+  background-color: #ccc;
+  color: #fff;
+}
+
+/* 预约卡片 */
+.appointment-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+.appointment-info {
+  flex: 1;
+}
+.appointment-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+.appointment-time {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+}
+
+/* 分页 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30rpx 0;
+}
+.page-btn {
+  width: 160rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 26rpx;
+  margin: 0 20rpx;
+  background-color: #07C160;
+  color: #fff;
+  border-radius: 30rpx;
+}
+.page-btn[disabled] {
+  background-color: #ccc;
+}
+.page-info {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 空状态提示 */
+.empty-tip {
+  text-align: center;
+  padding: 60rpx 0;
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 认证状态 */
+.auth-status {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  padding: 20rpx;
+  text-align: center;
+  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+.authenticated {
+  font-size: 28rpx;
+  color: #07C160;
+}
+.auth-btn {
+  background-color: #07C160;
+  color: #fff;
+  font-size: 30rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  width: 80%;
+  margin: 0 auto;
+}

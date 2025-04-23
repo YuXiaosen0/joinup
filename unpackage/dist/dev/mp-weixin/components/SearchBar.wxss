@@ -1,0 +1,23 @@
+
+.search-bar.data-v-2334f7bd {
+  padding: 16rpx;
+  background-color: #fff;
+}
+.search-input-container.data-v-2334f7bd {
+  display: flex;
+  align-items: center;
+}
+.search-button.data-v-2334f7bd {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: #f0f0f0;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+

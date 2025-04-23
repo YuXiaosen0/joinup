@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"version":3,"file":"assets.js","sources":["static/11.png"],"sourcesContent":["export default \"__VITE_ASSET__3c920cc2__\""],"names":[],"mappings":";AAAA,MAAe,aAAA;;"}
-=======
-{"version":3,"file":"assets.js","sources":["static/resource/images/empty.png","../../../static/images/wechat-icon.png"],"sourcesContent":["export default \"__VITE_ASSET__a0c2bf5d__\"","export default \"/static/images/wechat-icon.png\""],"names":[],"mappings":";AAAA,MAAe,eAAA;ACAf,MAAe,aAAA;;;"}
->>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
+{"version":3,"file":"assets.js","sources":["static/11.png","static/resource/images/empty.png","../../static/images/wechat-icon.png"],"sourcesContent":["export default \"__VITE_ASSET__3c920cc2__\"","export default \"__VITE_ASSET__a0c2bf5d__\"","export default \"/static/images/wechat-icon.png\""],"names":[],"mappings":";AAAA,MAAe,eAAA;ACAf,MAAe,eAAA;ACAf,MAAe,aAAA;;;;"}

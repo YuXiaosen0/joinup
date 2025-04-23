@@ -33,6 +33,9 @@ const _sfc_main = {
       teacherName: "张辉",
       weekDay: "周二"
     });
+    common_vendor.onLoad(async () => {
+      await getCouInfo();
+    });
     const showPopup = common_vendor.ref(false);
     const showSignListPopup = common_vendor.ref(false);
     const signList = common_vendor.ref([]);
@@ -41,6 +44,7 @@ const _sfc_main = {
     };
     const bindDateChange = async (e) => {
       date.value = e.detail.value;
+      await getCouInfo();
     };
     const showDetails = (course) => {
       selectedCourse.value = course;
@@ -69,7 +73,7 @@ const _sfc_main = {
     };
     const getCouInfo = async () => {
       const res = await api_api.getCourseInfo(date.value);
-      common_vendor.index.__f__("log", "at pages/course/course.vue:292", "res", res);
+      common_vendor.index.__f__("log", "at pages/course/course.vue:297", "res", res);
       if (res && Array.isArray(res.result)) {
         courseInfo.value = res.result.map((course) => ({
           id: course.id || "未知ID",
@@ -91,7 +95,7 @@ const _sfc_main = {
         });
         courseInfo.value = [];
       } else {
-        common_vendor.index.__f__("error", "at pages/course/course.vue:315", "获取课程信息失败或数据格式不正确");
+        common_vendor.index.__f__("error", "at pages/course/course.vue:320", "获取课程信息失败或数据格式不正确");
         courseInfo.value = [];
       }
     };
@@ -112,7 +116,7 @@ const _sfc_main = {
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/course/course.vue:338", "添加失败:", error);
+        common_vendor.index.__f__("error", "at pages/course/course.vue:343", "添加失败:", error);
         common_vendor.index.showToast({
           title: "添加失败，请稍后重试",
           icon: "none",
@@ -138,7 +142,7 @@ const _sfc_main = {
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/course/course.vue:366", "删除失败:", error);
+        common_vendor.index.__f__("error", "at pages/course/course.vue:371", "删除失败:", error);
         common_vendor.index.showToast({
           title: "删除失败",
           icon: "none",

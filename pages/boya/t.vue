@@ -141,18 +141,18 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue"
-import { 
-  getAuthStatus,
-  getAllCourses,
-  getSelectedCourses,
-  selectCourse,
-  cancelCourse,
-  makeAppointment,
-  getAppointments,
-  cancelAppointment
-} from "../../api/boyaApi"
+import {ref} from "vue"
+import {onLoad} from '@dcloudio/uni-app'
+import { boyaAuthentication, getBoyaCourse,xuanBoya,lookupYiXuan,deleteBoya,
+  appointBoya,getAppointList,cancelAppoint } from "../../api/api"
 
+// 初始化数据
+onLoad(() => {
+  fetchAuthStatus()
+  fetchAllCourses()
+  fetchSelectedCourses()
+  fetchAppointments()
+})
 const activeTab = ref('all') // 当前激活的标签页
 const isAuthenticated = ref(false) // 是否已认证
 const allCourses = ref([]) // 全部课程列表
@@ -186,7 +186,7 @@ const hasAppointment = (courseId) => {
 // 获取认证状态
 const fetchAuthStatus = async () => {
   try {
-    const res = await getAuthStatus()
+    const res = await boyaAuthentication()
     isAuthenticated.value = res.code === 1
   } catch (error) {
     console.error('获取认证状态失败:', error)
@@ -426,13 +426,7 @@ const nextPage = () => {
   fetchAllCourses()
 }
 
-// 初始化数据
-onMounted(() => {
-  fetchAuthStatus()
-  fetchAllCourses()
-  fetchSelectedCourses()
-  fetchAppointments()
-})
+
 </script>
 
 <style>

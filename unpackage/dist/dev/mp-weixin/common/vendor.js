@@ -7120,7 +7120,7 @@ function initOnError() {
   };
 }
 function initRuntimeSocketService() {
-  const hosts = "192.168.154.1,192.168.136.1,10.194.43.55,127.0.0.1";
+  const hosts = "192.168.154.1,192.168.136.1,10.192.109.84,127.0.0.1";
   const port = "8090";
   const id = "mp-weixin_Ts2B1x";
   const lazy = typeof swan !== "undefined";

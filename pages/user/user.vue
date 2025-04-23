@@ -239,7 +239,6 @@
 	};
 	// 页面加载时获取用户信息
 	onLoad(async () => {
-
 		uni.login({
 		  success: async (data) => {
 			console.log("微信登录 code:", data.code);

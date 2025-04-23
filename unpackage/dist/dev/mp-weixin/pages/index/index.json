@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "uni-app",
+  "usingComponents": {
+    "up-tabs": "../../uni_modules/uview-plus/components/u-tabs/u-tabs",
+    "up-sticky": "../../uni_modules/uview-plus/components/u-sticky/u-sticky",
+    "waterfall-list": "../../components/WaterfallList",
+    "search-bar": "../../components/SearchBar",
+    "swiper-banner": "../../components/SwiperBanner"
+  }
+}

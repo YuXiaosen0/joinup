@@ -1,0 +1,1 @@
+{"version":3,"names":["wx","createPage","_sfc_main"],"sources":["cGFnZXMvZGV0YWlsL2Fubm91bmNlbWVudC52dWU"],"sourcesContent":["import MiniProgramPage from 'D:/RG_FRONT/joinup_front/pages/detail/announcement.vue'\nwx.createPage(MiniProgramPage)"],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AACAA,EAAA,CAAGC,UAAA,CAAWC,SAAe","ignoreList":[]}

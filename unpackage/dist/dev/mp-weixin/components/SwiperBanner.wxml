@@ -1,0 +1,1 @@
+<view class="swiper-container data-v-b9a16aa3"><view wx:for="{{a}}" wx:for-item="item" wx:key="e" class="data-v-b9a16aa3"><up-swiper wx:if="{{item.d}}" class="data-v-b9a16aa3" key="{{item.a}}" bindclick="{{item.b}}" u-i="{{item.c}}" bind:__l="__l" u-p="{{item.d}}"/></view></view>

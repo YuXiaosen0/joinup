@@ -28,9 +28,9 @@ export function createApp() {
   const app = createSSRApp(App)
   app.use(pinia)
   app.use(uviewPlus)
-  
   return {
     app
   }
 }
+export {pinia}
 // #endif

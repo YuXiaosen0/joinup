@@ -1,5 +1,4 @@
 import App from './App'
-
 import uviewPlus from '@/uni_modules/uview-plus'
 
 //条件编译（非Vue 3 环境）
@@ -23,10 +22,10 @@ app.$mount()
 // #ifdef VUE3
 import { createSSRApp } from 'vue'
 import { createPinia } from 'pinia'; // Import pinia
-const pinia = createPinia(); // Create pinia instance
+const pinia1 = createPinia(); // Create pinia instance
 export function createApp() {
   const app = createSSRApp(App)
-  app.use(pinia)
+  app.use(pinia1)
   app.use(uviewPlus)
   return {
     app

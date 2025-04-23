@@ -1,5 +1,6 @@
 
 .search-bar.data-v-2334f7bd {
+<<<<<<< HEAD
   padding: 16rpx;
   background-color: #fff;
 }
@@ -21,3 +22,8 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
+=======
+	padding: 16rpx;
+	background-color: #fff;
+}
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f

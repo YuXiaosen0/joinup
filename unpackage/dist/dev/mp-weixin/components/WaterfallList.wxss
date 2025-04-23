@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 .waterfall-container.data-v-50bd2af7 {
   display: flex;
   justify-content: space-between;
@@ -74,4 +75,35 @@ mark.data-v-50bd2af7 {
 .creator-name.data-v-50bd2af7 {
   font-size: 28rpx;
   color: #333;
+=======
+.list.data-v-50bd2af7 {
+	margin: 30rpx 0;
+}
+.display-card.data-v-50bd2af7 {
+	margin: 10rpx;
+	background-color: #e6f2ff;
+	border: 1rpx solid #cce0ff;
+	border-radius: 16rpx;
+	padding: 20rpx;
+	box-shadow: 0 4rpx 12rpx rgba(0, 102, 204, 0.1);
+	transition: all 0.3s ease;
+	break-inside: avoid;
+}
+.display-card.data-v-50bd2af7:hover {
+	transform: translateY(-2rpx);
+	box-shadow: 0 6rpx 16rpx rgba(0, 102, 204, 0.15);
+	background-color: #d9e9ff;
+}
+.display-title.data-v-50bd2af7 {
+	font-size: 30rpx;
+	margin: 10rpx 0;
+	color: #003366;
+	font-weight: 600;
+}
+.display-demand.data-v-50bd2af7 {
+	font-size: 26rpx;
+	margin: 10rpx 0;
+	color: #0066cc;
+	line-height: 1.5;
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 }

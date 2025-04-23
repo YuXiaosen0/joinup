@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "",
+  "usingComponents": {
+    "up-toast": "../../uni_modules/uview-plus/components/u-toast/u-toast",
+    "up-icon": "../../uni_modules/uview-plus/components/u-icon/u-icon",
+    "up-input": "../../uni_modules/uview-plus/components/u-input/u-input",
+    "up-code": "../../uni_modules/uview-plus/components/u-code/u-code"
+  }
+}

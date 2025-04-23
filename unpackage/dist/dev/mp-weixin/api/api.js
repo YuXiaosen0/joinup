@@ -1,6 +1,7 @@
 "use strict";
 const api_http = require("./http.js");
 require("../stores/user.js");
+<<<<<<< HEAD
 const getTeamList = (themeId) => {
   return api_http.http(`/team/list?themeId=${themeId}`, {
     "pageNo": 1,
@@ -44,6 +45,10 @@ const kickMember = (teamId, userId) => {
 };
 const searchTeam = async (searchString) => {
   return api_http.http(`/team/search?keyword=${searchString}`, { searchString }, "GET");
+=======
+const getIndexList = () => {
+  return api_http.http("/test/hello", "d", "GET");
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 };
 const login = (code) => {
   return api_http.http("/user/wxLogin", { code }, "POST");
@@ -60,6 +65,7 @@ const sendVerifyCode = (data) => {
 const yanzheng = (data) => {
   return api_http.http("/user/verify", data, "POST");
 };
+<<<<<<< HEAD
 const getSignRecord = (data) => {
   return api_http.http(`/course/log`, data, "POST");
 };
@@ -80,5 +86,56 @@ exports.modifyUserInfo = modifyUserInfo;
 exports.processApplication = processApplication;
 exports.searchTeam = searchTeam;
 exports.sendVerifyCode = sendVerifyCode;
+=======
+const searchList = async (params) => {
+  return null;
+};
+const signClass = (id) => {
+  return api_http.http(`/course/sign?courseScheduleId=${id}`, "r", "POST");
+};
+const getCourseInfo = (data) => {
+  return api_http.http(`/course/list?date=${data}`, "d", "GET");
+};
+const getSign = (status) => {
+  return api_http.http(`/course/task/list?status=${status}`, "d", "GET");
+};
+const addSign = (courseId) => {
+  return api_http.http(`/course/task/add`, { courseId }, "POST");
+};
+const deleteSign = (Id) => {
+  return api_http.http(`/course/task/${Id}`, "r", "DELETE");
+};
+const getSignRecord = (data) => {
+  return api_http.http(`/course/log`, data, "POST");
+};
+const listAll = () => {
+  return api_http.http(`/interest/all`, "d", "GET");
+};
+const getMyInterest = () => {
+  return api_http.http(`/interest/my`, "d", "GET");
+};
+const addMyInterest = (interestId) => {
+  return api_http.http(`/interest/add?interestId=${interestId}`, {}, "POST");
+};
+const deleteMyInterest = (interestId) => {
+  return api_http.http(`/interest/${interestId}`, "d", "DELETE");
+};
+exports.addMyInterest = addMyInterest;
+exports.addSign = addSign;
+exports.deleteMyInterest = deleteMyInterest;
+exports.deleteSign = deleteSign;
+exports.getCourseInfo = getCourseInfo;
+exports.getIndexList = getIndexList;
+exports.getMyInterest = getMyInterest;
+exports.getSign = getSign;
+exports.getSignRecord = getSignRecord;
+exports.getUserInfo = getUserInfo;
+exports.listAll = listAll;
+exports.login = login;
+exports.modifyUserInfo = modifyUserInfo;
+exports.searchList = searchList;
+exports.sendVerifyCode = sendVerifyCode;
+exports.signClass = signClass;
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 exports.yanzheng = yanzheng;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/api.js.map

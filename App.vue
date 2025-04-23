@@ -1,6 +1,9 @@
 <script>
 	export default {
 		onLaunch: function() {
+			uni.setEnableDebug( {
+						enableDebug: true
+					} )
 			console.log('App Launch')
 		},
 		onShow: function() {

@@ -1,4 +1,10 @@
 {
   "component": true,
+<<<<<<< HEAD
   "usingComponents": {}
+=======
+  "usingComponents": {
+    "up-waterfall": "../uni_modules/uview-plus/components/u-waterfall/u-waterfall"
+  }
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 }

@@ -1,5 +1,6 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+<<<<<<< HEAD
 const common_assets = require("../../common/assets.js");
 const api_api = require("../../api/api.js");
 if (!Math) {
@@ -174,4 +175,18 @@ const _sfc_main = {
 };
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-eca06f3c"]]);
 wx.createPage(MiniProgramPage);
+=======
+const _sfc_main = {
+  __name: "detail",
+  setup(__props) {
+    common_vendor.onLoad((opt) => {
+      JSON.parse(decodeURIComponent(opt.item));
+    });
+    return (_ctx, _cache) => {
+      return {};
+    };
+  }
+};
+wx.createPage(_sfc_main);
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 //# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/detail/detail.js.map

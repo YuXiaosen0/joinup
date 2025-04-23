@@ -5309,14 +5309,65 @@ function findScopedSlotInvoker(vueId, instance) {
     parent = parent.parent;
   }
 }
+<<<<<<< HEAD
 const o = (value, key) => vOn(value, key);
 const f = (source, renderItem) => vFor(source, renderItem);
 const r = (name, props, key) => renderSlot(name, props, key);
+=======
+function withScopedSlot(fn, { name, path, vueId }) {
+  const instance = getCurrentInstance();
+  fn.path = path;
+  const scopedSlots = instance.$ssi || (instance.$ssi = {});
+  const invoker = scopedSlots[vueId] || (scopedSlots[vueId] = createScopedSlotInvoker(instance));
+  if (!invoker.slots[name]) {
+    invoker.slots[name] = {
+      fn
+    };
+  } else {
+    invoker.slots[name].fn = fn;
+  }
+  return getValueByDataPath(instance.ctx.$scope.data, path);
+}
+function createScopedSlotInvoker(instance) {
+  const invoker = (slotName, args, index2) => {
+    const slot = invoker.slots[slotName];
+    if (!slot) {
+      return;
+    }
+    const hasIndex = typeof index2 !== "undefined";
+    index2 = index2 || 0;
+    const prevInstance = setCurrentRenderingInstance(instance);
+    const data = slot.fn(args, slotName + (hasIndex ? "-" + index2 : ""), index2);
+    const path = slot.fn.path;
+    setCurrentRenderingInstance(prevInstance);
+    (instance.$scopedSlotsData || (instance.$scopedSlotsData = [])).push({
+      path,
+      index: index2,
+      data
+    });
+    instance.$updateScopedSlots();
+  };
+  invoker.slots = {};
+  return invoker;
+}
+function setRef(ref2, id, opts = {}) {
+  const { $templateRefs } = getCurrentInstance();
+  $templateRefs.push({ i: id, r: ref2, k: opts.k, f: opts.f });
+}
+const o = (value, key) => vOn(value, key);
+const f = (source, renderItem) => vFor(source, renderItem);
+const r = (name, props, key) => renderSlot(name, props, key);
+const w = (fn, options) => withScopedSlot(fn, options);
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 const s = (value) => stringifyStyle(value);
 const e = (target, ...sources) => extend(target, ...sources);
 const n = (value) => normalizeClass(value);
 const t = (val) => toDisplayString(val);
 const p = (props) => renderProps(props);
+<<<<<<< HEAD
+=======
+const sr = (ref2, id, opts) => setRef(ref2, id, opts);
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 function createApp$1(rootComponent, rootProps = null) {
   rootComponent && (rootComponent.mpType = "app");
   return createVueApp(rootComponent, rootProps).use(plugin);
@@ -6160,6 +6211,7 @@ const onLocaleChange = (fn) => {
 if (typeof global !== "undefined") {
   global.getLocale = getLocale;
 }
+<<<<<<< HEAD
 const UUID_KEY$1 = "__DC_STAT_UUID";
 let deviceId;
 function useDeviceId(global2 = wx) {
@@ -6169,6 +6221,17 @@ function useDeviceId(global2 = wx) {
       deviceId = Date.now() + "" + Math.floor(Math.random() * 1e7);
       wx.setStorage({
         key: UUID_KEY$1,
+=======
+const UUID_KEY = "__DC_STAT_UUID";
+let deviceId;
+function useDeviceId(global2 = wx) {
+  return function addDeviceId(_, toRes) {
+    deviceId = deviceId || global2.getStorageSync(UUID_KEY);
+    if (!deviceId) {
+      deviceId = Date.now() + "" + Math.floor(Math.random() * 1e7);
+      wx.setStorage({
+        key: UUID_KEY,
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
         data: deviceId
       });
     }
@@ -7078,9 +7141,15 @@ function initOnError() {
   };
 }
 function initRuntimeSocketService() {
+<<<<<<< HEAD
   const hosts = "198.18.0.1,192.168.157.1,192.168.119.1,10.193.65.131,127.0.0.1";
   const port = "8090";
   const id = "mp-weixin_YFvafS";
+=======
+  const hosts = "192.168.154.1,192.168.136.1,10.194.43.55,127.0.0.1";
+  const port = "8090";
+  const id = "mp-weixin_Ts2B1x";
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -8613,6 +8682,7 @@ This will fail in production.`);
   useStore.$id = id;
   return useStore;
 }
+<<<<<<< HEAD
 var define_process_env_UNI_STATISTICS_CONFIG_default = { enable: true };
 var define_process_env_UNI_STAT_TITLE_JSON_default = { "pages/index/index": "uni-app" };
 const sys = index.getSystemInfoSync();
@@ -9735,6 +9805,11 @@ const createHook = (lifecycle) => (hook, target = getCurrentInstance()) => {
   !isInSSRComponentSetup && injectHook(lifecycle, hook, target);
 };
 const onShow = /* @__PURE__ */ createHook(ON_SHOW);
+=======
+const createHook = (lifecycle) => (hook, target = getCurrentInstance()) => {
+  !isInSSRComponentSetup && injectHook(lifecycle, hook, target);
+};
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
 exports._export_sfc = _export_sfc;
 exports.computed = computed;
@@ -9750,14 +9825,24 @@ exports.nextTick$1 = nextTick$1;
 exports.o = o;
 exports.onLoad = onLoad;
 exports.onMounted = onMounted;
+<<<<<<< HEAD
 exports.onShow = onShow;
+=======
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 exports.p = p;
 exports.r = r;
 exports.reactive = reactive;
 exports.ref = ref;
 exports.resolveComponent = resolveComponent;
 exports.s = s;
+<<<<<<< HEAD
 exports.t = t;
 exports.unref = unref;
+=======
+exports.sr = sr;
+exports.t = t;
+exports.unref = unref;
+exports.w = w;
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 exports.watch = watch;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

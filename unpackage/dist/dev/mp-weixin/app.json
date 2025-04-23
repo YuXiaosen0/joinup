@@ -5,9 +5,16 @@
     "pages/user/user",
     "pages/order/order",
     "pages/course/course",
+<<<<<<< HEAD
     "pages/detail/announcement",
     "pages/detail/applicationList",
     "pages/detail/searchResult"
+=======
+    "pages/veri/veri",
+    "pages/technology/technology",
+    "pages/boya/boya",
+    "pages/register/register"
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -30,7 +37,17 @@
         "pagePath": "pages/order/order",
         "iconPath": "/static/resource/images/tab_pub.png",
         "selectedIconPath": "/static/resource/images/tab_pub_seled.png",
+<<<<<<< HEAD
         "text": "订单"
+=======
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/veri/veri",
+        "iconPath": "/static/resource/images/image_add.png",
+        "selectedIconPath": "/static/resource/images/image_add.png",
+        "text": "创建"
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
       },
       {
         "pagePath": "pages/user/user",

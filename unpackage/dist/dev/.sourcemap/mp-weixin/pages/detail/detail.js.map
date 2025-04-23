@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"version":3,"file":"detail.js","sources":["../../HBuilder/HBuilderX.4.57.2025032507/HBuilderX/plugins/uniapp-cli-vite/uniPage:/cGFnZXMvZGV0YWlsL2RldGFpbC52dWU"],"sourcesContent":["import MiniProgramPage from 'D:/RG_FRONT/joinup_front/pages/detail/detail.vue'\nwx.createPage(MiniProgramPage)"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AACA,GAAG,WAAW,eAAe;"}
+=======
+{"version":3,"file":"detail.js","sources":["../../../HBuilderX/plugins/uniapp-cli-vite/uniPage:/cGFnZXMvZGV0YWlsL2RldGFpbC52dWU"],"sourcesContent":["import MiniProgramPage from 'D:/uniapp/myJoinup/joinup/pages/detail/detail.vue'\nwx.createPage(MiniProgramPage)"],"names":["MiniProgramPage"],"mappings":";;;;;;;;;;;;;AACA,GAAG,WAAWA,SAAe;"}
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f

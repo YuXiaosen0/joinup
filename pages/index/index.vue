@@ -42,6 +42,7 @@ onShow(() => {
   loadList(themes[currentTab.value]?.id)
 })
 
+<<<<<<< HEAD
 // 页面加载时触发的逻辑
 onMounted(() => {
 	fetchSwiperList()  // 获取轮播图数据
@@ -55,6 +56,14 @@ function onTabChange(index) {
   currentTab.value = index.index
   const themeId = themes[currentTab.value].id  // 获取当前选中主题的 themeId
   loadList(themeId) 
+=======
+function initSwiper() {
+    swiperList.value = [
+        // { image: 'https://survey-planet-test.oss-cn-beijing.aliyuncs.com/9ec3b3d8670e11a01fbc7d586f3433f.png' },
+        // { image: 'https://survey-planet-test.oss-cn-beijing.aliyuncs.com/9ec3b3d8670e11a01fbc7d586f3433f.png' },
+        // { image: 'https://survey-planet-test.oss-cn-beijing.aliyuncs.com/9ec3b3d8670e11a01fbc7d586f3433f.png' }
+    ]
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 }
 
 // 加载首页列表数据

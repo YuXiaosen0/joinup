@@ -111,4 +111,8 @@ const colorGradient$1 = {
 };
 exports.colorGradient = colorGradient$1;
 exports.colorGradient$1 = colorGradient;
+<<<<<<< HEAD
+=======
+exports.hexToRgb = hexToRgb;
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 //# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/uview-plus/libs/function/colorGradient.js.map

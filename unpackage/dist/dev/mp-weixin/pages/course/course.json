@@ -1,7 +1,13 @@
 {
   "navigationBarTitleText": "",
   "usingComponents": {
+<<<<<<< HEAD
     "up-input": "../../uni_modules/uview-plus/components/u-input/u-input",
     "up-button": "../../uni_modules/uview-plus/components/u-button/u-button"
+=======
+    "up-icon": "../../uni_modules/uview-plus/components/u-icon/u-icon",
+    "up-button": "../../uni_modules/uview-plus/components/u-button/u-button",
+    "up-popup": "../../uni_modules/uview-plus/components/u-popup/u-popup"
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
   }
 }

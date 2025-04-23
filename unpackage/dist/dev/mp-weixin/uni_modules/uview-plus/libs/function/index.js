@@ -592,4 +592,8 @@ exports.page = page;
 exports.queryParams = queryParams;
 exports.shallowMerge = shallowMerge;
 exports.sleep = sleep;
+<<<<<<< HEAD
+=======
+exports.type2icon = type2icon;
+>>>>>>> 9301907643163c2aa0a9299b7273cf6a1824f36f
 //# sourceMappingURL=../../../../../.sourcemap/mp-weixin/uni_modules/uview-plus/libs/function/index.js.map

@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "uni-app",
+  "navigationBarTitleText": "",
   "usingComponents": {
     "up-swiper": "../../uni_modules/uview-plus/components/u-swiper/u-swiper",
     "up-tabs": "../../uni_modules/uview-plus/components/u-tabs/u-tabs",

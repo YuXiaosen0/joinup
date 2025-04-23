@@ -2,7 +2,7 @@
 	
   <view class="auth-container">
 	  <view class="logo-container">
-		<img src="../../static/tabbar/buaa.png" alt="北航" class="logo" />
+		<img src="https://survey-planet-test.oss-cn-beijing.aliyuncs.com/9ec3b3d8670e11a01fbc7d586f3433f.png" alt="北航" class="logo" />
 	  </view>
     <up-toast ref="uToastRef"></up-toast>
     
@@ -86,7 +86,6 @@
 	};
 
 	const getCode = async() => {
-		console.log("uCodeRef",uCodeRef.value?.canGetCode)
 		if (uCodeRef.value?.canGetCode) {
 			const data={
 				email: email.value,
@@ -159,7 +158,6 @@
 			vcode.value = ""; // 清空输入框
 		}else{
 			const res=await yanzheng(data)
-			console.log("res",res)
 			if(res.code==1){
 				uni.navigateTo({
                 url: '/pages/course/course',

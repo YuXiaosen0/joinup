@@ -58,9 +58,9 @@ onMounted(() => {
 
 function initSwiper() {
     swiperList.value = [
-        { image: '/static/logo.png' },
-        { image: '/static/logo.png' },
-        { image: '/static/logo.png' }
+        // { image: 'https://survey-planet-test.oss-cn-beijing.aliyuncs.com/9ec3b3d8670e11a01fbc7d586f3433f.png' },
+        // { image: 'https://survey-planet-test.oss-cn-beijing.aliyuncs.com/9ec3b3d8670e11a01fbc7d586f3433f.png' },
+        // { image: 'https://survey-planet-test.oss-cn-beijing.aliyuncs.com/9ec3b3d8670e11a01fbc7d586f3433f.png' }
     ]
 }
 

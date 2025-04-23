@@ -1,10 +1,10 @@
 {
-	
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+
+	"pages": [ 
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": ""
 			}
 		},
 		{
@@ -39,11 +39,30 @@
 			{
 				"navigationBarTitleText" : ""
 			}
+		},
+		{
+			"path" : "pages/technology/technology",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/boya/boya",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
 	],
 	"easycom": {
 		"autoscan": true,
-		// 注意一定要放在custom里，否则无效，https://ask.dcloud.net.cn/question/131175
 		"custom": {
 			"^u--(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
 			"^up-(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
@@ -59,11 +78,18 @@
 				"iconPath": "static/resource/images/tab_index.png",
 				"selectedIconPath": "/static/resource/images/tab_index_seled.png",
 				"text": "首页"
-			}, {
+			}, 
+			{
 				"pagePath": "pages/order/order",
 				"iconPath": "/static/resource/images/tab_pub.png",
 				"selectedIconPath": "/static/resource/images/tab_pub_seled.png",
-				"text": "订单"
+				"text": "消息"
+			},
+			{
+				"pagePath": "pages/veri/veri",
+				"iconPath": "/static/resource/images/image_add.png",
+				"selectedIconPath": "/static/resource/images/image_add.png",
+				"text": "创建"
 			},
 			{
 				"pagePath": "pages/user/user",

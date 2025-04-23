@@ -133,7 +133,7 @@
               </view>
             </view>
             <view v-else class="empty-list">
-              <image src="/static/images/empty.png" class="empty-image"></image>
+              <image src="../../static/resource/images/empty.png" class="empty-image"></image>
               <text class="empty-text">暂无签到打卡信息</text>
             </view>
           </scroll-view>
@@ -206,9 +206,10 @@
             shape="circle" 
             @click="addSignC(selectedCourse.courseId)" 
             class="action-btn"
+            :disabled=" isSignAdded(selectedCourse.courseId)"
             color="linear-gradient(to right, #6A11CB, #2575FC)"
           >
-            添加自动打卡
+          {{ isSignAdded(selectedCourse.courseId) ? '已添加' : '添加自动打卡' }}
           </up-button>
           
           <up-button 
@@ -232,7 +233,7 @@ import {reactive,ref} from "vue"
 import {onLoad} from '@dcloudio/uni-app'
 import { getCourseInfo,signClass,getSign,addSign,deleteSign} from "../../api/api"
 
-const date = ref('2025-04-08')
+const date = ref(new Date().toISOString().split('T')[0]);
 const startDate=ref('2024-04-08')
 const endDate=ref('2025-08-08')
 const courseInfo=ref()
@@ -251,7 +252,9 @@ const selectedCourse=ref({
 const showPopup=ref(false)
 const showSignListPopup = ref(false);
 const signList = ref([]);
-
+const isSignAdded = (courseId) => {
+  return signList.value.some(item => item.courseId === courseId);
+};
 const bindDateChange=async(e) =>{
   date.value = e.detail.value
 }
@@ -267,7 +270,6 @@ const closePopup = () => {
 
 const sign=async(id) =>{
   const res=await signClass(id)
-  console.log("签到接口返回数据:", res);
   if(res.code==1){
     uni.showToast({
       title: "签到成功",
@@ -287,7 +289,7 @@ const sign=async(id) =>{
 
 const getCouInfo = async () => {
   const res = await getCourseInfo(date.value);
-  console.log("接口返回数据:", res);
+  console.log("res",res)
   if (res && Array.isArray(res.result)) {
     courseInfo.value = res.result.map(course => ({
       id: course.id || "未知ID",
@@ -301,8 +303,15 @@ const getCouInfo = async () => {
       classEndTime: course.classEndTime || "未知结束时间",
       signStatus: course.signStatus || "未知状态",
     }));
-    console.log("courseInfo.value", courseInfo.value);
-  } else {
+  } else if(res==null||res.result==null){
+      uni.showToast({
+        title: "当前日期无课程",
+        icon: "none",
+        duration: 1000,
+      });
+    courseInfo.value = [];
+
+  }else{
     console.error("获取课程信息失败或数据格式不正确");
     courseInfo.value = [];
   }
@@ -311,7 +320,6 @@ const getCouInfo = async () => {
 const addSignC = async (courseId) => {
   try {
     const res = await addSign(courseId);
-    console.log("添加自动打卡接口返回数据:", res);
 
     if (res.code === 1) {
       uni.showToast({
@@ -339,7 +347,6 @@ const addSignC = async (courseId) => {
 const deleteSignC = async (courseId) => {
   try {
     const res = await deleteSign(courseId);
-    console.log("删除自动打卡接口返回数据:", res);
 
     if (res.code === 1) {
       signList.value = signList.value.filter(item => item.id !== courseId);
@@ -367,7 +374,6 @@ const deleteSignC = async (courseId) => {
 
 const openSignListPopup = async () => {
   const res=await getSign("RUNNING")
-  console.log("res",res)
   if (res && Array.isArray(res)) {
     signList.value = res;
   } else {

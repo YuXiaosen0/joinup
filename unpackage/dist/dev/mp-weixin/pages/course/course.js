@@ -17,7 +17,7 @@ if (!Math) {
 const _sfc_main = {
   __name: "course",
   setup(__props) {
-    const date = common_vendor.ref("2025-04-08");
+    const date = common_vendor.ref((/* @__PURE__ */ new Date()).toISOString().split("T")[0]);
     const startDate = common_vendor.ref("2024-04-08");
     const endDate = common_vendor.ref("2025-08-08");
     const courseInfo = common_vendor.ref();
@@ -36,6 +36,9 @@ const _sfc_main = {
     const showPopup = common_vendor.ref(false);
     const showSignListPopup = common_vendor.ref(false);
     const signList = common_vendor.ref([]);
+    const isSignAdded = (courseId) => {
+      return signList.value.some((item) => item.courseId === courseId);
+    };
     const bindDateChange = async (e) => {
       date.value = e.detail.value;
     };
@@ -48,7 +51,6 @@ const _sfc_main = {
     };
     const sign = async (id) => {
       const res = await api_api.signClass(id);
-      common_vendor.index.__f__("log", "at pages/course/course.vue:270", "签到接口返回数据:", res);
       if (res.code == 1) {
         common_vendor.index.showToast({
           title: "签到成功",
@@ -67,7 +69,7 @@ const _sfc_main = {
     };
     const getCouInfo = async () => {
       const res = await api_api.getCourseInfo(date.value);
-      common_vendor.index.__f__("log", "at pages/course/course.vue:290", "接口返回数据:", res);
+      common_vendor.index.__f__("log", "at pages/course/course.vue:292", "res", res);
       if (res && Array.isArray(res.result)) {
         courseInfo.value = res.result.map((course) => ({
           id: course.id || "未知ID",
@@ -81,16 +83,21 @@ const _sfc_main = {
           classEndTime: course.classEndTime || "未知结束时间",
           signStatus: course.signStatus || "未知状态"
         }));
-        common_vendor.index.__f__("log", "at pages/course/course.vue:304", "courseInfo.value", courseInfo.value);
+      } else if (res == null || res.result == null) {
+        common_vendor.index.showToast({
+          title: "当前日期无课程",
+          icon: "none",
+          duration: 1e3
+        });
+        courseInfo.value = [];
       } else {
-        common_vendor.index.__f__("error", "at pages/course/course.vue:306", "获取课程信息失败或数据格式不正确");
+        common_vendor.index.__f__("error", "at pages/course/course.vue:315", "获取课程信息失败或数据格式不正确");
         courseInfo.value = [];
       }
     };
     const addSignC = async (courseId) => {
       try {
         const res = await api_api.addSign(courseId);
-        common_vendor.index.__f__("log", "at pages/course/course.vue:314", "添加自动打卡接口返回数据:", res);
         if (res.code === 1) {
           common_vendor.index.showToast({
             title: "添加成功",
@@ -105,7 +112,7 @@ const _sfc_main = {
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/course/course.vue:330", "添加失败:", error);
+        common_vendor.index.__f__("error", "at pages/course/course.vue:338", "添加失败:", error);
         common_vendor.index.showToast({
           title: "添加失败，请稍后重试",
           icon: "none",
@@ -116,7 +123,6 @@ const _sfc_main = {
     const deleteSignC = async (courseId) => {
       try {
         const res = await api_api.deleteSign(courseId);
-        common_vendor.index.__f__("log", "at pages/course/course.vue:342", "删除自动打卡接口返回数据:", res);
         if (res.code === 1) {
           signList.value = signList.value.filter((item) => item.id !== courseId);
           common_vendor.index.showToast({
@@ -132,7 +138,7 @@ const _sfc_main = {
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/course/course.vue:359", "删除失败:", error);
+        common_vendor.index.__f__("error", "at pages/course/course.vue:366", "删除失败:", error);
         common_vendor.index.showToast({
           title: "删除失败",
           icon: "none",
@@ -142,7 +148,6 @@ const _sfc_main = {
     };
     const openSignListPopup = async () => {
       const res = await api_api.getSign("RUNNING");
-      common_vendor.index.__f__("log", "at pages/course/course.vue:370", "res", res);
       if (res && Array.isArray(res)) {
         signList.value = res;
       } else {
@@ -292,7 +297,7 @@ const _sfc_main = {
           shape: "circle"
         })
       } : {
-        z: common_assets._imports_0$1
+        z: common_assets._imports_0
       }, {
         A: common_vendor.o(closeSignListPopup),
         B: common_vendor.p({
@@ -342,22 +347,24 @@ const _sfc_main = {
         }),
         Q: common_vendor.t(formatTime(selectedCourse.value.classBeginTime)),
         R: common_vendor.t(formatTime(selectedCourse.value.classEndTime)),
-        S: common_vendor.o(($event) => addSignC(selectedCourse.value.courseId)),
-        T: common_vendor.p({
+        S: common_vendor.t(isSignAdded(selectedCourse.value.courseId) ? "已添加" : "添加自动打卡"),
+        T: common_vendor.o(($event) => addSignC(selectedCourse.value.courseId)),
+        U: common_vendor.p({
           type: "primary",
           shape: "circle",
+          disabled: isSignAdded(selectedCourse.value.courseId),
           color: "linear-gradient(to right, #6A11CB, #2575FC)"
         }),
-        U: common_vendor.t(selectedCourse.value.signStatus === "已签到" ? "已签到" : "立即签到"),
-        V: common_vendor.o(($event) => sign(selectedCourse.value.id)),
-        W: common_vendor.p({
+        V: common_vendor.t(selectedCourse.value.signStatus === "已签到" ? "已签到" : "立即签到"),
+        W: common_vendor.o(($event) => sign(selectedCourse.value.id)),
+        X: common_vendor.p({
           type: "primary",
           shape: "circle",
           disabled: selectedCourse.value.signStatus === "已签到",
           color: "linear-gradient(to right, #5A7BFF, #3D56F0)"
         }),
-        X: common_vendor.o(closePopup),
-        Y: common_vendor.p({
+        Y: common_vendor.o(closePopup),
+        Z: common_vendor.p({
           show: showPopup.value,
           mode: "center",
           round: "16"

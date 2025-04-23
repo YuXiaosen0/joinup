@@ -14,7 +14,7 @@ export const getUserInfo = () => {
 }
 // 修改用户信息
 export const modifyUserInfo = (data) => {
-	return http('/user',{data},'PUT')
+	return http('/user',data,'PUT')
 }
 // 发送验证码
 export const sendVerifyCode = (data) => {
@@ -51,3 +51,28 @@ export const addSign = (courseId) => {
 export const deleteSign = (Id) => {
 	return http(`/course/task/${Id}`,'r','DELETE')
 }
+//获得学生的签到记录
+export const getSignRecord = (data) => {
+	return http(`/course/log`,data,'POST')
+}
+//listAll
+export const listAll = () => {
+	return http(`/interest/all`,'d','GET')
+}
+//获取用户的兴趣
+export const getMyInterest = () => {
+	return http(`/interest/my`,'d','GET')
+}
+//添加用户兴趣
+export const addMyInterest = (interestId) => {
+	return http(`/interest/add?interestId=${interestId}`,{},'POST')
+}
+//删除用户兴趣
+export const deleteMyInterest = (interestId) => {
+	return http(`/interest/${interestId}`,'d','DELETE')
+}
+// 博雅选课认证
+export const boyaAuthentication = () => {
+	return http(`/boya/authentication`,'d','POST')
+}
+

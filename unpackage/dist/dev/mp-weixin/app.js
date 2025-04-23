@@ -9,16 +9,22 @@ if (!Math) {
   "./pages/order/order.js";
   "./pages/course/course.js";
   "./pages/veri/veri.js";
+  "./pages/technology/technology.js";
+  "./pages/boya/boya.js";
+  "./pages/register/register.js";
 }
 const _sfc_main = {
   onLaunch: function() {
-    common_vendor.index.__f__("log", "at App.vue:4", "App Launch");
+    common_vendor.index.setEnableDebug({
+      enableDebug: true
+    });
+    common_vendor.index.__f__("log", "at App.vue:7", "App Launch");
   },
   onShow: function() {
-    common_vendor.index.__f__("log", "at App.vue:7", "App Show");
+    common_vendor.index.__f__("log", "at App.vue:10", "App Show");
   },
   onHide: function() {
-    common_vendor.index.__f__("log", "at App.vue:10", "App Hide");
+    common_vendor.index.__f__("log", "at App.vue:13", "App Hide");
   }
 };
 const pinia1 = common_vendor.createPinia();

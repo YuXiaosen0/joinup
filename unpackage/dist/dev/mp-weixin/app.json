@@ -5,7 +5,10 @@
     "pages/user/user",
     "pages/order/order",
     "pages/course/course",
-    "pages/veri/veri"
+    "pages/veri/veri",
+    "pages/technology/technology",
+    "pages/boya/boya",
+    "pages/register/register"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -28,7 +31,13 @@
         "pagePath": "pages/order/order",
         "iconPath": "/static/resource/images/tab_pub.png",
         "selectedIconPath": "/static/resource/images/tab_pub_seled.png",
-        "text": "订单"
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/veri/veri",
+        "iconPath": "/static/resource/images/image_add.png",
+        "selectedIconPath": "/static/resource/images/image_add.png",
+        "text": "创建"
       },
       {
         "pagePath": "pages/user/user",

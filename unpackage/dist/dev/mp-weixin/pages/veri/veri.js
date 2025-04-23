@@ -1,6 +1,5 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
-const common_assets = require("../../common/assets.js");
 const api_api = require("../../api/api.js");
 if (!Array) {
   const _easycom_up_toast2 = common_vendor.resolveComponent("up-toast");
@@ -29,9 +28,8 @@ const _sfc_main = {
       tips.value = text;
     };
     const getCode = async () => {
-      var _a, _b;
-      common_vendor.index.__f__("log", "at pages/veri/veri.vue:89", "uCodeRef", (_a = uCodeRef.value) == null ? void 0 : _a.canGetCode);
-      if ((_b = uCodeRef.value) == null ? void 0 : _b.canGetCode) {
+      var _a;
+      if ((_a = uCodeRef.value) == null ? void 0 : _a.canGetCode) {
         const data = {
           email: email.value,
           type: 4
@@ -86,7 +84,6 @@ const _sfc_main = {
         vcode.value = "";
       } else {
         const res = await api_api.yanzheng(data);
-        common_vendor.index.__f__("log", "at pages/veri/veri.vue:162", "res", res);
         if (res.code == 1) {
           common_vendor.index.navigateTo({
             url: "/pages/course/course"
@@ -106,42 +103,41 @@ const _sfc_main = {
     };
     return (_ctx, _cache) => {
       return {
-        a: common_assets._imports_0$2,
-        b: common_vendor.sr("uToastRef", "08418ad3-0"),
-        c: common_vendor.p({
+        a: common_vendor.sr("uToastRef", "08418ad3-0"),
+        b: common_vendor.p({
           name: "email",
           color: "#7d7d7d",
           size: "20"
         }),
-        d: common_vendor.o(($event) => email.value = $event),
-        e: common_vendor.p({
+        c: common_vendor.o(($event) => email.value = $event),
+        d: common_vendor.p({
           placeholder: "请输入邮箱",
           border: "none",
           ["placeholder-class"]: "input-placeholder",
           modelValue: email.value
         }),
-        f: common_vendor.t(tips.value),
-        g: common_vendor.o(getCode),
-        h: common_vendor.p({
+        e: common_vendor.t(tips.value),
+        f: common_vendor.o(getCode),
+        g: common_vendor.p({
           name: "lock",
           color: "#7d7d7d",
           size: "20"
         }),
-        i: common_vendor.o(($event) => vcode.value = $event),
-        j: common_vendor.p({
+        h: common_vendor.o(($event) => vcode.value = $event),
+        i: common_vendor.p({
           placeholder: "请填写验证码",
           border: "none",
           ["placeholder-class"]: "input-placeholder",
           modelValue: vcode.value
         }),
-        k: common_vendor.o(bhyanzheng),
-        l: common_vendor.sr(uCodeRef, "08418ad3-5", {
+        j: common_vendor.o(bhyanzheng),
+        k: common_vendor.sr(uCodeRef, "08418ad3-5", {
           "k": "uCodeRef"
         }),
-        m: common_vendor.o(end),
-        n: common_vendor.o(start),
-        o: common_vendor.o(codeChange),
-        p: common_vendor.p({
+        l: common_vendor.o(end),
+        m: common_vendor.o(start),
+        n: common_vendor.o(codeChange),
+        o: common_vendor.p({
           seconds: seconds.value
         })
       };

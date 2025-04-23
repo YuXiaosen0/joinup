@@ -7122,7 +7122,7 @@ function initOnError() {
 function initRuntimeSocketService() {
   const hosts = "192.168.154.1,192.168.136.1,10.194.43.55,127.0.0.1";
   const port = "8090";
-  const id = "mp-weixin_thpSzX";
+  const id = "mp-weixin_Ts2B1x";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -8660,6 +8660,7 @@ const createHook = (lifecycle) => (hook, target = getCurrentInstance()) => {
 };
 const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
 exports._export_sfc = _export_sfc;
+exports.computed = computed;
 exports.createPinia = createPinia;
 exports.createSSRApp = createSSRApp;
 exports.defineStore = defineStore;

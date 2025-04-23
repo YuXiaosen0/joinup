@@ -11,7 +11,7 @@ const getUserInfo = () => {
   return api_http.http("/user/info", "d", "GET");
 };
 const modifyUserInfo = (data) => {
-  return api_http.http("/user", { data }, "PUT");
+  return api_http.http("/user", data, "PUT");
 };
 const sendVerifyCode = (data) => {
   return api_http.http("/verify", data, "POST");
@@ -37,12 +37,32 @@ const addSign = (courseId) => {
 const deleteSign = (Id) => {
   return api_http.http(`/course/task/${Id}`, "r", "DELETE");
 };
+const getSignRecord = (data) => {
+  return api_http.http(`/course/log`, data, "POST");
+};
+const listAll = () => {
+  return api_http.http(`/interest/all`, "d", "GET");
+};
+const getMyInterest = () => {
+  return api_http.http(`/interest/my`, "d", "GET");
+};
+const addMyInterest = (interestId) => {
+  return api_http.http(`/interest/add?interestId=${interestId}`, {}, "POST");
+};
+const deleteMyInterest = (interestId) => {
+  return api_http.http(`/interest/${interestId}`, "d", "DELETE");
+};
+exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
+exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
 exports.getCourseInfo = getCourseInfo;
 exports.getIndexList = getIndexList;
+exports.getMyInterest = getMyInterest;
 exports.getSign = getSign;
+exports.getSignRecord = getSignRecord;
 exports.getUserInfo = getUserInfo;
+exports.listAll = listAll;
 exports.login = login;
 exports.modifyUserInfo = modifyUserInfo;
 exports.searchList = searchList;

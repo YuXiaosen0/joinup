@@ -12,10 +12,10 @@
     </up-sticky>
 
     <!-- 主题描述 -->
-    <view v-if="themes.length" class="theme-description" style="margin: 12px; padding: 16px 20px; background: linear-gradient(135deg, #e0f7ff, #f9f9f9); border-radius: 12px; color: #333; font-size: 15px; line-height: 1.7; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; align-items: flex-start;">
+    <!-- <view v-if="themes.length" class="theme-description" style="margin: 12px; padding: 16px 20px; background: linear-gradient(135deg, #e0f7ff, #f9f9f9); border-radius: 12px; color: #333; font-size: 15px; line-height: 1.7; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; align-items: flex-start;">
       <text style="font-size: 18px; color: #3c9cff; margin-right: 8px;">💡</text>
       <text style="flex: 1;">{{ themes[currentTab]?.description || '暂无描述' }}</text>
-    </view>
+    </view> -->
 
     <!-- 内容区 -->
     <WaterfallList v-model="flowList" @itemClick="goDetail" />

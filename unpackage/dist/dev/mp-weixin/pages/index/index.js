@@ -121,8 +121,7 @@ const _sfc_main = {
       });
     };
     return (_ctx, _cache) => {
-      var _a;
-      return common_vendor.e({
+      return {
         a: common_vendor.o(onSearch),
         b: common_vendor.o(onClear),
         c: common_vendor.o(($event) => keyword.value = $event),
@@ -144,16 +143,12 @@ const _sfc_main = {
         i: common_vendor.p({
           bgColor: "#fff"
         }),
-        j: themes.length
-      }, themes.length ? {
-        k: common_vendor.t(((_a = themes[common_vendor.unref(currentTab)]) == null ? void 0 : _a.description) || "暂无描述")
-      } : {}, {
-        l: common_vendor.o(goDetail),
-        m: common_vendor.o(($event) => common_vendor.isRef(flowList) ? flowList.value = $event : flowList = $event),
-        n: common_vendor.p({
+        j: common_vendor.o(goDetail),
+        k: common_vendor.o(($event) => common_vendor.isRef(flowList) ? flowList.value = $event : flowList = $event),
+        l: common_vendor.p({
           modelValue: common_vendor.unref(flowList)
         })
-      });
+      };
     };
   }
 };

@@ -1,6 +1,4 @@
 {
   "component": true,
-  "usingComponents": {
-    "up-waterfall": "../uni_modules/uview-plus/components/u-waterfall/u-waterfall"
-  }
+  "usingComponents": {}
 }

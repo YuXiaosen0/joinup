@@ -197,7 +197,7 @@ const _sfc_main = {
         i: common_vendor.o(($event) => loginForm.password = $event.detail.value),
         j: common_vendor.o(navigateToForgotPassword),
         k: common_vendor.o(handleLogin),
-        l: common_assets._imports_0$1,
+        l: common_assets._imports_0$2,
         m: common_vendor.o(onGetPhoneNumber)
       } : {
         n: registerForm.phone,

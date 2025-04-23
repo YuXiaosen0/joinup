@@ -1,1 +1,1 @@
-<view class="search-bar data-v-2334f7bd"><up-search wx:if="{{d}}" class="data-v-2334f7bd" bindsearch="{{a}}" bindclear="{{b}}" u-i="2334f7bd-0" bind:__l="__l" bindupdateModelValue="{{c}}" u-p="{{d}}"></up-search></view>
+<view class="search-bar data-v-2334f7bd"><view class="search-input-container data-v-2334f7bd"><up-search wx:if="{{e}}" class="data-v-2334f7bd" bindsearch="{{a}}" bindconfirm="{{b}}" bindclear="{{c}}" u-i="2334f7bd-0" bind:__l="__l" bindupdateModelValue="{{d}}" u-p="{{e}}"/><button class="search-button data-v-2334f7bd" bindtap="{{f}}">🔍</button></view></view>

@@ -8,8 +8,11 @@ if (!Math) {
   "./pages/user/user.js";
   "./pages/order/order.js";
   "./pages/course/course.js";
+  "./pages/detail/announcement.js";
   "./pages/veri/veri.js";
+  "./pages/detail/applicationList.js";
   "./pages/technology/technology.js";
+  "./pages/detail/searchResult.js";
   "./pages/boya/boya.js";
   "./pages/register/register.js";
 }

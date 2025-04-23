@@ -12,7 +12,7 @@ Vue.config.productionTip = false
 App.mpType = 'app'
 //创建 Vue 实例并挂载
 const app = new Vue({
-  ...App
+  ...App
 })
 app.use(pinia)
 app.$mount()
@@ -24,12 +24,12 @@ import { createSSRApp } from 'vue'
 import { createPinia } from 'pinia'; // Import pinia
 const pinia1 = createPinia(); // Create pinia instance
 export function createApp() {
-  const app = createSSRApp(App)
-  app.use(pinia1)
-  app.use(uviewPlus)
-  
-  return {
-    app
-  }
+  const app = createSSRApp(App)
+  app.use(pinia1)
+  app.use(uviewPlus)
+  
+  return {
+    app
+  }
 }
 // #endif

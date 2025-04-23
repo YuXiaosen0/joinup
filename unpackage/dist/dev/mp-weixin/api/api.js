@@ -1,8 +1,49 @@
 "use strict";
 const api_http = require("./http.js");
 require("../stores/user.js");
-const getIndexList = () => {
-  return api_http.http("/test/hello", "d", "GET");
+const getTeamList = (themeId) => {
+  return api_http.http(`/team/list?themeId=${themeId}`, {
+    "pageNo": 1,
+    "pageSize": 100,
+    "isAsc": true,
+    "sortBy": "name"
+  }, "POST");
+};
+const getThemeList = () => {
+  return api_http.http(`/theme/list`, "", "GET");
+};
+const getTeamDetails = (teamId) => {
+  return api_http.http(`/team/${teamId}`, "", "GET");
+};
+const getSwiperList = () => {
+  return api_http.http(`/message/announcement/list`, "", "GET");
+};
+const getAnnouncementDetails = (announcementId) => {
+  return api_http.http(`/message/announcement/${announcementId}`, "", "GET");
+};
+const applyToJoin = (teamId, joinReason) => {
+  return api_http.http(`/team/${teamId}/join/apply`, { "reason": joinReason }, "POST");
+};
+const getApplicationList = (teamId) => {
+  return api_http.http(`/team/${teamId}/join/list`, "", "GET");
+};
+const processApplication = (teamId, applicationId, action, comment) => {
+  return api_http.http(`/team/${teamId}/join/review/${applicationId}`, {
+    "action": action,
+    "comment": comment
+  }, "POST");
+};
+const leaveTeamApi = (teamId) => {
+  return api_http.http(`/team/${teamId}/leave`, "", "POST");
+};
+const judgeRole = (teamId) => {
+  return api_http.http(`/team/${teamId}/role`, "", "GET");
+};
+const kickMember = (teamId, userId) => {
+  return api_http.http(`/team/${teamId}/kick/${userId}`, "", "POST");
+};
+const searchTeam = async (searchString) => {
+  return api_http.http(`/team/search?keyword=${searchString.keyward}`, { searchString }, "GET");
 };
 const login = (code) => {
   return api_http.http("/user/wxLogin", { code }, "POST");
@@ -18,9 +59,6 @@ const sendVerifyCode = (data) => {
 };
 const yanzheng = (data) => {
   return api_http.http("/user/verify", data, "POST");
-};
-const searchList = async (params) => {
-  return null;
 };
 const signClass = (id) => {
   return api_http.http(`/course/sign?courseScheduleId=${id}`, "r", "POST");
@@ -57,19 +95,32 @@ const boyaAuthentication = () => {
 };
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
+<<<<<<< HEAD
 exports.boyaAuthentication = boyaAuthentication;
+=======
+exports.applyToJoin = applyToJoin;
+>>>>>>> d3a1f7fb3de42fab19ba195918a16f7b5ba604fe
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
+exports.getAnnouncementDetails = getAnnouncementDetails;
+exports.getApplicationList = getApplicationList;
 exports.getCourseInfo = getCourseInfo;
-exports.getIndexList = getIndexList;
 exports.getMyInterest = getMyInterest;
 exports.getSign = getSign;
 exports.getSignRecord = getSignRecord;
+exports.getSwiperList = getSwiperList;
+exports.getTeamDetails = getTeamDetails;
+exports.getTeamList = getTeamList;
+exports.getThemeList = getThemeList;
 exports.getUserInfo = getUserInfo;
+exports.judgeRole = judgeRole;
+exports.kickMember = kickMember;
+exports.leaveTeamApi = leaveTeamApi;
 exports.listAll = listAll;
 exports.login = login;
 exports.modifyUserInfo = modifyUserInfo;
-exports.searchList = searchList;
+exports.processApplication = processApplication;
+exports.searchTeam = searchTeam;
 exports.sendVerifyCode = sendVerifyCode;
 exports.signClass = signClass;
 exports.yanzheng = yanzheng;

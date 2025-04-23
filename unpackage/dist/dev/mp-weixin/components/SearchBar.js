@@ -25,21 +25,32 @@ const _sfc_main = {
       emit("update:modelValue", newVal);
     });
     function handleSearch() {
+      common_vendor.index.__f__("log", "at components/SearchBar.vue:40", "[SearchBar] 触发搜索：", searchValue.value);
+      if (!searchValue.value.trim()) {
+        common_vendor.index.showToast({ title: "请输入关键字", icon: "none" });
+        return;
+      }
       emit("search", searchValue.value);
     }
     function handleClear() {
+      searchValue.value = "";
+      emit("update:modelValue", "");
       emit("clear");
     }
     return (_ctx, _cache) => {
       return {
         a: common_vendor.o(handleSearch),
-        b: common_vendor.o(handleClear),
-        c: common_vendor.o(($event) => searchValue.value = $event),
-        d: common_vendor.p({
+        b: common_vendor.o(handleSearch),
+        c: common_vendor.o(handleClear),
+        d: common_vendor.o(($event) => searchValue.value = $event),
+        e: common_vendor.p({
           placeholder: "搜索组队信息",
           ["bg-color"]: "#e3e3e3",
+          shape: "round",
+          ["show-action"]: false,
           modelValue: searchValue.value
-        })
+        }),
+        f: common_vendor.o(handleSearch)
       };
     };
   }

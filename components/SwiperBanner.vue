@@ -1,11 +1,22 @@
 <template>
   <view class="swiper-container">
-    <!-- 轮播图列表或加载状态或空数据占位 -->
-	<view v-for="(item, index) in swiperList" :key="index">
-	  <up-swiper :key="index" :list="[item]" keyName="image" showTitle="" radius="8" :autoplay="true" height="160" @click="handleClick(item)"/>
-	</view>
-
+    <!-- 检查是否有数据 -->
+    <view v-if="swiperList.length === 0" class="no-data">
+      暂无数据
+    </view>
     
+    <!-- 轮播图列表 -->
+    <up-swiper 
+      v-if="swiperList.length > 0"
+      :list="swiperList"
+      keyName="image"
+      showTitle
+      radius="8"
+      :autoplay="true"
+      height="160"
+      @click="handleClick"
+    />
+
   </view>
 </template>
 
@@ -20,7 +31,15 @@ const props = defineProps({
     default: () => []
   }
 })
-const handleClick = (item) => {
+
+
+
+const handleClick = (index) => {
+  const item = props.swiperList[index]
+  if (!item || !item.id) {
+    console.error('无效的 item 对象', item)
+    return
+  }
   emit('itemClick', item)
 }
 </script>
@@ -29,29 +48,10 @@ const handleClick = (item) => {
 .swiper-container {
   margin: 16rpx 0;
 }
+
 .no-data {
   text-align: center;
   font-size: 16px;
   color: #999;
 }
-
-/* 控制图片展示方式 */
-.swiper-images .swiper-slide {
-  position: relative;
-  z-index: 1; /* 确保图片不被覆盖 */
-}
-
-.swiper-title {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 14px;
-  z-index: 10; /* 确保标题在图片之上 */
-}
-
-
 </style>

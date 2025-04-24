@@ -153,6 +153,7 @@
 		            <u-cell  title="课程打卡" is-link 
 								:url="userInfo.studentId ? '/pages/course/course' : '/pages/veri/veri'"></u-cell>
 		            <u-cell  title="博雅打卡" is-link url="/pages/boya/boya"></u-cell>
+								<u-cell  title="反馈问题" is-link url="/pages/boya/boya"></u-cell>
 		        </u-cell-group>
 		    </view>
 		</view>

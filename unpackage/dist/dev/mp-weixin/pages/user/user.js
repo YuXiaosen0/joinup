@@ -42,7 +42,7 @@ const _sfc_main = {
     };
     const getSignList = async () => {
       const res = await api_api.getSignRecord(pageQuery);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:216", "res", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:217", "res", res);
       signList.value = res.list;
     };
     const close = () => {
@@ -67,17 +67,17 @@ const _sfc_main = {
     common_vendor.onLoad(async () => {
       common_vendor.index.login({
         success: async (data) => {
-          common_vendor.index.__f__("log", "at pages/user/user.vue:244", "微信登录 code:", data.code);
+          common_vendor.index.__f__("log", "at pages/user/user.vue:245", "微信登录 code:", data.code);
           try {
             const { token } = await api_api.login(data.code);
             common_vendor.index.setStorageSync("token", token);
-            common_vendor.index.__f__("log", "at pages/user/user.vue:248", "登录成功，获取到 token:", token);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:249", "登录成功，获取到 token:", token);
             const res = await api_api.getUserInfo();
             Object.assign(userInfo.value, res);
             common_vendor.index.setStorageSync("userInfo", JSON.stringify(userInfo));
-            common_vendor.index.__f__("log", "at pages/user/user.vue:256", "用户信息:", userInfo);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:257", "用户信息:", userInfo);
           } catch (error) {
-            common_vendor.index.__f__("error", "at pages/user/user.vue:258", "登录或获取用户信息失败:", error);
+            common_vendor.index.__f__("error", "at pages/user/user.vue:259", "登录或获取用户信息失败:", error);
             common_vendor.index.showToast({
               title: "登录失败，请稍后重试",
               icon: "none"
@@ -85,7 +85,7 @@ const _sfc_main = {
           }
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/user/user.vue:266", "微信登录失败:", err);
+          common_vendor.index.__f__("error", "at pages/user/user.vue:267", "微信登录失败:", err);
           common_vendor.index.showToast({
             title: "微信登录失败",
             icon: "none"
@@ -101,7 +101,7 @@ const _sfc_main = {
       };
       common_vendor.index.setStorageSync("userInfo", JSON.stringify(userInfo));
       const res = await api_api.modifyUserInfo(data);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:285", "modifyUserInfo", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:286", "modifyUserInfo", res);
       show.value = false;
     };
     const onChooseavatar = (e) => {
@@ -109,7 +109,7 @@ const _sfc_main = {
     };
     const changeName = (e) => {
       userInfo.value.username = e.detail.value;
-      common_vendor.index.__f__("log", "at pages/user/user.vue:297", "userInfo", userInfo);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:298", "userInfo", userInfo);
     };
     const setFun = () => {
       common_vendor.index.showModal({
@@ -211,12 +211,17 @@ const _sfc_main = {
           ["is-link"]: true,
           url: "/pages/boya/boya"
         }),
-        J: userInfo.value.avatar,
-        K: common_vendor.o(onChooseavatar),
-        L: common_vendor.o(changeName),
-        M: common_vendor.o(userSubmit),
-        N: common_vendor.o(close),
-        O: common_vendor.p({
+        J: common_vendor.p({
+          title: "反馈问题",
+          ["is-link"]: true,
+          url: "/pages/boya/boya"
+        }),
+        K: userInfo.value.avatar,
+        L: common_vendor.o(onChooseavatar),
+        M: common_vendor.o(changeName),
+        N: common_vendor.o(userSubmit),
+        O: common_vendor.o(close),
+        P: common_vendor.p({
           closeable: true,
           show: show.value,
           round: "20"

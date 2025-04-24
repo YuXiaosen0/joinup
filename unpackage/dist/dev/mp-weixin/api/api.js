@@ -95,11 +95,8 @@ const boyaAuthentication = () => {
 };
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
-<<<<<<< HEAD
-exports.boyaAuthentication = boyaAuthentication;
-=======
 exports.applyToJoin = applyToJoin;
->>>>>>> d3a1f7fb3de42fab19ba195918a16f7b5ba604fe
+exports.boyaAuthentication = boyaAuthentication;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
 exports.getAnnouncementDetails = getAnnouncementDetails;

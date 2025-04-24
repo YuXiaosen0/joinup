@@ -1,1 +1,0 @@
-{"version":3,"file":"props.js","sources":["uni_modules/uview-plus/components/u-table/props.js"],"sourcesContent":["import { defineMixin } from '../../libs/vue'\nimport defProps from '../../libs/config/props.js'\nexport const props = defineMixin({\n    props: {\n\n    }\n})\n"],"names":["defineMixin"],"mappings":";;;AAEY,MAAC,QAAQA,+BAAAA,YAAY;AAAA,EAC7B,OAAO,CAEN;AACL,CAAC;;"}

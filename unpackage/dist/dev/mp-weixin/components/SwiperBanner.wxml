@@ -1,1 +1,0 @@
-<view class="swiper-container data-v-b9a16aa3"><view wx:if="{{a}}" class="no-data data-v-b9a16aa3"> 暂无数据 </view><up-swiper wx:if="{{b}}" class="data-v-b9a16aa3" bindclick="{{c}}" u-i="b9a16aa3-0" bind:__l="__l" u-p="{{d}}"/></view>

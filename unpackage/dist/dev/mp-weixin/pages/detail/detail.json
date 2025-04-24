@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "",
-  "usingComponents": {
-    "apply-to-join-dialog": "../../components/applyToJoinDialog"
-  }
-}

@@ -249,6 +249,10 @@ const selectedCourse=ref({
   teacherName: "张辉",
   weekDay: "周二"
 })
+onLoad(async() => {
+  // 页面加载时获取课程列表
+  await getCouInfo();
+})
 const showPopup=ref(false)
 const showSignListPopup = ref(false);
 const signList = ref([]);
@@ -257,6 +261,7 @@ const isSignAdded = (courseId) => {
 };
 const bindDateChange=async(e) =>{
   date.value = e.detail.value
+  await getCouInfo()
 }
 
 const showDetails = (course) => {

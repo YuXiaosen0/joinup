@@ -27,6 +27,54 @@ const _sfc_main = {
       createdTeamCount: 0,
       createTime: ""
     });
+    const showFeedbackPopup = common_vendor.ref(false);
+    const subjectOptions = ["功能建议", "使用问题", "界面优化", "其他"];
+    const selectedSubject = common_vendor.ref("");
+    const feedbackContent = common_vendor.ref("");
+    const contactInfo = common_vendor.ref("");
+    const openFeedbackPopup = () => {
+      showFeedbackPopup.value = true;
+    };
+    const closeFeedbackPopup = () => {
+      showFeedbackPopup.value = false;
+    };
+    const onSubjectChange = (e) => {
+      selectedSubject.value = subjectOptions[e.detail.value];
+    };
+    const submitFeedback = async () => {
+      if (!selectedSubject.value) {
+        common_vendor.index.showToast({
+          title: "请选择反馈主题",
+          icon: "none"
+        });
+        return;
+      }
+      if (!feedbackContent.value.trim()) {
+        common_vendor.index.showToast({
+          title: "请输入反馈内容",
+          icon: "none"
+        });
+        return;
+      }
+      common_vendor.index.__f__("log", "at pages/user/user.vue:301", "反馈主题:", selectedSubject.value);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:302", "反馈内容:", feedbackContent.value);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:303", "联系方式:", contactInfo.value);
+      const data = {
+        "subject": selectedSubject.value,
+        "content": feedbackContent.value,
+        "contact": contactInfo.value
+      };
+      const res = await api_api.feedback(data);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:310", "feedback", res);
+      common_vendor.index.showToast({
+        title: "反馈已提交",
+        icon: "success"
+      });
+      selectedSubject.value = "";
+      feedbackContent.value = "";
+      contactInfo.value = "";
+      closeFeedbackPopup();
+    };
     const show = common_vendor.ref(false);
     const goToTechnology = () => {
       common_vendor.index.navigateTo({
@@ -42,7 +90,7 @@ const _sfc_main = {
     };
     const getSignList = async () => {
       const res = await api_api.getSignRecord(pageQuery);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:217", "res", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:337", "res", res);
       signList.value = res.list;
     };
     const close = () => {
@@ -67,17 +115,17 @@ const _sfc_main = {
     common_vendor.onLoad(async () => {
       common_vendor.index.login({
         success: async (data) => {
-          common_vendor.index.__f__("log", "at pages/user/user.vue:245", "微信登录 code:", data.code);
+          common_vendor.index.__f__("log", "at pages/user/user.vue:365", "微信登录 code:", data.code);
           try {
             const { token } = await api_api.login(data.code);
             common_vendor.index.setStorageSync("token", token);
-            common_vendor.index.__f__("log", "at pages/user/user.vue:249", "登录成功，获取到 token:", token);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:369", "登录成功，获取到 token:", token);
             const res = await api_api.getUserInfo();
             Object.assign(userInfo.value, res);
             common_vendor.index.setStorageSync("userInfo", JSON.stringify(userInfo));
-            common_vendor.index.__f__("log", "at pages/user/user.vue:257", "用户信息:", userInfo);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:377", "用户信息:", userInfo);
           } catch (error) {
-            common_vendor.index.__f__("error", "at pages/user/user.vue:259", "登录或获取用户信息失败:", error);
+            common_vendor.index.__f__("error", "at pages/user/user.vue:379", "登录或获取用户信息失败:", error);
             common_vendor.index.showToast({
               title: "登录失败，请稍后重试",
               icon: "none"
@@ -85,7 +133,7 @@ const _sfc_main = {
           }
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/user/user.vue:267", "微信登录失败:", err);
+          common_vendor.index.__f__("error", "at pages/user/user.vue:387", "微信登录失败:", err);
           common_vendor.index.showToast({
             title: "微信登录失败",
             icon: "none"
@@ -97,11 +145,12 @@ const _sfc_main = {
       const data = {
         "username": userInfo.value.username,
         "avatar": userInfo.value.avatar,
-        "gender": userInfo.value.gender
+        "gender": userInfo.value.gender,
+        "ssoPassword": "123456"
       };
       common_vendor.index.setStorageSync("userInfo", JSON.stringify(userInfo));
       const res = await api_api.modifyUserInfo(data);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:286", "modifyUserInfo", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:407", "modifyUserInfo", res);
       show.value = false;
     };
     const onChooseavatar = (e) => {
@@ -109,7 +158,7 @@ const _sfc_main = {
     };
     const changeName = (e) => {
       userInfo.value.username = e.detail.value;
-      common_vendor.index.__f__("log", "at pages/user/user.vue:298", "userInfo", userInfo);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:419", "userInfo", userInfo);
     };
     const setFun = () => {
       common_vendor.index.showModal({
@@ -211,17 +260,31 @@ const _sfc_main = {
           ["is-link"]: true,
           url: "/pages/boya/boya"
         }),
-        J: common_vendor.p({
+        J: common_vendor.o(openFeedbackPopup),
+        K: common_vendor.p({
           title: "反馈问题",
-          ["is-link"]: true,
-          url: "/pages/boya/boya"
+          ["is-link"]: true
         }),
-        K: userInfo.value.avatar,
-        L: common_vendor.o(onChooseavatar),
-        M: common_vendor.o(changeName),
-        N: common_vendor.o(userSubmit),
-        O: common_vendor.o(close),
-        P: common_vendor.p({
+        L: common_vendor.t(selectedSubject.value || "请选择反馈主题"),
+        M: subjectOptions,
+        N: common_vendor.o(onSubjectChange),
+        O: feedbackContent.value,
+        P: common_vendor.o(($event) => feedbackContent.value = $event.detail.value),
+        Q: contactInfo.value,
+        R: common_vendor.o(($event) => contactInfo.value = $event.detail.value),
+        S: common_vendor.o(submitFeedback),
+        T: common_vendor.o(closeFeedbackPopup),
+        U: common_vendor.p({
+          closeable: true,
+          show: showFeedbackPopup.value,
+          round: "20"
+        }),
+        V: userInfo.value.avatar,
+        W: common_vendor.o(onChooseavatar),
+        X: common_vendor.o(changeName),
+        Y: common_vendor.o(userSubmit),
+        Z: common_vendor.o(close),
+        aa: common_vendor.p({
           closeable: true,
           show: show.value,
           round: "20"

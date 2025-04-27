@@ -1,0 +1,55 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/detail/detail",
+    "pages/user/user",
+    "pages/order/order",
+    "pages/course/course",
+    "pages/detail/announcement",
+    "pages/veri/veri",
+    "pages/detail/applicationList",
+    "pages/technology/technology",
+    "pages/detail/searchResult",
+    "pages/boya/boya",
+    "pages/register/register",
+    "pages/blank/blank"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#535353",
+    "selectedColor": "#0bb584",
+    "borderstyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/resource/images/tab_index.png",
+        "selectedIconPath": "/static/resource/images/tab_index_seled.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/order/order",
+        "iconPath": "/static/resource/images/tab_pub.png",
+        "selectedIconPath": "/static/resource/images/tab_pub_seled.png",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/blank/blank",
+        "iconPath": "/static/resource/images/image_add.png",
+        "selectedIconPath": "/static/resource/images/image_add.png",
+        "text": "创建"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "iconPath": "/static/resource/images/tab_user.png",
+        "selectedIconPath": "/static/resource/images/tab_user_seled.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

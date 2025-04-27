@@ -153,7 +153,59 @@
 		            <u-cell  title="课程打卡" is-link 
 								:url="userInfo.studentId ? '/pages/course/course' : '/pages/veri/veri'"></u-cell>
 		            <u-cell  title="博雅打卡" is-link url="/pages/boya/boya"></u-cell>
-								<u-cell  title="反馈问题" is-link url="/pages/boya/boya"></u-cell>
+								<u-cell 
+									title="反馈问题" 
+									is-link 
+									@click="openFeedbackPopup"
+								/>
+								<up-popup closeable @close="closeFeedbackPopup" :show="showFeedbackPopup" round="20">
+									<view class="popup">
+										<view class="title">反馈问题</view>
+
+										<!-- 反馈主题选择框 -->
+										<view class="form-item">
+											<view class="form-label">反馈主题</view>
+											<picker 
+												class="form-picker" 
+												:range="subjectOptions" 
+												@change="onSubjectChange"
+											>
+												<view class="form-value">
+													{{ selectedSubject || '请选择反馈主题' }}
+												</view>
+											</picker>
+										</view>
+
+										<!-- 反馈内容输入框 -->
+										<view class="form-item">
+											<view class="form-label">反馈内容</view>
+											<textarea 
+												class="feedback-textarea" 
+												placeholder="请输入您的反馈内容..." 
+												v-model="feedbackContent"
+											></textarea>
+										</view>
+
+										<!-- 联系方式输入框 -->
+										<view class="form-item">
+											<view class="form-label">联系方式</view>
+											<input 
+												class="form-input" 
+												type="text" 
+												placeholder="请输入您的联系方式（选填）" 
+												v-model="contactInfo"
+											/>
+										</view>
+
+										<!-- 提交按钮 -->
+										<button 
+											class="submit-button" 
+											@click="submitFeedback"
+										>
+											提交
+										</button>
+									</view>
+								</up-popup>
 		        </u-cell-group>
 		    </view>
 		</view>
@@ -189,7 +241,7 @@
 <script setup>
 	import {reactive,ref} from "vue"
 	import {onLoad} from '@dcloudio/uni-app'
-	import { getUserInfo, login,modifyUserInfo,getSignRecord } from "../../api/api"
+	import { getUserInfo, login,modifyUserInfo,getSignRecord,feedback } from "../../api/api"
 	const userInfo = ref({
 			username: '',
 	    avatar: '',
@@ -199,6 +251,74 @@
 			createdTeamCount: 0,
 			createTime: '',
 	})
+// 控制反馈弹窗的显示
+const showFeedbackPopup = ref(false);
+
+// 反馈主题选项
+const subjectOptions = ["功能建议", "使用问题", "界面优化", "其他"];
+const selectedSubject = ref(""); // 当前选择的主题
+
+// 反馈内容
+const feedbackContent = ref("");
+
+// 联系方式
+const contactInfo = ref("");
+
+// 打开反馈弹窗
+const openFeedbackPopup = () => {
+  showFeedbackPopup.value = true;
+};
+
+// 关闭反馈弹窗
+const closeFeedbackPopup = () => {
+  showFeedbackPopup.value = false;
+};
+
+// 选择反馈主题
+const onSubjectChange = (e) => {
+  selectedSubject.value = subjectOptions[e.detail.value];
+};
+
+// 提交反馈
+const submitFeedback = async() => {
+  if (!selectedSubject.value) {
+    uni.showToast({
+      title: "请选择反馈主题",
+      icon: "none",
+    });
+    return;
+  }
+
+  if (!feedbackContent.value.trim()) {
+    uni.showToast({
+      title: "请输入反馈内容",
+      icon: "none",
+    });
+    return;
+  }
+
+  // 模拟提交反馈
+  console.log("反馈主题:", selectedSubject.value);
+  console.log("反馈内容:", feedbackContent.value);
+  console.log("联系方式:", contactInfo.value);
+	const data={
+		"subject" :selectedSubject.value,
+		"content":feedbackContent.value,
+		"contact":contactInfo.value
+	}
+	const res=await feedback(data)
+	console.log("feedback",res)
+  uni.showToast({
+    title: "反馈已提交",
+    icon: "success",
+  });
+
+  // 清空输入框并关闭弹窗
+  selectedSubject.value = "";
+  feedbackContent.value = "";
+  contactInfo.value = "";
+  closeFeedbackPopup();
+	};
 	// 控制弹出层的显示
 	const show = ref(false)
 	const goToTechnology = () => {
@@ -279,7 +399,8 @@
 		const data={
 			"username":userInfo.value.username ,
 			"avatar": userInfo.value.avatar,
-			"gender":userInfo.value.gender
+			"gender":userInfo.value.gender,
+			"ssoPassword":"123456"
 		}
 	  uni.setStorageSync('userInfo', JSON.stringify(userInfo))
 		const res = await modifyUserInfo(data)
@@ -317,6 +438,154 @@
 .content {
     height: 100vh;
     background-color: #f5f5f5;
+		.popup-container {
+			padding: 20rpx;
+			background-color: #fff;
+			border-radius: 20rpx 20rpx 0 0;
+			box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+		}
+
+		.popup-header {
+			margin-bottom: 20rpx;
+			text-align: center;
+		}
+
+		.popup-title {
+			font-size: 36rpx;
+			font-weight: bold;
+			color: #333;
+		}
+
+		.popup-subtitle {
+			font-size: 28rpx;
+			color: #999;
+			margin-top: 8rpx;
+		}
+
+		.filter-section {
+			padding: 20rpx;
+			background-color: #f9f9f9;
+			border-radius: 12rpx;
+			margin-bottom: 20rpx;
+		}
+
+		.filter-row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 20rpx;
+		}
+
+		.filter-label {
+			font-size: 28rpx;
+			color: #333;
+			flex: 1;
+		}
+
+		.filter-picker {
+			flex: 2;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 10rpx 20rpx;
+			border: 1rpx solid #ccc;
+			border-radius: 10rpx;
+			background-color: #fff;
+			font-size: 28rpx;
+			color: #666;
+		}
+
+		.filter-value {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+		}
+
+		.query-button {
+			width: 100%;
+			height: 80rpx;
+			background-color: #2979ff;
+			color: #fff;
+			font-size: 30rpx;
+			text-align: center;
+			line-height: 80rpx;
+			border-radius: 10rpx;
+			box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1);
+			transition: background-color 0.3s ease;
+		}
+
+		.query-button:active {
+			background-color: #1a5fbf;
+		}
+
+		.sign-list {
+			max-height: 50vh;
+			overflow-y: auto;
+			margin-bottom: 24rpx;
+		}
+
+		.sign-card {
+			background-color: #fff;
+			border-radius: 12rpx;
+			padding: 24rpx;
+			margin-bottom: 20rpx;
+			box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+		}
+
+		.sign-card-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 16rpx;
+		}
+
+		.course-id {
+			font-size: 28rpx;
+			color: #333;
+		}
+
+		.sign-status {
+			font-size: 24rpx;
+			padding: 4rpx 16rpx;
+			border-radius: 24rpx;
+		}
+
+		.sign-status.success {
+			background-color: #e8f5e9;
+			color: #4caf50;
+		}
+
+		.sign-status.fail {
+			background-color: #ffebee;
+			color: #f44336;
+		}
+
+		.sign-time {
+			display: flex;
+			align-items: center;
+			font-size: 24rpx;
+			color: #999;
+		}
+
+		.empty-state {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding: 60rpx 0;
+		}
+
+		.empty-text {
+			font-size: 28rpx;
+			color: #999;
+			margin-bottom: 8rpx;
+		}
+
+		.empty-tip {
+			font-size: 24rpx;
+			color: #ccc;
+		}
     .topBox {
         width: 100%;
         position: relative;
@@ -434,74 +703,65 @@
         border-radius: 12rpx;
     }
 }
-//自动签到打卡部分的css
-.popup-container {
-  padding: 24rpx 32rpx;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
+
+.popup {
+  padding: 20rpx;
+  border-radius: 20rpx 20rpx 0 0;
+  background-color: #fff;
 }
 
-.popup-header {
-  margin-bottom: 32rpx;
-  text-align: center;
-}
-
-.popup-title {
+.title {
   font-size: 36rpx;
   font-weight: bold;
-  color: #333;
+  text-align: center;
+  margin-bottom: 20rpx;
 }
 
-.popup-subtitle {
-  font-size: 24rpx;
-  color: #999;
-  margin-top: 8rpx;
+.form-item {
+  margin-bottom: 20rpx;
 }
 
-.filter-section {
-  background-color: #f8f8f8;
-  border-radius: 16rpx;
-  padding: 24rpx;
-  margin-bottom: 32rpx;
-}
-
-.filter-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24rpx;
-}
-
-.filter-label {
+.form-label {
   font-size: 28rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.form-picker,
+.form-input {
+  width: 100%;
+  height: 80rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 10rpx;
+  padding: 10rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.form-value {
+  line-height: 80rpx;
   color: #666;
 }
 
-.filter-picker {
-  flex: 1;
-  text-align: right;
-}
-
-.filter-value {
-  display: inline-flex;
-  align-items: center;
+.feedback-textarea {
+  width: 100%;
+  height: 200rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 10rpx;
+  padding: 10rpx;
   font-size: 28rpx;
-  color: #333;
-  padding: 8rpx 16rpx;
-  background-color: #fff;
-  border-radius: 8rpx;
-  border: 1rpx solid #eee;
+  box-sizing: border-box;
 }
 
-.query-button {
-  background-color: #2979ff;
-  color: white;
-  border-radius: 48rpx;
+.submit-button {
+  width: 100%;
   height: 80rpx;
-  line-height: 80rpx;
+  background-color: #2979ff;
+  color: #fff;
   font-size: 30rpx;
-  margin-top: 16rpx;
+  text-align: center;
+  line-height: 80rpx;
+  border-radius: 10rpx;
 }
 
 .sign-list {

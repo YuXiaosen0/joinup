@@ -1,14 +1,5 @@
 import http from "./http";
 import {useUserStore} from '../stores/user.js'
-//首页信息
-// 获取队伍列表（通过主题 ID）
-/* export const getTeamList = ( themeId, pageNo = 1, pageSize = 4, isAsc = true ) => {
-  const bodyData = { pageNo, pageSize, isAsc }
-  return http('/team/list', {
-    params: { themeId },
-    body: bodyData
-  }, 'POST')
-} */
 export const getTeamList = ( themeId ) => {
   return http(`/team/list?themeId=${themeId}`, {
     "pageNo": 1,
@@ -170,4 +161,8 @@ export const getAppointList = () => {
 //撤销预约
 export const cancelAppoint = (appointment_id) => {
 	return http(`/boya/appointment/${appointment_id}`,'d','DELETE')
+}
+//用户提交反馈
+export const feedback = (data) => {
+	return http(`/message/feedback/add`,data,'POST')
 }

@@ -93,12 +93,16 @@ const deleteMyInterest = (interestId) => {
 const boyaAuthentication = () => {
   return api_http.http(`/boya/authentication`, "d", "POST");
 };
+const feedback = (data) => {
+  return api_http.http(`/message/feedback/add`, data, "POST");
+};
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
 exports.applyToJoin = applyToJoin;
 exports.boyaAuthentication = boyaAuthentication;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
+exports.feedback = feedback;
 exports.getAnnouncementDetails = getAnnouncementDetails;
 exports.getApplicationList = getApplicationList;
 exports.getCourseInfo = getCourseInfo;

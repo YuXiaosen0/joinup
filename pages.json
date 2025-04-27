@@ -87,10 +87,9 @@
 			}
 		},
 		{
-			"path" : "pages/detail/createTag",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
+			"path": "pages/team/team",
+			"style": {
+				"navigationBarTitleText": ""
 			}
 		}
 	],

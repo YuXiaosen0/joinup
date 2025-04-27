@@ -182,3 +182,32 @@ export const getAppointList = () => {
 export const cancelAppoint = (appointment_id) => {
 	return http(`/boya/appointment/${appointment_id}`,'d','DELETE')
 }
+
+//创建新的队伍
+export const createNewTeam = (data) => {
+	return http('/team/add',data,'POST')
+}
+//解散已有的队伍, 传入队伍id
+export const deleteTeam = (teamId) => {
+	return http(`/team/${teamId}`,'r','DELETE')
+}
+//推出已有的队伍, 传入队伍id
+export const quitTeam = (teamId) => {
+	return http(`/team/${teamId}/leave`,{},'POST')
+}	
+//获取用户创建的队伍
+export const getMyTeam = (role) => {
+	return http('/team/my/list',role,'GET')
+}
+//获取用户收到的消息
+export const getMyMessage = (data) => {
+	return http('/message/site/list',data,'GET')
+}
+//将消息标记为已读
+export const markMessageRead = (messageId) => {
+	return http(`/message/site/read/${messageId}`,'r','POST')
+}
+//删除已有消息
+export const deleteMessage = (messageId) => {
+	return http(`/message/site/{id}`,'r','DELETE')
+}

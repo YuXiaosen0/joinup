@@ -1,5 +1,5 @@
 "use strict";
-const common_vendor = require("../common/vendor.js");
+require("../common/vendor.js");
 const api_http = require("./http.js");
 require("../stores/user.js");
 const getTeamList = (themeId) => {
@@ -45,14 +45,6 @@ const kickMember = (teamId, userId) => {
 };
 const searchTeam = async (searchString) => {
   return api_http.http(`/team/search?keyword=${searchString}`, "", "GET");
-};
-const applyCreateTag = (name, description) => {
-  common_vendor.index.__f__("log", "at api/api.js:81", "name:", name);
-  common_vendor.index.__f__("log", "at api/api.js:82", "description", description);
-  return api_http.http(`/tag/apply`, {
-    "name": name,
-    "description": description
-  }, "POST");
 };
 const login = (code) => {
   return api_http.http("/user/wxLogin", { code }, "POST");
@@ -102,17 +94,35 @@ const deleteMyInterest = (interestId) => {
 const boyaAuthentication = () => {
   return api_http.http(`/boya/authentication`, "d", "POST");
 };
+const createNewTeam = (data) => {
+  return api_http.http("/team/add", data, "POST");
+};
+const getMyTeam = (role) => {
+  return api_http.http("/team/my/list", role, "GET");
+};
+const getMyMessage = (data) => {
+  return api_http.http("/message/site/list", data, "GET");
+};
+const markMessageRead = (messageId) => {
+  return api_http.http(`/message/site/read/${messageId}`, "r", "POST");
+};
+const deleteMessage = (messageId) => {
+  return api_http.http(`/message/site/{id}`, "r", "DELETE");
+};
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
-exports.applyCreateTag = applyCreateTag;
 exports.applyToJoin = applyToJoin;
 exports.boyaAuthentication = boyaAuthentication;
+exports.createNewTeam = createNewTeam;
+exports.deleteMessage = deleteMessage;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
 exports.getAnnouncementDetails = getAnnouncementDetails;
 exports.getApplicationList = getApplicationList;
 exports.getCourseInfo = getCourseInfo;
 exports.getMyInterest = getMyInterest;
+exports.getMyMessage = getMyMessage;
+exports.getMyTeam = getMyTeam;
 exports.getSign = getSign;
 exports.getSignRecord = getSignRecord;
 exports.getSwiperList = getSwiperList;
@@ -125,6 +135,7 @@ exports.kickMember = kickMember;
 exports.leaveTeamApi = leaveTeamApi;
 exports.listAll = listAll;
 exports.login = login;
+exports.markMessageRead = markMessageRead;
 exports.modifyUserInfo = modifyUserInfo;
 exports.processApplication = processApplication;
 exports.searchTeam = searchTeam;

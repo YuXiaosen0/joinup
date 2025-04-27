@@ -1,4 +1,5 @@
 "use strict";
+const common_vendor = require("../common/vendor.js");
 const api_http = require("./http.js");
 require("../stores/user.js");
 const getTeamList = (themeId) => {
@@ -43,7 +44,15 @@ const kickMember = (teamId, userId) => {
   return api_http.http(`/team/${teamId}/kick/${userId}`, "", "POST");
 };
 const searchTeam = async (searchString) => {
-  return api_http.http(`/team/search?keyword=${searchString.keyward}`, { searchString }, "GET");
+  return api_http.http(`/team/search?keyword=${searchString}`, "", "GET");
+};
+const applyCreateTag = (name, description) => {
+  common_vendor.index.__f__("log", "at api/api.js:81", "name:", name);
+  common_vendor.index.__f__("log", "at api/api.js:82", "description", description);
+  return api_http.http(`/tag/apply`, {
+    "name": name,
+    "description": description
+  }, "POST");
 };
 const login = (code) => {
   return api_http.http("/user/wxLogin", { code }, "POST");
@@ -95,6 +104,7 @@ const boyaAuthentication = () => {
 };
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
+exports.applyCreateTag = applyCreateTag;
 exports.applyToJoin = applyToJoin;
 exports.boyaAuthentication = boyaAuthentication;
 exports.deleteMyInterest = deleteMyInterest;

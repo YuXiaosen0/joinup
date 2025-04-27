@@ -1,0 +1,24 @@
+# 忽略编译生成目录
+unpackage/
+dist/
+*.log
+
+# 临时文件
+*.tmp
+*.swp
+*.bak
+
+# IDE 配置
+.vscode/
+.idea/
+
+# Mac 和 Windows 系统文件
+.DS_Store
+Thumbs.db
+
+# node_modules
+node_modules/
+
+# 微信小程序平台编译产物
+project.private.config.json
+project.config.json

@@ -29,12 +29,14 @@
 		</view>
 		
 		<!-- 新增第四个图标 -->
-		<view class="icon-item" @tap="navigateTo('newFeature')">
+		
+		<!-- <view class="icon-item" @tap="navigateTo('newFeature')">
 		  <view class="icon-box">
 			<image src="https://joinup.oss-cn-beijing.aliyuncs.com/images/message/plus.png" mode="aspectFit"></image>
 		  </view>
 		  <text class="icon-text">+++</text>
-		</view>
+		</view> -->
+		
 	  </view>
 	  
 	  <!-- 选择消息分类的Tab -->
@@ -73,7 +75,6 @@
 		@refresherrefresh="onRefresh">
 		
 		<view v-if="!hasSelectedType" class="select-type-tips">
-		  <image src="/static/images/select-type.png" mode="aspectFit"></image>
 		  <text>请选择消息类型</text>
 		</view>
 		
@@ -101,7 +102,6 @@
 		  </view>
 		  
 		  <view v-if="messageList.length === 0" class="empty-tips">
-			<image src="/static/images/empty-message.png" mode="aspectFit"></image>
 			<text>暂无{{getReadStatusText()}}{{getTypeText(currentType)}}消息</text>
 		  </view>
 		  

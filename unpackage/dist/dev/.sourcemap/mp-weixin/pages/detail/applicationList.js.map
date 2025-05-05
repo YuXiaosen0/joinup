@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"version":3,"file":"applicationList.js","sources":["../../../HBuilderX/plugins/uniapp-cli-vite/uniPage:/cGFnZXMvZGV0YWlsL2FwcGxpY2F0aW9uTGlzdC52dWU"],"sourcesContent":["import MiniProgramPage from 'D:/uniapp/myJoinup/joinup/pages/detail/applicationList.vue'\nwx.createPage(MiniProgramPage)"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AACA,GAAG,WAAW,eAAe;"}
+=======
+{"version":3,"file":"applicationList.js","sources":["../../../../HBuilderX.4.57.2025032507/HBuilderX/plugins/uniapp-cli-vite/uniPage:/cGFnZXMvZGV0YWlsL2FwcGxpY2F0aW9uTGlzdC52dWU"],"sourcesContent":["import MiniProgramPage from 'D:/codeProject/vsCode/joinup-formal/joinup/pages/detail/applicationList.vue'\nwx.createPage(MiniProgramPage)"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AACA,GAAG,WAAW,eAAe;"}
+>>>>>>> cb2e08c891bacdfe0760a9b52cf83374cdab9dd4

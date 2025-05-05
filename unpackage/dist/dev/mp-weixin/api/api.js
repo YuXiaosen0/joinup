@@ -22,7 +22,7 @@ const getAnnouncementDetails = (announcementId) => {
   return api_http.http(`/message/announcement/${announcementId}`, "", "GET");
 };
 const applyToJoin = (teamId, joinReason) => {
-  return api_http.http(`/team/${teamId}/join/apply`, { "reason": joinReason }, "POST");
+  return api_http.http(`/team/${teamId}/join/apply`, { "applicationMessage": joinReason }, "POST");
 };
 const getApplicationList = (teamId) => {
   return api_http.http(`/team/${teamId}/join/list`, "", "GET");

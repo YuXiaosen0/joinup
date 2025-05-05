@@ -105,7 +105,7 @@
           class="page-picker"
           mode="selector" 
           :range="pageNumberOptions" 
-          :value="pageNumberIndex"
+          :value="pageNumber"
           @change="changePageNumber"
         >
           <view class="picker-text">
@@ -442,7 +442,8 @@ const changePageSize = (e) => {
 // 改变页码
 const changePageNumber = (e) => {
   const index = e.detail.value
-  pageNumber.value = index + 1
+  pageNumber.value = parseInt(index, 10) + 1;
+  console.log("pageNumber.value",pageNumber.value)
   loadCourseData() // 重新加载数据
 }
 

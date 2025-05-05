@@ -198,7 +198,7 @@ const _sfc_main = {
       }
       return options;
     });
-    const pageNumberIndex = common_vendor.computed(() => pageNumber.value - 1);
+    common_vendor.computed(() => pageNumber.value - 1);
     const changePageSize = (e) => {
       const index = e.detail.value;
       pageSizeIndex.value = index;
@@ -207,7 +207,8 @@ const _sfc_main = {
     };
     const changePageNumber = (e) => {
       const index = e.detail.value;
-      pageNumber.value = index + 1;
+      pageNumber.value = parseInt(index, 10) + 1;
+      common_vendor.index.__f__("log", "at pages/boya/boya.vue:446", "pageNumber.value", pageNumber.value);
       loadCourseData();
     };
     const prevPage = () => {
@@ -259,7 +260,7 @@ const _sfc_main = {
         n: common_vendor.o(changePageSize),
         o: common_vendor.t(pageNumber.value),
         p: pageNumberOptions.value,
-        q: pageNumberIndex.value,
+        q: pageNumber.value,
         r: common_vendor.o(changePageNumber),
         s: common_vendor.o(nextPage)
       } : activeTab.value === "selected" ? common_vendor.e({

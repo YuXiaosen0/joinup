@@ -140,7 +140,7 @@
           >
             退选
           </button>
-          <button 
+          <!-- <button 
             v-if="!hasAppointment(course.course_id)"
             class="action-btn appointment-btn"
             @click="yuYue(course.course_id)"
@@ -153,7 +153,7 @@
             disabled
           >
             已预约
-          </button>
+          </button> -->
         </view>
       </view>
     </view>

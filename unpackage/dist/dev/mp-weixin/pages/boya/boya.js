@@ -266,19 +266,15 @@ const _sfc_main = {
         v: selectedCourses.value.length === 0
       }, selectedCourses.value.length === 0 ? {} : {}, {
         w: common_vendor.f(selectedCourses.value, (course, k0, i0) => {
-          return common_vendor.e({
+          return {
             a: common_vendor.t(course.name),
             b: common_vendor.t(formatDateTime(course.start_date)),
             c: common_vendor.t(formatDateTime(course.end_date)),
             d: common_vendor.t(course.college),
             e: common_vendor.t(course.position),
             f: common_vendor.o(($event) => tuiSelectedKe(course.id), course.course_id),
-            g: !hasAppointment(course.course_id)
-          }, !hasAppointment(course.course_id) ? {
-            h: common_vendor.o(($event) => yuYue(course.course_id), course.course_id)
-          } : {}, {
-            i: course.course_id
-          });
+            g: course.course_id
+          };
         })
       }) : common_vendor.e({
         x: appointments.value.length === 0

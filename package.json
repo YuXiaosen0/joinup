@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "@dcloudio/uni-ui": "^1.5.7",
     "clipboard": "^2.0.11",

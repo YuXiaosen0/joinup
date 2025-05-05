@@ -1,7 +1,6 @@
 "use strict";
 require("../common/vendor.js");
 const api_http = require("./http.js");
-require("../stores/user.js");
 const getTeamList = (themeId) => {
   return api_http.http(`/team/list?themeId=${themeId}`, {
     "pageNo": 1,
@@ -91,13 +90,30 @@ const addMyInterest = (interestId) => {
 const deleteMyInterest = (interestId) => {
   return api_http.http(`/interest/${interestId}`, "d", "DELETE");
 };
-const boyaAuthentication = () => {
-  return api_http.http(`/boya/authentication`, "d", "POST");
+const getBoyaCourse = (data) => {
+  return api_http.http(`/boya/get-course/`, data, "POST");
 };
-<<<<<<< HEAD
+const xuanBoya = (course_id) => {
+  return api_http.http(`/boya/choose-course/`, course_id, "POST");
+};
+const lookupYiXuan = () => {
+  return api_http.http(`/boya/choose-course/`, "d", "GET");
+};
+const deleteBoya = (select_id) => {
+  return api_http.http(`/boya/choose-course/${select_id}/`, "d", "DELETE");
+};
+const appointBoya = (data) => {
+  return api_http.http(`/boya/appoint-course/`, data, "POST");
+};
+const getAppointList = () => {
+  return api_http.http(`/boya/appoint-course/`, "d", "GET");
+};
+const cancelAppoint = (appointment_id) => {
+  return api_http.http(`/boya/appoint-course/${appointment_id}/`, "d", "DELETE");
+};
 const feedback = (data) => {
   return api_http.http(`/message/feedback/add`, data, "POST");
-=======
+};
 const createNewTeam = (data) => {
   return api_http.http("/team/add", data, "POST");
 };
@@ -112,19 +128,22 @@ const markMessageRead = (messageId) => {
 };
 const deleteMessage = (messageId) => {
   return api_http.http(`/message/site/{id}`, "r", "DELETE");
->>>>>>> d8360d5f691c2fe0871c964ef40f5d1764de9d44
 };
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
 exports.applyToJoin = applyToJoin;
-exports.boyaAuthentication = boyaAuthentication;
+exports.appointBoya = appointBoya;
+exports.cancelAppoint = cancelAppoint;
 exports.createNewTeam = createNewTeam;
+exports.deleteBoya = deleteBoya;
 exports.deleteMessage = deleteMessage;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
 exports.feedback = feedback;
 exports.getAnnouncementDetails = getAnnouncementDetails;
 exports.getApplicationList = getApplicationList;
+exports.getAppointList = getAppointList;
+exports.getBoyaCourse = getBoyaCourse;
 exports.getCourseInfo = getCourseInfo;
 exports.getMyInterest = getMyInterest;
 exports.getMyMessage = getMyMessage;
@@ -141,11 +160,13 @@ exports.kickMember = kickMember;
 exports.leaveTeamApi = leaveTeamApi;
 exports.listAll = listAll;
 exports.login = login;
+exports.lookupYiXuan = lookupYiXuan;
 exports.markMessageRead = markMessageRead;
 exports.modifyUserInfo = modifyUserInfo;
 exports.processApplication = processApplication;
 exports.searchTeam = searchTeam;
 exports.sendVerifyCode = sendVerifyCode;
 exports.signClass = signClass;
+exports.xuanBoya = xuanBoya;
 exports.yanzheng = yanzheng;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/api.js.map

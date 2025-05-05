@@ -1,5 +1,7 @@
-import http from "./http";
-import {useUserStore} from '../stores/user.js'
+import http from "./http"
+
+
+
 export const getTeamList = ( themeId ) => {
   return http(`/team/list?themeId=${themeId}`, {
     "pageNo": 1,
@@ -143,40 +145,40 @@ export const deleteMyInterest = (interestId) => {
 }
 // 博雅选课认证
 export const boyaAuthentication = () => {
-  return http(`/boya/authentication`,'d','POST')
+  return http(`/boya/authentication/`,'d','POST')
 }
 //查询目前所有博雅课程
 export const getBoyaCourse = (data) => {
-	return http(`/boya/get-course`,data,'GET')
+	return http(`/boya/get-course/`,data,'POST')
 }
 //直接选一门博雅课程
 export const xuanBoya = (course_id) => {
-	return http(`/boya/choose-course`,{course_id},'POST')
+	return http(`/boya/choose-course/`,course_id,'POST')
 }
 //查看所有已选的博雅课程
 export const lookupYiXuan = () => {
-	return http(`/boya/choose-course`,'d','GET')
+	return http(`/boya/choose-course/`,'d','GET')
 }
 //退选一门博雅课程
 export const deleteBoya = (select_id) => {
-	return http(`/boya/choose-course/${select_id}`,'d','DELETE')
+	return http(`/boya/choose-course/${select_id}/`,'d','DELETE')
 }
 //预约抢课
-export const appointBoya = (course_id) => {
-	return http(`/boya/appointment`,{course_id},'POST')
+export const appointBoya = (data) => {
+	return http(`/boya/appoint-course/`,data,'POST')
 }
 // 获取当前所有预约请求
 export const getAppointList = () => {
-	return http(`/boya/appointment`,'d','GET')
+	return http(`/boya/appoint-course/`,'d','GET')
 }
 //撤销预约
 export const cancelAppoint = (appointment_id) => {
-	return http(`/boya/appointment/${appointment_id}`,'d','DELETE')
+	return http(`/boya/appoint-course/${appointment_id}/`,'d','DELETE')
 }
 //用户提交反馈
 export const feedback = (data) => {
 	return http(`/message/feedback/add`,data,'POST')
-
+}
 //创建新的队伍
 export const createNewTeam = (data) => {
 	return http('/team/add',data,'POST')

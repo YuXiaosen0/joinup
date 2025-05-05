@@ -81,12 +81,6 @@
 			}
 		},
 		{
-			"path": "pages/register/register",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
 			"path" : "pages/blank/blank",
 			"style" : 
 			{
@@ -97,6 +91,13 @@
 			"path": "pages/team/team",
 			"style": {
 				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path" : "pages/sign/sign",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
 			}
 		}
 	],

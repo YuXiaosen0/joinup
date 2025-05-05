@@ -34,30 +34,53 @@
         </view>
         <view class="course-actions">
           <button 
-            v-if="!isCourseSelected(course.course_id)"
+            v-if="!isCourseSelected(course.course_id)
+            &&isWithinSelectPeriod(course.select_start_date, course.select_end_date)"
             class="action-btn select-btn"
-            @click="showToast('选课功能(模拟)')"
+            @click="xuanKe(course.course_id)"
           >
             选课
           </button>
           <button 
-            v-else
+            v-else-if="isCourseSelected(course.course_id)"
             class="action-btn cancel-btn"
-            @click="showToast('退选功能(模拟)')"
+            @click="tuiKe(course)"
           >
             退选
           </button>
           <button 
-            class="action-btn appointment-btn"
-            @click="showToast('预约功能(模拟)')"
+            v-else
+            class="action-btn disabled-btn"
           >
-            预约
+            当前时间无法选课
           </button>
+		  <button
+		    v-if="!hasAppointment(course.course_id)
+        && new Date() < new Date(course.select_end_date)"
+		    class="action-btn appointment-btn"
+		    @click="yuYue(course.course_id)"
+		  >
+		    预约
+		  </button>
+		  <button 
+		    v-else-if="hasAppointment(course.course_id)"
+		    class="action-btn disabled-btn"
+		    disabled
+		  >
+		    已预约
+		  </button>
+      <button 
+		    v-else
+		    class="action-btn disabled-btn"
+		    disabled
+		  >
+		    当前时间无法预约
+		  </button>
         </view>
       </view>
       
-      <!-- 分页控制 -->
-      <view class="pagination">
+	  <!-- 分页控制 -->
+    <view class="pagination">
         <button 
           :disabled="pageNumber === 1"
           class="page-btn"
@@ -65,7 +88,31 @@
         >
           上一页
         </button>
-        <text class="page-info">第 {{ pageNumber }} 页</text>
+        
+        <picker 
+          class="page-picker"
+          mode="selector" 
+          :range="pageSizeOptions" 
+          :value="pageSizeIndex"
+          @change="changePageSize"
+        >
+          <view class="picker-text">
+            每页 {{ pageSize }} 条
+          </view>
+        </picker>
+        
+        <picker 
+          class="page-picker"
+          mode="selector" 
+          :range="pageNumberOptions" 
+          :value="pageNumberIndex"
+          @change="changePageNumber"
+        >
+          <view class="picker-text">
+            第 {{ pageNumber }} 页
+          </view>
+        </picker>
+        
         <button 
           class="page-btn"
           @click="nextPage"
@@ -74,7 +121,6 @@
         </button>
       </view>
     </view>
-
     <!-- 已选课程列表 -->
     <view v-else-if="activeTab === 'selected'" class="course-list">
       <view v-if="selectedCourses.length === 0" class="empty-tip">
@@ -83,22 +129,21 @@
       <view v-for="course in selectedCourses" :key="course.course_id" class="course-card">
         <view class="course-info">
           <text class="course-name">{{ course.name }}</text>
-          <text class="course-time">时间: {{ course.start_date }} 至 {{ course.end_date }}</text>
+          <text class="course-time">时间: {{ formatDateTime(course.start_date) }} 至 {{ formatDateTime(course.end_date) }}</text>
           <text class="course-college">学院: {{ course.college }}</text>
           <text class="course-position">地点: {{ course.position }}</text>
-          <text class="course-identifier">选课标识: {{ course.select_identifier }}</text>
         </view>
         <view class="course-actions">
           <button 
             class="action-btn cancel-btn"
-            @click="showToast('退选功能(模拟)')"
+            @click="tuiSelectedKe(course.id)"
           >
             退选
           </button>
           <button 
             v-if="!hasAppointment(course.course_id)"
             class="action-btn appointment-btn"
-            @click="showToast('预约打卡功能(模拟)')"
+            @click="yuYue(course.course_id)"
           >
             预约打卡
           </button>
@@ -121,94 +166,232 @@
       <view v-for="appointment in appointments" :key="appointment.appointment_id" class="appointment-card">
         <view class="appointment-info">
           <text class="appointment-name">{{ appointment.name }}</text>
-          <text class="appointment-time">预约时间: {{ appointment.select_start_date }}</text>
+          <text class="appointment-time">课程开选时间: {{ formatDateTime(appointment.select_start_date) }}</text>
         </view>
         <button 
           class="action-btn cancel-btn"
-          @click="showToast('撤销预约功能(模拟)')"
+          @click="ceXiaoYuYue(appointment.id)"
         >
           撤销预约
         </button>
       </view>
     </view>
 
-    <!-- 认证状态 -->
-    <view class="auth-status">
-      <text v-if="isAuthenticated" class="authenticated">已通过北航校园认证</text>
-      <button v-else class="auth-btn" @click="showToast('校园认证功能(模拟)')">进行北航校园认证</button>
-    </view>
+
   </view>
 </template>
 
 <script setup>
-import {ref} from "vue"
+import { ref, computed } from "vue";
 import {onLoad} from '@dcloudio/uni-app'
 import { boyaAuthentication, getBoyaCourse,xuanBoya,lookupYiXuan,deleteBoya,appointBoya,getAppointList,cancelAppoint } from "../../api/api"
+const allCourses = ref([])
+const selectedCourses = ref([])
+const appointments = ref([])
+const isWithinSelectPeriod = (startDate, endDate) => {
+  const now = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  return now >= start && now <= end;
+};
+const formatDateTime = (dateTime) => {
+  if (!dateTime) return '--';
+  const date = new Date(dateTime);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
+//预约
+const yuYue = async (courseId) => {
+  try {
+	  console.log("预约kaishi",courseId)
+    const data = { "course_id": courseId };
+    const res = await appointBoya(data)
+    console.log("预约成功:", res);
+
+    // 更新预约列表
+    appointments.value.push({
+      id: res.id,
+      course_id: courseId,
+      name: res.name,
+      select_start_date: res.select_start_date,
+    });
+
+    uni.showToast({
+      title: "预约成功",
+      icon: "success",
+    });
+  } catch (error) {
+    console.error("预约失败:", error);
+    uni.showToast({
+      title: "预约失败，请重试",
+      icon: "none",
+    });
+  }
+};
+
+//撤销预约
+const ceXiaoYuYue = async (appointmentId) => {
+  try {
+    const res = await cancelAppoint(appointmentId);
+    console.log("撤销预约成功:", res);
+
+    // 从预约列表中移除已撤销的预约
+    appointments.value = appointments.value.filter(
+      (appointment) => appointment.id !== appointmentId
+    );
+
+    uni.showToast({
+      title: "撤销预约成功",
+      icon: "success",
+    });
+  } catch (error) {
+    console.error("撤销预约失败:", error);
+    uni.showToast({
+      title: "撤销预约失败，请重试",
+      icon: "none",
+    });
+  }
+};
+//选课
+const xuanKe = async (courseId) => {
+  try {
+    const data = { course_id: courseId };
+    const res = await xuanBoya(data);
+    console.log("选课成功:", res);
+
+    // 更新已选课程列表
+    selectedCourses.value.push({
+      course_id: courseId,
+      name: res.name,
+      start_date: res.start_date,
+      end_date: res.end_date,
+      college: res.college,
+      position: res.position,
+    });
+
+    uni.showToast({
+      title: "选课成功",
+      icon: "success",
+    });
+  } catch (error) {
+    console.error("选课失败:", error);
+    uni.showToast({
+      title: "选课失败，请重试",
+      icon: "none",
+    });
+  }
+};
+//退已选择的课
+const tuiSelectedKe = async (Id) => {
+  try {
+    const res = await deleteBoya(Id);
+    console.log("退课成功:", res);
+
+    // 从已选课程列表中移除已退选的课程
+    selectedCourses.value = selectedCourses.value.filter(
+      (course) => course.id !== Id
+    );
+
+    uni.showToast({
+      title: "退课成功",
+      icon: "success",
+    });
+  } catch (error) {
+    console.error("退课失败:", error);
+    uni.showToast({
+      title: "退课失败，请重试",
+      icon: "none",
+    });
+  }
+};
+//退课
+const tuiKe = async (course) => {
+  // 在 selectedCourses 中查找匹配的课程
+  const selectedCourse = selectedCourses.value.find(item => item.course_id === course.course_id);
+
+  if (selectedCourse) {
+    try {
+      // 调用 deleteBoya 方法，传入找到的课程的 id
+      const res1 = await deleteBoya(selectedCourse.id);
+      console.log("deleteBoya", res1);
+
+      // 从 selectedCourses 中移除已退选的课程
+      selectedCourses.value = selectedCourses.value.filter(item => item.course_id !== course.course_id);
+
+      uni.showToast({
+        title: "退课成功",
+        icon: "success"
+      });
+    } catch (error) {
+      console.error("退课失败:", error);
+      uni.showToast({
+        title: "退课失败",
+        icon: "none"
+      });
+    }
+  } else {
+    console.error("未找到匹配的课程");
+    uni.showToast({
+      title: "未找到匹配的课程",
+      icon: "none"
+    });
+  }
+};
+// 加载课程数据的函数
+const loadCourseData = async () => {
+  try {
+    const res = await getBoyaCourse({
+      "page_size": pageSize.value,
+      "page_number": pageNumber.value
+    })
+    allCourses.value = res
+    uni.showToast({
+      title: `已加载第${pageNumber.value}页`,
+      icon: 'none'
+    })
+  } catch (error) {
+    uni.showToast({
+      title: '加载数据失败',
+      icon: 'error'
+    })
+    console.error('加载数据失败:', error)
+  }
+}
 onLoad(async() => {
-	// 页面加载时获取课程列表
-	const res = await boyaAuthentication();
-	console.log("boyaAuthentication",res);
+  await loadCourseData()
+
+  selectedCourses.value=await lookupYiXuan();
+  console.log("selectedCourses.value",selectedCourses.value)
+
+  appointments.value=await getAppointList();
+  console.log(" appointments.value", appointments.value)
 })
-// 静态数据
-const allCourses = ref([
-  {
-    course_id: 1,
-    name: "中国传统文化",
-    start_date: "2023-09-01",
-    end_date: "2023-12-31",
-    college: "人文学院",
-    position: "主楼201",
-    select_identifier: "Boya-2023-001"
-  },
-  {
-    course_id: 2,
-    name: "西方艺术史",
-    start_date: "2023-09-15",
-    end_date: "2024-01-10",
-    college: "艺术学院",
-    position: "艺术楼101",
-    select_identifier: "Boya-2023-002"
-  },
-  {
-    course_id: 3,
-    name: "科技创新与创业",
-    start_date: "2023-10-01",
-    end_date: "2023-12-15",
-    college: "工程学院",
-    position: "工程楼301",
-    select_identifier: "Boya-2023-003"
-  }
-])
-
-const selectedCourses = ref([
-  {
-    course_id: 1,
-    name: "中国传统文化",
-    start_date: "2023-09-01",
-    end_date: "2023-12-31",
-    college: "人文学院",
-    position: "主楼201",
-    select_identifier: "Boya-2023-001"
-  }
-])
-
-const appointments = ref([
-  {
-    appointment_id: 1,
-    course_id: 1,
-    name: "中国传统文化",
-    select_start_date: "2023-09-01 14:00"
-  }
-])
 
 // 界面状态
 const activeTab = ref('all')
-const isAuthenticated = ref(false)
-const pageNumber = ref(1)
 
 // 切换标签页
-const switchTab = (tab) => {
+const switchTab = async(tab) => {
   activeTab.value = tab
+  if(tab=='all'){
+	  const res = await getBoyaCourse({
+	    "page_size": pageSize.value,
+	    "page_number": pageNumber.value
+	  })
+	  allCourses.value = res
+  }else if(tab=='selected'){
+	  selectedCourses.value=await lookupYiXuan();
+	  console.log("selectedCourses.value",selectedCourses.value)
+  }else{
+	  appointments.value=await getAppointList();
+	  console.log(" appointments.value", appointments.value)
+  }
+  
+  
 }
 
 // 检查课程是否已选
@@ -229,18 +412,52 @@ const showToast = (title) => {
   })
 }
 
+// 分页相关状态
+const pageNumber = ref(1)
+const pageSize = ref(6)
+const pageSizeOptions = [5, 6, 10, 15, 20]
+const pageSizeIndex = ref(1) // 默认选中6条/页
+
+// 计算可选的页码范围
+const pageNumberOptions = computed(() => {
+  const options = []
+  // 假设总页数为10，实际应根据API返回的总页数计算
+  const totalPages = 10
+  for (let i = 1; i <= totalPages; i++) {
+    options.push(`第 ${i} 页`)
+  }
+  return options
+})
+
+const pageNumberIndex = computed(() => pageNumber.value - 1)
+
+// 改变每页显示数量
+const changePageSize = (e) => {
+  const index = e.detail.value
+  pageSizeIndex.value = index
+  pageSize.value = pageSizeOptions[index]
+  loadCourseData() // 重新加载数据
+}
+
+// 改变页码
+const changePageNumber = (e) => {
+  const index = e.detail.value
+  pageNumber.value = index + 1
+  loadCourseData() // 重新加载数据
+}
+
 // 上一页
 const prevPage = () => {
   if (pageNumber.value > 1) {
     pageNumber.value--
-    showToast(`切换到第 ${pageNumber.value} 页(模拟)`)
+    loadCourseData()
   }
 }
 
 // 下一页
 const nextPage = () => {
   pageNumber.value++
-  showToast(`切换到第 ${pageNumber.value} 页(模拟)`)
+  loadCourseData()
 }
 </script>
 
@@ -386,6 +603,14 @@ const nextPage = () => {
   display: block;
 }
 
+/* 空状态提示 */
+.empty-tip {
+  text-align: center;
+  padding: 60rpx 0;
+  font-size: 28rpx;
+  color: #999;
+}
+
 /* 分页 */
 .pagination {
   display: flex;
@@ -395,11 +620,11 @@ const nextPage = () => {
 }
 
 .page-btn {
-  width: 160rpx;
+  width: 140rpx;
   height: 60rpx;
   line-height: 60rpx;
   font-size: 26rpx;
-  margin: 0 20rpx;
+  margin: 0 10rpx;
   background-color: #07C160;
   color: #fff;
   border-radius: 30rpx;
@@ -409,44 +634,19 @@ const nextPage = () => {
   background-color: #ccc;
 }
 
-.page-info {
-  font-size: 28rpx;
-  color: #666;
+.page-picker {
+  margin: 0 10rpx;
+  background-color: #f5f5f5;
+  border-radius: 30rpx;
+  padding: 0 20rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 26rpx;
 }
 
-/* 空状态提示 */
-.empty-tip {
-  text-align: center;
-  padding: 60rpx 0;
-  font-size: 28rpx;
-  color: #999;
+.picker-text {
+  color: #333;
 }
 
-/* 认证状态 */
-.auth-status {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #fff;
-  padding: 20rpx;
-  text-align: center;
-  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.05);
-}
 
-.authenticated {
-  font-size: 28rpx;
-  color: #07C160;
-}
-
-.auth-btn {
-  background-color: #07C160;
-  color: #fff;
-  font-size: 30rpx;
-  height: 80rpx;
-  line-height: 80rpx;
-  border-radius: 40rpx;
-  width: 80%;
-  margin: 0 auto;
-}
 </style>

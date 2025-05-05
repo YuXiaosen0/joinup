@@ -222,19 +222,40 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  background-color: white;
+  border-radius: 16rpx;
 }
-.content .users .u-bottom .u-item.data-v-0f7520f0 {
-  text-align: center;
+.content .users .u-item.data-v-0f7520f0 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 120rpx;
+  background-color: white;
 }
-.content .users .u-bottom .u-item .u-tit.data-v-0f7520f0 {
-  color: #757575;
+.content .users .u-item.data-v-0f7520f0:hover {
+  transform: scale(1.05);
+}
+.content .users .icon-wrapper.data-v-0f7520f0 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60rpx;
+  height: 60rpx;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+  margin-bottom: 10rpx;
+}
+.content .users .u-tit.data-v-0f7520f0 {
   font-size: 26rpx;
+  color: #666;
   margin-top: 10rpx;
 }
-.content .users .u-bottom .u-item .num.data-v-0f7520f0 {
-  color: #000;
-  font-size: 33rpx;
-  font-weight: 700;
+.content .users .num.data-v-0f7520f0 {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
 }
 .content .popup.data-v-0f7520f0 {
   padding: 20rpx;

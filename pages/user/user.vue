@@ -124,23 +124,33 @@
   				<uni-icons class="arrow-icon" type="arrowright" size="30" color="#999" @click.stop="setFun"></uni-icons>
 				</view>
 				<view class="u-bottom">
-				    <!-- 展示用户的一些统计数据：点赞、喜欢、浏览、收藏 -->
-				    <view class="u-item" @click="goToTechnology">
-							<view class="num">12</view>
-							<view class="u-tit">技术</view>
+					<!-- 兴趣 -->
+					<view class="u-item" @click="goToTechnology">
+						<view class="icon-wrapper">
+							<uni-icons type="heart" size="40" color="#FF4D4F"></uni-icons>
+						</view>
+						<view class="u-tit">兴趣</view>
 					</view>
-				    <view class="u-item">
-				        <view class="num">{{ userInfo.joinedTeamCount }}</view>
-				        <view class="u-tit">加入队伍</view>
-				    </view>
-				    <view class="u-item">
-				        <view class="num">{{ userInfo.createdTeamCount }}</view>
-				        <view class="u-tit">创建队伍</view>
-				    </view>
-				    <view class="u-item">
-				        <view class="num">12</view>
-				        <view class="u-tit">收藏</view>
-				    </view>
+
+					<!-- 加入队伍 -->
+					<view class="u-item">
+						<view class="num">{{ userInfo.joinedTeamCount }}</view>
+						<view class="u-tit">加入队伍</view>
+					</view>
+
+					<!-- 创建队伍 -->
+					<view class="u-item">
+						<view class="num">{{ userInfo.createdTeamCount }}</view>
+						<view class="u-tit">创建队伍</view>
+					</view>
+
+					<!-- 收藏 -->
+					<!-- <view class="u-item">
+						<view class="icon-wrapper">
+							<uni-icons type="star" size="40" color="#FFD700"></uni-icons>
+						</view>
+						<view class="u-tit">收藏</view>
+					</view> -->
 				</view>
 			</view>
 		</view>
@@ -213,27 +223,40 @@
 		<!-- @close: 这个事件监听器用于处理弹出层关闭时的事件。
 		:show: 这个属性用于控制弹出层的显示状态。 -->
 		<up-popup closeable @close="close" :show="show" round="20">
-		    <view class="popup">
-		        <view class="title">获取您的昵称、头像</view>
-		        <view class="flex">
-		            <view class="label">获取用户头像：</view>
-		            <!-- 用户选择头像 -->
-					<!-- open-type="chooseAvatar" - 指定按钮类型为选择头像
-					@chooseavatar="onChooseavatar" - 当用户选择完头像后触发的事件处理函数
-					<image> 标签用于显示当前头像 -->
-		            <button class="avatar-warpper" open-type="chooseAvatar" @chooseavatar="onChooseavatar">
-		                <image class="avatar" :src="userInfo.avatar"></image>
-		            </button>
-		        </view>
-				<!-- 微信小程序会读取当前已授权的用户信息，并将其提供给相关字段进行自动填充。 -->
-		        <view class="flex">
-		            <view class="label">获取用户昵称：</view>
-		            <!-- 输入昵称 -->
-		            <input @input="changeName" type="nickname">
-		        </view>
-		        <!-- 提交按钮 -->
-		        <button size="default" type="primary" @click="userSubmit">确定</button>
-		    </view>
+		  <view class="popup">
+			<view class="title">获取您的昵称、头像</view>
+
+			<!-- 获取用户头像 -->
+			<view class="flex">
+			  <view class="label">获取用户头像：</view>
+			  <button class="avatar-warpper" open-type="chooseAvatar" @chooseavatar="onChooseavatar">
+				<image class="avatar" :src="userInfo.avatar"></image>
+			  </button>
+			</view>
+
+			<!-- 获取用户昵称 -->
+			<view class="flex">
+			  <view class="label">获取用户昵称：</view>
+			  <input @input="changeName" type="nickname" placeholder="请输入昵称">
+			</view>
+
+			<!-- 选择性别 -->
+			<view class="flex">
+			  <view class="label">选择性别：</view>
+			  <picker :range="genderOptions" @change="changeGender">
+				<view class="picker-value">{{ userInfo.gender || '请选择性别' }}</view>
+			  </picker>
+			</view>
+
+			<!-- 输入北航密码 -->
+			<view class="flex">
+			  <view class="label">北航密码：</view>
+			  <input v-model="userInfo.ssoPassword" type="password" placeholder="请输入北航密码（可选）">
+			</view>
+
+			<!-- 提交按钮 -->
+			<button size="default" type="primary" @click="userSubmit">确定</button>
+		  </view>
 		</up-popup>
 	</view>
 </template>
@@ -244,13 +267,22 @@
 	import { getUserInfo, login,modifyUserInfo,getSignRecord,feedback } from "../../api/api"
 	const userInfo = ref({
 			username: '',
-	    avatar: '',
+			avatar: '',
 			studentId: '',
 			gender:'',
 			joinedTeamCount: 0,
 			createdTeamCount: 0,
 			createTime: '',
+			ssoPassword: ''
 	})
+	// 性别选项
+	const genderOptions = ["男", "女"];
+	
+	// 修改性别
+	const changeGender = (e) => {
+	  userInfo.value.gender = genderOptions[e.detail.value];
+	};
+
 // 控制反馈弹窗的显示
 const showFeedbackPopup = ref(false);
 
@@ -351,7 +383,10 @@ const submitFeedback = async() => {
 
 	// 打开签到记录弹窗
 	const openSign = async () => {
-	    showSignPopup.value = true; // 显示弹窗
+		uni.navigateTo({
+			url: '/pages/sign/sign' // 跳转到签到记录页面
+		});
+	    // showSignPopup.value = true; // 显示弹窗
 	};
 	
 	// 关闭签到记录弹窗
@@ -393,19 +428,18 @@ const submitFeedback = async() => {
 		});
 	});
 	
-	// 提交用户信息，保存到本地存储
+	//提交用户信息，保存到本地存储  TODO
 	const userSubmit = async() => {
 		// 同步地将数据存储到本地存储（Local Storage）中,'userInfo'为键，后者为值
 		const data={
 			"username":userInfo.value.username ,
 			"avatar": userInfo.value.avatar,
 			"gender":userInfo.value.gender,
-			"ssoPassword":"123456"
-		}
-	  uni.setStorageSync('userInfo', JSON.stringify(userInfo))
+			"ssoPassword":userInfo.value.ssoPassword
+		}		
 		const res = await modifyUserInfo(data)
 		console.log("modifyUserInfo",res)
-	  show.value = false
+		show.value = false
 	}
 	
 	// 选择头像时更新头像
@@ -649,23 +683,49 @@ const submitFeedback = async() => {
 						}
         }
         .u-bottom {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            .u-item {
-                text-align: center;
-                .u-tit {
-                    color: #757575;
-                    font-size: 26rpx;
-                    margin-top: 10rpx;
-                }
-                .num {
-                    color: #000;
-                    font-size: 33rpx;
-                    font-weight: 700;
-                }
-            }
-        }
+					display: flex;
+					justify-content: space-around;
+					align-items: center;
+					background-color: white;
+					border-radius: 16rpx;
+				}
+
+				.u-item {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					height: 120rpx;
+					background-color: white;
+				}
+
+				.u-item:hover {
+					transform: scale(1.05);
+				}
+
+				.icon-wrapper {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					width: 60rpx;
+					height: 60rpx;
+					background-color: #fff;
+					border-radius: 50%;
+					box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+					margin-bottom: 10rpx;
+				}
+
+				.u-tit {
+					font-size: 26rpx;
+					color: #666;
+					margin-top: 10rpx;
+				}
+
+				.num {
+					font-size: 30rpx;
+					font-weight: bold;
+					color: #333;
+				}
     }
     .popup {
         padding: 20rpx;

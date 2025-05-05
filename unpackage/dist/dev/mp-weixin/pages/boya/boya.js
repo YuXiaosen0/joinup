@@ -4,63 +4,181 @@ const api_api = require("../../api/api.js");
 const _sfc_main = {
   __name: "boya",
   setup(__props) {
+    const allCourses = common_vendor.ref([]);
+    const selectedCourses = common_vendor.ref([]);
+    const appointments = common_vendor.ref([]);
+    const isWithinSelectPeriod = (startDate, endDate) => {
+      const now = /* @__PURE__ */ new Date();
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      return now >= start && now <= end;
+    };
+    const formatDateTime = (dateTime) => {
+      if (!dateTime)
+        return "--";
+      const date = new Date(dateTime);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    };
+    const yuYue = async (courseId) => {
+      try {
+        common_vendor.index.__f__("log", "at pages/boya/boya.vue:210", "预约kaishi", courseId);
+        const data = { "course_id": courseId };
+        const res = await api_api.appointBoya(data);
+        common_vendor.index.__f__("log", "at pages/boya/boya.vue:213", "预约成功:", res);
+        appointments.value.push({
+          id: res.id,
+          course_id: courseId,
+          name: res.name,
+          select_start_date: res.select_start_date
+        });
+        common_vendor.index.showToast({
+          title: "预约成功",
+          icon: "success"
+        });
+      } catch (error) {
+        common_vendor.index.__f__("error", "at pages/boya/boya.vue:228", "预约失败:", error);
+        common_vendor.index.showToast({
+          title: "预约失败，请重试",
+          icon: "none"
+        });
+      }
+    };
+    const ceXiaoYuYue = async (appointmentId) => {
+      try {
+        const res = await api_api.cancelAppoint(appointmentId);
+        common_vendor.index.__f__("log", "at pages/boya/boya.vue:240", "撤销预约成功:", res);
+        appointments.value = appointments.value.filter(
+          (appointment) => appointment.id !== appointmentId
+        );
+        common_vendor.index.showToast({
+          title: "撤销预约成功",
+          icon: "success"
+        });
+      } catch (error) {
+        common_vendor.index.__f__("error", "at pages/boya/boya.vue:252", "撤销预约失败:", error);
+        common_vendor.index.showToast({
+          title: "撤销预约失败，请重试",
+          icon: "none"
+        });
+      }
+    };
+    const xuanKe = async (courseId) => {
+      try {
+        const data = { course_id: courseId };
+        const res = await api_api.xuanBoya(data);
+        common_vendor.index.__f__("log", "at pages/boya/boya.vue:264", "选课成功:", res);
+        selectedCourses.value.push({
+          course_id: courseId,
+          name: res.name,
+          start_date: res.start_date,
+          end_date: res.end_date,
+          college: res.college,
+          position: res.position
+        });
+        common_vendor.index.showToast({
+          title: "选课成功",
+          icon: "success"
+        });
+      } catch (error) {
+        common_vendor.index.__f__("error", "at pages/boya/boya.vue:281", "选课失败:", error);
+        common_vendor.index.showToast({
+          title: "选课失败，请重试",
+          icon: "none"
+        });
+      }
+    };
+    const tuiSelectedKe = async (Id) => {
+      try {
+        const res = await api_api.deleteBoya(Id);
+        common_vendor.index.__f__("log", "at pages/boya/boya.vue:292", "退课成功:", res);
+        selectedCourses.value = selectedCourses.value.filter(
+          (course) => course.id !== Id
+        );
+        common_vendor.index.showToast({
+          title: "退课成功",
+          icon: "success"
+        });
+      } catch (error) {
+        common_vendor.index.__f__("error", "at pages/boya/boya.vue:304", "退课失败:", error);
+        common_vendor.index.showToast({
+          title: "退课失败，请重试",
+          icon: "none"
+        });
+      }
+    };
+    const tuiKe = async (course) => {
+      const selectedCourse = selectedCourses.value.find((item) => item.course_id === course.course_id);
+      if (selectedCourse) {
+        try {
+          const res1 = await api_api.deleteBoya(selectedCourse.id);
+          common_vendor.index.__f__("log", "at pages/boya/boya.vue:320", "deleteBoya", res1);
+          selectedCourses.value = selectedCourses.value.filter((item) => item.course_id !== course.course_id);
+          common_vendor.index.showToast({
+            title: "退课成功",
+            icon: "success"
+          });
+        } catch (error) {
+          common_vendor.index.__f__("error", "at pages/boya/boya.vue:330", "退课失败:", error);
+          common_vendor.index.showToast({
+            title: "退课失败",
+            icon: "none"
+          });
+        }
+      } else {
+        common_vendor.index.__f__("error", "at pages/boya/boya.vue:337", "未找到匹配的课程");
+        common_vendor.index.showToast({
+          title: "未找到匹配的课程",
+          icon: "none"
+        });
+      }
+    };
+    const loadCourseData = async () => {
+      try {
+        const res = await api_api.getBoyaCourse({
+          "page_size": pageSize.value,
+          "page_number": pageNumber.value
+        });
+        allCourses.value = res;
+        common_vendor.index.showToast({
+          title: `已加载第${pageNumber.value}页`,
+          icon: "none"
+        });
+      } catch (error) {
+        common_vendor.index.showToast({
+          title: "加载数据失败",
+          icon: "error"
+        });
+        common_vendor.index.__f__("error", "at pages/boya/boya.vue:361", "加载数据失败:", error);
+      }
+    };
     common_vendor.onLoad(async () => {
-      const res = await api_api.boyaAuthentication();
-      common_vendor.index.__f__("log", "at pages/boya/boya.vue:150", "boyaAuthentication", res);
+      await loadCourseData();
+      selectedCourses.value = await api_api.lookupYiXuan();
+      common_vendor.index.__f__("log", "at pages/boya/boya.vue:368", "selectedCourses.value", selectedCourses.value);
+      appointments.value = await api_api.getAppointList();
+      common_vendor.index.__f__("log", "at pages/boya/boya.vue:371", " appointments.value", appointments.value);
     });
-    const allCourses = common_vendor.ref([
-      {
-        course_id: 1,
-        name: "中国传统文化",
-        start_date: "2023-09-01",
-        end_date: "2023-12-31",
-        college: "人文学院",
-        position: "主楼201",
-        select_identifier: "Boya-2023-001"
-      },
-      {
-        course_id: 2,
-        name: "西方艺术史",
-        start_date: "2023-09-15",
-        end_date: "2024-01-10",
-        college: "艺术学院",
-        position: "艺术楼101",
-        select_identifier: "Boya-2023-002"
-      },
-      {
-        course_id: 3,
-        name: "科技创新与创业",
-        start_date: "2023-10-01",
-        end_date: "2023-12-15",
-        college: "工程学院",
-        position: "工程楼301",
-        select_identifier: "Boya-2023-003"
-      }
-    ]);
-    const selectedCourses = common_vendor.ref([
-      {
-        course_id: 1,
-        name: "中国传统文化",
-        start_date: "2023-09-01",
-        end_date: "2023-12-31",
-        college: "人文学院",
-        position: "主楼201",
-        select_identifier: "Boya-2023-001"
-      }
-    ]);
-    const appointments = common_vendor.ref([
-      {
-        appointment_id: 1,
-        course_id: 1,
-        name: "中国传统文化",
-        select_start_date: "2023-09-01 14:00"
-      }
-    ]);
     const activeTab = common_vendor.ref("all");
-    const isAuthenticated = common_vendor.ref(false);
-    const pageNumber = common_vendor.ref(1);
-    const switchTab = (tab) => {
+    const switchTab = async (tab) => {
       activeTab.value = tab;
+      if (tab == "all") {
+        const res = await api_api.getBoyaCourse({
+          "page_size": pageSize.value,
+          "page_number": pageNumber.value
+        });
+        allCourses.value = res;
+      } else if (tab == "selected") {
+        selectedCourses.value = await api_api.lookupYiXuan();
+        common_vendor.index.__f__("log", "at pages/boya/boya.vue:388", "selectedCourses.value", selectedCourses.value);
+      } else {
+        appointments.value = await api_api.getAppointList();
+        common_vendor.index.__f__("log", "at pages/boya/boya.vue:391", " appointments.value", appointments.value);
+      }
     };
     const isCourseSelected = (courseId) => {
       return selectedCourses.value.some((course) => course.course_id === courseId);
@@ -68,21 +186,39 @@ const _sfc_main = {
     const hasAppointment = (courseId) => {
       return appointments.value.some((app) => app.course_id === courseId);
     };
-    const showToast = (title) => {
-      common_vendor.index.showToast({
-        title,
-        icon: "none"
-      });
+    const pageNumber = common_vendor.ref(1);
+    const pageSize = common_vendor.ref(6);
+    const pageSizeOptions = [5, 6, 10, 15, 20];
+    const pageSizeIndex = common_vendor.ref(1);
+    const pageNumberOptions = common_vendor.computed(() => {
+      const options = [];
+      const totalPages = 10;
+      for (let i = 1; i <= totalPages; i++) {
+        options.push(`第 ${i} 页`);
+      }
+      return options;
+    });
+    const pageNumberIndex = common_vendor.computed(() => pageNumber.value - 1);
+    const changePageSize = (e) => {
+      const index = e.detail.value;
+      pageSizeIndex.value = index;
+      pageSize.value = pageSizeOptions[index];
+      loadCourseData();
+    };
+    const changePageNumber = (e) => {
+      const index = e.detail.value;
+      pageNumber.value = index + 1;
+      loadCourseData();
     };
     const prevPage = () => {
       if (pageNumber.value > 1) {
         pageNumber.value--;
-        showToast(`切换到第 ${pageNumber.value} 页(模拟)`);
+        loadCourseData();
       }
     };
     const nextPage = () => {
       pageNumber.value++;
-      showToast(`切换到第 ${pageNumber.value} 页(模拟)`);
+      loadCourseData();
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
@@ -100,55 +236,63 @@ const _sfc_main = {
             b: common_vendor.t(course.start_date),
             c: common_vendor.t(course.end_date),
             d: common_vendor.t(course.college),
-            e: !isCourseSelected(course.course_id)
-          }, !isCourseSelected(course.course_id) ? {
-            f: common_vendor.o(($event) => showToast("选课功能(模拟)"), course.course_id)
-          } : {
-            g: common_vendor.o(($event) => showToast("退选功能(模拟)"), course.course_id)
-          }, {
-            h: common_vendor.o(($event) => showToast("预约功能(模拟)"), course.course_id),
-            i: course.course_id
+            e: !isCourseSelected(course.course_id) && isWithinSelectPeriod(course.select_start_date, course.select_end_date)
+          }, !isCourseSelected(course.course_id) && isWithinSelectPeriod(course.select_start_date, course.select_end_date) ? {
+            f: common_vendor.o(($event) => xuanKe(course.course_id), course.course_id)
+          } : isCourseSelected(course.course_id) ? {
+            h: common_vendor.o(($event) => tuiKe(course), course.course_id)
+          } : {}, {
+            g: isCourseSelected(course.course_id),
+            i: !hasAppointment(course.course_id) && /* @__PURE__ */ new Date() < new Date(course.select_end_date)
+          }, !hasAppointment(course.course_id) && /* @__PURE__ */ new Date() < new Date(course.select_end_date) ? {
+            j: common_vendor.o(($event) => yuYue(course.course_id), course.course_id)
+          } : hasAppointment(course.course_id) ? {} : {}, {
+            k: hasAppointment(course.course_id),
+            l: course.course_id
           });
         }),
         i: pageNumber.value === 1,
         j: common_vendor.o(prevPage),
-        k: common_vendor.t(pageNumber.value),
-        l: common_vendor.o(nextPage)
+        k: common_vendor.t(pageSize.value),
+        l: pageSizeOptions,
+        m: pageSizeIndex.value,
+        n: common_vendor.o(changePageSize),
+        o: common_vendor.t(pageNumber.value),
+        p: pageNumberOptions.value,
+        q: pageNumberIndex.value,
+        r: common_vendor.o(changePageNumber),
+        s: common_vendor.o(nextPage)
       } : activeTab.value === "selected" ? common_vendor.e({
-        n: selectedCourses.value.length === 0
+        v: selectedCourses.value.length === 0
       }, selectedCourses.value.length === 0 ? {} : {}, {
-        o: common_vendor.f(selectedCourses.value, (course, k0, i0) => {
+        w: common_vendor.f(selectedCourses.value, (course, k0, i0) => {
           return common_vendor.e({
             a: common_vendor.t(course.name),
-            b: common_vendor.t(course.start_date),
-            c: common_vendor.t(course.end_date),
+            b: common_vendor.t(formatDateTime(course.start_date)),
+            c: common_vendor.t(formatDateTime(course.end_date)),
             d: common_vendor.t(course.college),
             e: common_vendor.t(course.position),
-            f: common_vendor.t(course.select_identifier),
-            g: common_vendor.o(($event) => showToast("退选功能(模拟)"), course.course_id),
-            h: !hasAppointment(course.course_id)
+            f: common_vendor.o(($event) => tuiSelectedKe(course.id), course.course_id),
+            g: !hasAppointment(course.course_id)
           }, !hasAppointment(course.course_id) ? {
-            i: common_vendor.o(($event) => showToast("预约打卡功能(模拟)"), course.course_id)
+            h: common_vendor.o(($event) => yuYue(course.course_id), course.course_id)
           } : {}, {
-            j: course.course_id
+            i: course.course_id
           });
         })
       }) : common_vendor.e({
-        p: appointments.value.length === 0
+        x: appointments.value.length === 0
       }, appointments.value.length === 0 ? {} : {}, {
-        q: common_vendor.f(appointments.value, (appointment, k0, i0) => {
+        y: common_vendor.f(appointments.value, (appointment, k0, i0) => {
           return {
             a: common_vendor.t(appointment.name),
-            b: common_vendor.t(appointment.select_start_date),
-            c: common_vendor.o(($event) => showToast("撤销预约功能(模拟)"), appointment.appointment_id),
+            b: common_vendor.t(formatDateTime(appointment.select_start_date)),
+            c: common_vendor.o(($event) => ceXiaoYuYue(appointment.id), appointment.appointment_id),
             d: appointment.appointment_id
           };
         })
       }), {
-        m: activeTab.value === "selected",
-        r: isAuthenticated.value
-      }, isAuthenticated.value ? {} : {
-        s: common_vendor.o(($event) => showToast("校园认证功能(模拟)"))
+        t: activeTab.value === "selected"
       });
     };
   }

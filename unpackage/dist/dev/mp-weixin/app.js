@@ -14,8 +14,9 @@ if (!Math) {
   "./pages/technology/technology.js";
   "./pages/detail/searchResult.js";
   "./pages/boya/boya.js";
-  "./pages/register/register.js";
   "./pages/blank/blank.js";
+  "./pages/team/team.js";
+  "./pages/sign/sign.js";
 }
 const _sfc_main = {
   onLaunch: function() {

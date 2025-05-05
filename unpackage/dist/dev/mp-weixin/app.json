@@ -11,8 +11,9 @@
     "pages/technology/technology",
     "pages/detail/searchResult",
     "pages/boya/boya",
-    "pages/register/register",
-    "pages/blank/blank"
+    "pages/blank/blank",
+    "pages/team/team",
+    "pages/sign/sign"
   ],
   "window": {
     "navigationBarTextStyle": "black",

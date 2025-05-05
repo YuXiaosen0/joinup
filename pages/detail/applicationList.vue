@@ -9,7 +9,11 @@
           :key="index"
           class="application-item"
         >
+          <view class="avatar-section">
+            <image :src="item.avatar" class="avatar" mode="aspectFill" />
+          </view>
           <view class="info">
+            <view class="username">{{ item.username }}</view>
             <view class="message">申请理由：{{ item.applicationMessage }}</view>
           </view>
           <view class="actions">
@@ -22,6 +26,7 @@
     </view>
   </view>
 </template>
+
 
 <script>
 import { getApplicationList, processApplication, getTeamDetails } from '../../api/api'
@@ -101,7 +106,6 @@ export default {
 }
 .application-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 20rpx;
   padding: 20rpx;
@@ -109,19 +113,30 @@ export default {
   border-radius: 16rpx;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
+.avatar-section {
+  margin-right: 20rpx;
+}
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
 .info {
   flex: 1;
+}
+.username {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+.message {
+  font-size: 26rpx;
+  color: #333;
 }
 .actions {
   display: flex;
   flex-direction: column;
   gap: 10rpx;
-}
-.message {
-  font-weight: bold;
-}
-.status {
-  margin-top: 8rpx;
-  color: #666;
 }
 </style>

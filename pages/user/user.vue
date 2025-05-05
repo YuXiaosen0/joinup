@@ -127,9 +127,9 @@
 					<!-- 兴趣 -->
 					<view class="u-item" @click="goToTechnology">
 						<view class="icon-wrapper">
-							<uni-icons type="heart" size="40" color="#FF4D4F"></uni-icons>
+							<uni-icons  type="star" size="30" color="#FF4D4F"></uni-icons>
 						</view>
-						<view class="u-tit">兴趣</view>
+						<view class="u-tit">技术</view>
 					</view>
 
 					<!-- 加入队伍 -->
@@ -160,9 +160,9 @@
 		        <u-cell-group>
 		            <!-- 列出多个功能项，点击时跳转到相应页面 -->
 
-		            <u-cell  title="课程打卡" is-link 
+		            <u-cell  title="课程助手" is-link 
 								:url="userInfo.studentId ? '/pages/course/course' : '/pages/veri/veri'"></u-cell>
-		            <u-cell  title="博雅打卡" is-link url="/pages/boya/boya"></u-cell>
+		            <u-cell  title="博雅助手" is-link url="/pages/boya/boya"></u-cell>
 								<u-cell 
 									title="反馈问题" 
 									is-link 
@@ -469,6 +469,11 @@ const submitFeedback = async() => {
 </script>
 
 <style lang="scss" scoped>
+.icon-lightbulb {
+  width: 30rpx;
+  height: 30rpx;
+  filter: drop-shadow(0 0 10px #FFD700); /* 发光效果 */
+}
 .content {
     height: 100vh;
     background-color: #f5f5f5;
@@ -722,7 +727,7 @@ const submitFeedback = async() => {
 				}
 
 				.num {
-					font-size: 30rpx;
+					font-size: 50rpx;
 					font-weight: bold;
 					color: #333;
 				}

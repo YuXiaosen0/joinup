@@ -255,20 +255,20 @@ const _sfc_main = {
           color: "#999"
         }),
         E: common_vendor.p({
-          type: "heart",
-          size: "40",
+          type: "star",
+          size: "30",
           color: "#FF4D4F"
         }),
         F: common_vendor.o(goToTechnology),
         G: common_vendor.t(userInfo.value.joinedTeamCount),
         H: common_vendor.t(userInfo.value.createdTeamCount),
         I: common_vendor.p({
-          title: "课程打卡",
+          title: "课程助手",
           ["is-link"]: true,
           url: userInfo.value.studentId ? "/pages/course/course" : "/pages/veri/veri"
         }),
         J: common_vendor.p({
-          title: "博雅打卡",
+          title: "博雅助手",
           ["is-link"]: true,
           url: "/pages/boya/boya"
         }),

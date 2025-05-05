@@ -34,7 +34,7 @@ export const getAnnouncementDetails = (announcementId) => {
 
 //申请加入队伍
 export const applyToJoin = (teamId, joinReason) => {
-  return http(`/team/${teamId}/join/apply`, { "reason":joinReason }, 'POST')
+  return http(`/team/${teamId}/join/apply`, { "applicationMessage":joinReason }, 'POST')
 }
 
 // 获取申请列表

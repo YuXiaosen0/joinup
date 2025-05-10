@@ -53,6 +53,7 @@
         />
       </view>
       
+	  <!--
       <view class="form-item">
         <text class="form-label">队伍主题</text>
         <input 
@@ -62,6 +63,24 @@
           type="number"
         />
       </view>
+	  -->
+	  
+	  <!-- 队伍主题 -->
+	  <!-- 将原来的picker组件替换为主题选择块 -->
+	  <view class="form-item">
+	    <text class="form-label">队伍主题</text>
+	    <view class="theme-options">
+	      <view 
+	        v-for="theme in themeOptions" 
+	        :key="theme.id"
+	        class="theme-option"
+	        :class="{ 'theme-selected': teamForm.themeId === theme.id }"
+	        @tap="selectTheme(theme.id)"
+	      >
+	        {{ theme.name }}
+	      </view>
+	    </view>
+	  </view>
       
       <view class="form-item">
         <text class="form-label">队伍是否公开</text>
@@ -82,6 +101,7 @@
         />
       </view>
       
+	  <!--
       <view class="form-item">
         <text class="form-label">队伍标签</text>
         <input 
@@ -90,8 +110,30 @@
           v-model="teamForm.tagIdsInput"
         />
       </view>
+	  -->
+	  
+	  <view class="form-item">
+	    <text class="form-label">队伍标签</text>
+	    <view v-if="tagList.length > 0" class="tag-options">
+	      <view 
+	        v-for="tag in tagList" 
+	        :key="tag.id"
+	        class="tag-option"
+	        :class="{ 'tag-selected': selectedTagIds.includes(tag.id) }"
+	        @tap="toggleTagSelection(tag.id)"
+	      >
+	        {{ tag.name }}
+	      </view>
+	    </view>
+	    <view v-else class="no-tags">
+	      <text>无标签</text>
+	    </view>
+	  </view>
       
       <button class="create-button" @tap="createTeam">确认创建</button>
+	  
+	  <!-- 添加一个无色但占据空间的区域 -->
+	  <view class="spacer-block"></view>
     </view>
     
     <!-- 当前显示的类型提示 -->
@@ -118,7 +160,6 @@
       </view>
       
       <view v-if="teamList.length === 0" class="empty-tips">
-        <image src="/static/images/empty-team.png" mode="aspectFit"></image>
         <text>{{ emptyTipsText }}</text>
       </view>
       
@@ -132,7 +173,7 @@
 
 <script>
 import { ref, reactive } from 'vue'
-import { createNewTeam, deleteTeam, getMyTeam } from "../../api/api"
+import { createNewTeam, deleteTeam, getMyTeam, getAllTags } from "../../api/api"
 // import TeamItem from '@/components/team-item.vue';
 
 const userInfo = reactive({
@@ -162,9 +203,23 @@ export default {
         maxMembers: '',
         tagIdsInput: '', // 用于输入，后续会转换为数组
       },
+	  
+	  // 添加主题选项数组
+      themeOptions: [
+          { id: 1, name: '课程' },
+          { id: 2, name: '游戏' },
+          { id: 3, name: '竞赛' },
+          { id: 4, name: '生活' }
+      ],
       
       // 组队列表
       teamList: [],
+	  
+	  // 添加标签列表
+	  tagList: [],
+	      
+	  // 记录选中的标签ID数组
+	  selectedTagIds: [],
       
       // 当前显示的组队类型（全部/我创建的/我加入的）
       currentTeamType: 'all',
@@ -195,13 +250,19 @@ export default {
         case 'CREATOR':
           return '你还没有发起过队伍';
         case 'MEMBER':
-          return '你还没有加入过队伍';
+          return '你还没有加入过别人发起的队伍';
         default:
           return '暂无组队信息';
       }
     }
   },
   onLoad() {
+	// // 加载队伍列表
+	// this.loadTeamList();
+	    
+	// 获取标签列表
+	this.loadTagList();
+		
     // 页面加载时获取组队列表
     this.getTeamList();
   },
@@ -210,7 +271,7 @@ export default {
     // 切换创建表单显示
     toggleCreateForm() {
       this.showCreateForm = !this.showCreateForm;
-      
+      this.loadTagList();
       // 如果关闭表单，重置回全部队伍列表
       if (!this.showCreateForm) {
         this.currentTeamType = 'all';
@@ -231,6 +292,10 @@ export default {
     onOpenChange(e) {
       this.teamForm.open = e.detail.value;
     },
+	
+	selectTheme(themeId) {
+	  this.teamForm.themeId = themeId;
+	},
     
     // 获取我的队伍（发起的或加入的）
     async getMyTeams(role) {
@@ -274,6 +339,54 @@ export default {
         this.teamList = [];
       }
     },
+	
+	// 加载标签列表
+	async loadTagList() {
+	  try {
+	    const response = await getAllTags();
+	    
+	    if (response) {
+	      this.tagList = response || [];
+	    } else {
+	      console.error('获取标签列表失败:', response.msg);
+	      uni.showToast({
+	        title: '获取标签列表失败',
+	        icon: 'none'
+	      });
+	    }
+	  } catch (error) {
+	    console.error('获取标签列表出错', error);
+	    uni.showToast({
+	      title: '获取标签列表出错',
+	      icon: 'none'
+	    });
+	  }
+	},
+	
+	// 选择或取消选择标签
+	toggleTagSelection(tagId) {
+	  const index = this.selectedTagIds.indexOf(tagId);
+	  
+	  if (index === -1) {
+	    // 如果标签数量超过10个，显示提示并返回
+	    if (this.selectedTagIds.length >= 10) {
+	      uni.showToast({
+	        title: '队伍标签不能超过10个',
+	        icon: 'none'
+	      });
+	      return;
+	    }
+	    
+	    // 添加标签ID到选中数组
+	    this.selectedTagIds.push(tagId);
+	  } else {
+	    // 从选中数组中移除标签ID
+	    this.selectedTagIds.splice(index, 1);
+	  }
+	  
+	  // 更新表单中的标签ID输入字段，用于后续提交
+	  this.teamForm.tagIdsInput = this.selectedTagIds.join(',');
+	},
     
     // 获取队伍状态样式类
     getStatusClass(status) {
@@ -341,6 +454,14 @@ export default {
             return;
           }
         }
+		
+		if (this.selectedTagIds.length > 10) {
+			uni.showToast({
+				title: '队伍标签不能超过10个',
+				icon: 'none'
+			});
+			return;
+		}
         
         uni.showLoading({
           title: '创建中...'
@@ -353,7 +474,7 @@ export default {
           themeId: parseInt(this.teamForm.themeId),
           open: this.teamForm.open,
           maxMembers: maxMembers,
-          tagIds: tagIds
+          tagIds: this.selectedTagIds
         };
 
         const result = await createNewTeam(teamData);
@@ -390,7 +511,7 @@ export default {
       } catch (error) {
         uni.hideLoading();
         uni.showToast({
-          title: '创建失败，请稍后重试',
+          title: error || '创建失败，请稍后重试',
           icon: 'none'
         });
         console.error('创建组队失败:', error);
@@ -407,6 +528,7 @@ export default {
         maxMembers: '',
         tagIdsInput: '',
       };
+	  this.selectedTagIds = []; // 重置选中的标签ID数组
     },
     
     // 获取组队列表
@@ -657,5 +779,92 @@ export default {
     font-size: 24rpx;
     color: #999;
   }
+}
+
+.picker-view {
+  border: 1rpx solid #e5e5e5;
+  border-radius: 10rpx;
+  padding: 15rpx;
+  font-size: 28rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selected-theme {
+  flex: 1;
+}
+
+.placeholder-text {
+  color: #999999;
+}
+
+/* 主题选择样式 */
+.theme-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 10rpx;
+}
+
+.theme-option {
+  width: 24%;
+  text-align: center;
+  padding: 15rpx 0;
+  margin-bottom: 15rpx;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #666666;
+  border: 1rpx solid #e0e0e0;
+}
+
+.theme-selected {
+  background-color: #1296db;
+  color: #ffffff;
+  border-color: #1296db;
+  box-shadow: 0 2rpx 6rpx rgba(18, 150, 219, 0.3);
+}
+
+/* 标签选择样式 */
+.tag-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15rpx;
+  margin-top: 10rpx;
+}
+
+.tag-option {
+  padding: 10rpx 20rpx;
+  background-color: #f5f5f5;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #666666;
+  border: 1rpx solid #e0e0e0;
+}
+
+.tag-selected {
+  background-color: #1296db;
+  color: #ffffff;
+  border-color: #1296db;
+  box-shadow: 0 2rpx 6rpx rgba(18, 150, 219, 0.3);
+}
+
+.no-tags {
+  padding: 20rpx;
+  text-align: center;
+  color: #999;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+  margin-top: 10rpx;
+}
+
+/* 添加一个无色但占据空间的大块区域 */
+.spacer-block {
+  width: 100%;
+  height: 3000rpx; /* 可以根据需要调整高度 */
+  background-color: transparent; /* 透明背景 */
+  display: block; /* 确保它是块级元素 */
+  pointer-events: none; /* 不接收鼠标事件 */
 }
 </style>

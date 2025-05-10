@@ -301,7 +301,7 @@ const _sfc_main = {
           shape: "circle"
         })
       } : {
-        z: common_assets._imports_0$1
+        z: common_assets._imports_0
       }, {
         A: common_vendor.o(closeSignListPopup),
         B: common_vendor.p({

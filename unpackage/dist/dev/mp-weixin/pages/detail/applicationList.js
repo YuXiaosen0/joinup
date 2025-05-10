@@ -24,7 +24,7 @@ const _sfc_main = {
       });
     } catch (err) {
       this.error = "获取申请列表失败，请稍后再试";
-      common_vendor.index.__f__("error", "at pages/detail/applicationList.vue:63", err);
+      common_vendor.index.__f__("error", "at pages/detail/applicationList.vue:68", err);
     } finally {
       this.loading = false;
     }
@@ -39,7 +39,7 @@ const _sfc_main = {
           icon: "success"
         });
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/detail/applicationList.vue:79", err);
+        common_vendor.index.__f__("error", "at pages/detail/applicationList.vue:84", err);
         common_vendor.index.showToast({
           title: "操作失败",
           icon: "none"
@@ -58,10 +58,12 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   }, $data.applications.length > 0 ? {
     e: common_vendor.f($data.applications, (item, index, i0) => {
       return {
-        a: common_vendor.t(item.applicationMessage),
-        b: common_vendor.o(($event) => $options.handleProcess(item.id, 0), index),
-        c: common_vendor.o(($event) => $options.handleProcess(item.id, 1), index),
-        d: index
+        a: item.avatar,
+        b: common_vendor.t(item.username),
+        c: common_vendor.t(item.applicationMessage),
+        d: common_vendor.o(($event) => $options.handleProcess(item.id, 0), index),
+        e: common_vendor.o(($event) => $options.handleProcess(item.id, 1), index),
+        f: index
       };
     })
   } : {}), {

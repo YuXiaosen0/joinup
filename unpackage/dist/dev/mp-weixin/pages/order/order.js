@@ -1,7 +1,6 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const api_api = require("../../api/api.js");
-const common_assets = require("../../common/assets.js");
 const _sfc_main = {
   data() {
     return {
@@ -223,7 +222,7 @@ const _sfc_main = {
       common_vendor.index.showLoading({
         title: "删除中..."
       });
-      api_api.deleteMessage().then((res) => {
+      api_api.deleteMessage(id).then((res) => {
         common_vendor.index.hideLoading();
         if (res.code === 1) {
           common_vendor.index.showToast({
@@ -266,21 +265,18 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     g: $data.currentType === 1 ? 1 : "",
     h: $data.currentType === 1 ? 1 : "",
     i: common_vendor.o(($event) => $options.selectMessageType(1)),
-    j: common_vendor.o(($event) => $options.navigateTo("newFeature")),
-    k: $data.hasSelectedType
+    j: $data.hasSelectedType
   }, $data.hasSelectedType ? {
-    l: $data.readStatus === null ? 1 : "",
-    m: common_vendor.o(($event) => $options.switchReadStatus(null)),
-    n: $data.readStatus === false ? 1 : "",
-    o: common_vendor.o(($event) => $options.switchReadStatus(false)),
-    p: $data.readStatus === true ? 1 : "",
-    q: common_vendor.o(($event) => $options.switchReadStatus(true))
+    k: $data.readStatus === null ? 1 : "",
+    l: common_vendor.o(($event) => $options.switchReadStatus(null)),
+    m: $data.readStatus === false ? 1 : "",
+    n: common_vendor.o(($event) => $options.switchReadStatus(false)),
+    o: $data.readStatus === true ? 1 : "",
+    p: common_vendor.o(($event) => $options.switchReadStatus(true))
   } : {}, {
-    r: !$data.hasSelectedType
-  }, !$data.hasSelectedType ? {
-    s: common_assets._imports_0
-  } : common_vendor.e({
-    t: common_vendor.f($data.messageList, (item, index, i0) => {
+    q: !$data.hasSelectedType
+  }, !$data.hasSelectedType ? {} : common_vendor.e({
+    r: common_vendor.f($data.messageList, (item, index, i0) => {
       return common_vendor.e({
         a: common_vendor.t($options.formatTime(item.createTime)),
         b: item.read
@@ -294,18 +290,17 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         i: index
       });
     }),
-    v: $data.messageList.length === 0
+    s: $data.messageList.length === 0
   }, $data.messageList.length === 0 ? {
-    w: common_assets._imports_1,
-    x: common_vendor.t($options.getReadStatusText()),
-    y: common_vendor.t($options.getTypeText($data.currentType))
+    t: common_vendor.t($options.getReadStatusText()),
+    v: common_vendor.t($options.getTypeText($data.currentType))
   } : {}, {
-    z: $data.isLoading
+    w: $data.isLoading
   }, $data.isLoading ? {} : {}), {
-    A: $data.hasSelectedType ? 1 : "",
-    B: common_vendor.o((...args) => $options.loadMore && $options.loadMore(...args)),
-    C: $data.isRefreshing,
-    D: common_vendor.o((...args) => $options.onRefresh && $options.onRefresh(...args))
+    x: $data.hasSelectedType ? 1 : "",
+    y: common_vendor.o((...args) => $options.loadMore && $options.loadMore(...args)),
+    z: $data.isRefreshing,
+    A: common_vendor.o((...args) => $options.onRefresh && $options.onRefresh(...args))
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);

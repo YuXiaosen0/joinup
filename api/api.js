@@ -34,7 +34,7 @@ export const getAnnouncementDetails = (announcementId) => {
 
 //申请加入队伍
 export const applyToJoin = (teamId, joinReason) => {
-  return http(`/team/${teamId}/join/apply`, { "reason":joinReason }, 'POST')
+  return http(`/team/${teamId}/join/apply`, { "applicationMessage":joinReason }, 'POST')
 }
 
 // 获取申请列表
@@ -204,6 +204,10 @@ export const markMessageRead = (messageId) => {
 	return http(`/message/site/read/${messageId}`,'r','POST')
 }
 //删除已有消息
-export const deleteMessage = (messageId) => {
-	return http(`/message/site/{id}`,'r','DELETE')
+export const deleteMessage = (id) => {
+	return http(`/message/site/${id}`,'r','DELETE')
+}
+//获取所有标签
+export const getAllTags = () => {
+	return http(`/tag/list`, 'd', 'GET')
 }

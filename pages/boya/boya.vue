@@ -105,7 +105,7 @@
           class="page-picker"
           mode="selector" 
           :range="pageNumberOptions" 
-          :value="pageNumberIndex"
+          :value="pageNumber"
           @change="changePageNumber"
         >
           <view class="picker-text">
@@ -140,7 +140,7 @@
           >
             退选
           </button>
-          <button 
+          <!-- <button 
             v-if="!hasAppointment(course.course_id)"
             class="action-btn appointment-btn"
             @click="yuYue(course.course_id)"
@@ -153,7 +153,7 @@
             disabled
           >
             已预约
-          </button>
+          </button> -->
         </view>
       </view>
     </view>
@@ -442,7 +442,8 @@ const changePageSize = (e) => {
 // 改变页码
 const changePageNumber = (e) => {
   const index = e.detail.value
-  pageNumber.value = index + 1
+  pageNumber.value = parseInt(index, 10) + 1;
+  console.log("pageNumber.value",pageNumber.value)
   loadCourseData() // 重新加载数据
 }
 

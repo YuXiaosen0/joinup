@@ -22,7 +22,7 @@ const getAnnouncementDetails = (announcementId) => {
   return api_http.http(`/message/announcement/${announcementId}`, "", "GET");
 };
 const applyToJoin = (teamId, joinReason) => {
-  return api_http.http(`/team/${teamId}/join/apply`, { "reason": joinReason }, "POST");
+  return api_http.http(`/team/${teamId}/join/apply`, { "applicationMessage": joinReason }, "POST");
 };
 const getApplicationList = (teamId) => {
   return api_http.http(`/team/${teamId}/join/list`, "", "GET");
@@ -126,8 +126,11 @@ const getMyMessage = (data) => {
 const markMessageRead = (messageId) => {
   return api_http.http(`/message/site/read/${messageId}`, "r", "POST");
 };
-const deleteMessage = (messageId) => {
-  return api_http.http(`/message/site/{id}`, "r", "DELETE");
+const deleteMessage = (id) => {
+  return api_http.http(`/message/site/${id}`, "r", "DELETE");
+};
+const getAllTags = () => {
+  return api_http.http(`/tag/list`, "d", "GET");
 };
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
@@ -140,6 +143,7 @@ exports.deleteMessage = deleteMessage;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
 exports.feedback = feedback;
+exports.getAllTags = getAllTags;
 exports.getAnnouncementDetails = getAnnouncementDetails;
 exports.getApplicationList = getApplicationList;
 exports.getAppointList = getAppointList;

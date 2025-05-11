@@ -238,9 +238,6 @@ const _sfc_main = {
           });
           return;
         }
-        common_vendor.index.showLoading({
-          title: "创建中..."
-        });
         const teamData = {
           name: this.teamForm.name,
           description: this.teamForm.description,
@@ -273,7 +270,7 @@ const _sfc_main = {
       } catch (error) {
         common_vendor.index.hideLoading();
         common_vendor.index.showToast({
-          title: "创建失败，请稍后重试",
+          title: error || "创建失败，请稍后重试",
           icon: "none"
         });
         common_vendor.index.__f__("error", "at pages/blank/blank.vue:517", "创建组队失败:", error);

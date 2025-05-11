@@ -8,7 +8,7 @@ export const getTeamList = ( themeId ) => {
     "pageSize": 100,
     "isAsc": true,
     "sortBy": "name"
-}, 'POST')
+	}, 'POST')
 }
 
 
@@ -210,4 +210,8 @@ export const deleteMessage = (id) => {
 //获取所有标签
 export const getAllTags = () => {
 	return http(`/tag/list`, 'd', 'GET')
+}
+//上传文件
+export const uploadFile=(file) => {
+	return http(`/oss/file/upload`, file, 'POST')
 }

@@ -1,5 +1,5 @@
-// let baseUrl = 'https://81.70.182.217/api'
-let baseUrl = 'https://joinup.org.cn/api'
+let baseUrl = 'https://joinup.org.cn/api-dev'
+// let baseUrl = 'https://joinup.org.cn/api'
 import { useUserStore } from '../stores/user.js'
 // 给参数 data 设置了一个默认值，即一个空对象 {}
 export default function http(url1, data = {}, method) {

@@ -144,13 +144,6 @@
 						<view class="u-tit">创建队伍</view>
 					</view>
 
-					<!-- 收藏 -->
-					<!-- <view class="u-item">
-						<view class="icon-wrapper">
-							<uni-icons type="star" size="40" color="#FFD700"></uni-icons>
-						</view>
-						<view class="u-tit">收藏</view>
-					</view> -->
 				</view>
 			</view>
 		</view>
@@ -228,10 +221,8 @@
 
 			<!-- 获取用户头像 -->
 			<view class="flex">
-			  <view class="label">获取用户头像：</view>
-			  <button class="avatar-warpper" open-type="chooseAvatar" @chooseavatar="onChooseavatar">
-				<image class="avatar" :src="userInfo.avatar"></image>
-			  </button>
+				<view class="label">上传头像：</view>
+				<button class="upload-btn" @click="chooseFile">选择文件</button>
 			</view>
 
 			<!-- 获取用户昵称 -->
@@ -264,7 +255,7 @@
 <script setup>
 	import {reactive,ref} from "vue"
 	import {onLoad} from '@dcloudio/uni-app'
-	import { getUserInfo, login,modifyUserInfo,getSignRecord,feedback } from "../../api/api"
+	import { getUserInfo, login,modifyUserInfo,getSignRecord,feedback,uploadFile } from "../../api/api"
 	const userInfo = ref({
 			username: '',
 			avatar: '',
@@ -295,7 +286,60 @@ const feedbackContent = ref("");
 
 // 联系方式
 const contactInfo = ref("");
+const fileInput = ref(); // 引用文件输入框
 
+
+// 处理文件上传
+const chooseFile = async () => {
+  try {
+    // 选择文件
+    const res = await uni.chooseImage({
+      count: 1, // 只允许选择一个文件
+      sizeType: ['compressed'], // 压缩图像
+      sourceType: ['album', 'camera'], // 允许从相册或拍照选择
+    });
+
+    const filePath = res.tempFilePaths[0]; // 获取临时文件路径
+    console.log("选择的文件路径:", filePath);
+
+    // 上传文件
+    const uploadRes = await uni.uploadFile({
+      url: 'https://joinup.org.cn/api-dev/oss/file/upload', // 替换为实际的上传接口
+      filePath: filePath, // 文件路径
+      name: 'file', // 后端接收文件的字段名
+      header: {
+        'Authorization': uni.getStorageSync('token') || '', // 如果需要鉴权，传递 token
+      },
+      formData: {
+        // 如果需要额外的表单数据，可以在这里添加
+        userId: '12345', // 示例：用户 ID
+      },
+    });
+
+    // 处理上传结果
+    if (uploadRes.statusCode === 200) {
+      const data = JSON.parse(uploadRes.data); // 解析返回的数据
+      console.log("上传成功:", data);
+			userInfo.value.avatar = data.data.url
+      uni.showToast({
+        title: "上传成功",
+        icon: "success",
+      });
+    } else {
+      console.error("上传失败，状态码:", uploadRes.statusCode);
+      uni.showToast({
+        title: "上传失败",
+        icon: "none",
+      });
+    }
+  } catch (error) {
+    console.error("文件选择或上传失败:", error);
+    uni.showToast({
+      title: "上传失败",
+      icon: "none",
+    });
+  }
+};
 // 打开反馈弹窗
 const openFeedbackPopup = () => {
   showFeedbackPopup.value = true;
@@ -407,8 +451,6 @@ const submitFeedback = async() => {
 			  const res = await getUserInfo();
 				Object.assign(userInfo.value, res);
 
-			  // 缓存用户信息
-			  uni.setStorageSync('userInfo', JSON.stringify(userInfo));
 			  console.log("用户信息:", userInfo);
 			} catch (error) {
 			  console.error("登录或获取用户信息失败:", error);
@@ -461,7 +503,7 @@ const submitFeedback = async() => {
 	        content: '亲，授权微信登录后才能正常使用小程序',
 	        success(res) {
 	            if (res.confirm) {
-	                        show.value = true
+	                show.value = true
 	            }
 	        }
 	    })
@@ -746,6 +788,17 @@ const submitFeedback = async() => {
             align-items: center;
             border-bottom: 1px solid #f5f5f5;
             padding: 24rpx 0;
+						.file-input {
+						width: 100%;
+						height: 80rpx;
+						border: 1rpx solid #ccc;
+						border-radius: 10rpx;
+						padding: 10rpx;
+						font-size: 28rpx;
+						box-sizing: border-box;
+						background-color: #fff;
+						color: #666;
+					}
         }
         image {
             width: 70rpx;
@@ -901,5 +954,16 @@ const submitFeedback = async() => {
 .empty-tip {
   font-size: 24rpx;
   color: #ccc;
+}
+
+.upload-btn {
+  padding: 10rpx 20rpx;
+  background-color: #2979ff;
+  color: #fff;
+  font-size: 28rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  line-height: 40rpx;
+  margin-left: 20rpx;
 }
 </style>

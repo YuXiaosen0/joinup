@@ -2,7 +2,7 @@
 	export default {
 		onLaunch: function() {
 			uni.setEnableDebug( {
-						enableDebug: true
+						enableDebug: false
 					} )
 			console.log('App Launch')
 		},

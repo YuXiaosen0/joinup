@@ -511,7 +511,7 @@ export default {
       } catch (error) {
         uni.hideLoading();
         uni.showToast({
-          title: '创建失败，请稍后重试',
+          title: error || '创建失败，请稍后重试',
           icon: 'none'
         });
         console.error('创建组队失败:', error);

@@ -27,10 +27,16 @@
 		    <view v-if="teamDetails.tags && teamDetails.tags.length > 0">
 		      <view class="tag-title">🏷️标签：</view>
 		      <view class="tags">
-		        <view v-for="tag in teamDetails.tags" :key="tag.id" class="tag-item">
+		        <view
+		          v-for="tag in teamDetails.tags"
+		          :key="tag.id"
+		          class="tag-item"
+		          @click="onSearch(tag.name)"
+		        >
 		          {{ tag.name }}
 		        </view>
 		      </view>
+
 		    </view>
 		
 		    <view class="divider"></view>
@@ -109,10 +115,16 @@
 		    <view v-if="teamDetails.tags && teamDetails.tags.length > 0">
 		      <view class="tag-title">🏷️标签：</view>
 		      <view class="tags">
-		        <view v-for="tag in teamDetails.tags" :key="tag.id" class="tag-item">
+		        <view
+		          v-for="tag in teamDetails.tags"
+		          :key="tag.id"
+		          class="tag-item"
+		          @click="onSearch(tag.name)"
+		        >
 		          {{ tag.name }}
 		        </view>
 		      </view>
+
 		    </view>
 		
 		    <view class="divider"></view>
@@ -174,10 +186,16 @@
 		    <view v-if="teamDetails.tags && teamDetails.tags.length > 0">
 		      <view class="tag-title">🏷️标签：</view>
 		      <view class="tags">
-		        <view v-for="tag in teamDetails.tags" :key="tag.id" class="tag-item">
+		        <view
+		          v-for="tag in teamDetails.tags"
+		          :key="tag.id"
+		          class="tag-item"
+		          @click="onSearch(tag.name)"
+		        >
 		          {{ tag.name }}
 		        </view>
 		      </view>
+
 		    </view>
 		
 		    <view class="divider"></view>
@@ -275,6 +293,16 @@ onLoad(async (opt) => {
 // 打开弹窗
 const openDialog = () => {
   showInputArea.value = true
+}
+
+function onSearch(value) {
+  if (!value.trim()) {
+    uni.showToast({ title: '请输入关键字', icon: 'none' })
+    return
+  }
+  uni.navigateTo({
+    url: `/pages/detail/searchResult?keyword=${encodeURIComponent(value)}`
+  })
 }
 
 // 同意加入

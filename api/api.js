@@ -71,14 +71,21 @@ export const searchTeam = async (searchString) => {
 
 // 创建标签
 export const applyCreateTag = (name, description) => {
-	console.log('name:',name)
-	console.log('description',description)
   return http(`/tag/apply`, {
 	  "name":name,
 	  "description":description
   }, 'POST')
 }
 
+//修改队伍信息
+export const modifyTeam = (teamId, name, description, open, maxMembers) => {
+  return http(`/team/${teamId}`, {
+	  "name":name,
+	  "description":description,
+	  "open":open,
+	  "maxMembers":maxMembers
+  }, 'PUT')
+}
 
 // 登录
 export const login = (code) => {

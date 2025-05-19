@@ -17,6 +17,7 @@ if (!Math) {
   "./pages/blank/blank.js";
   "./pages/team/team.js";
   "./pages/sign/sign.js";
+  "./pages/message/message.js";
 }
 const _sfc_main = {
   onLaunch: function() {

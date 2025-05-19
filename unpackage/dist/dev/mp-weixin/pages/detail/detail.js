@@ -34,20 +34,29 @@ const _sfc_main = {
           } else {
             userRole.value = "creator";
           }
-          common_vendor.index.__f__("log", "at pages/detail/detail.vue:262", "!!!", userRole.value);
+          common_vendor.index.__f__("log", "at pages/detail/detail.vue:280", "!!!", userRole.value);
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/detail/detail.vue:270", "加载失败：", error);
+        common_vendor.index.__f__("error", "at pages/detail/detail.vue:288", "加载失败：", error);
         teamDetails.value = null;
       }
     });
     const openDialog = () => {
       showInputArea.value = true;
     };
+    function onSearch(value) {
+      if (!value.trim()) {
+        common_vendor.index.showToast({ title: "请输入关键字", icon: "none" });
+        return;
+      }
+      common_vendor.index.navigateTo({
+        url: `/pages/detail/searchResult?keyword=${encodeURIComponent(value)}`
+      });
+    }
     const handleKick = async (memberId) => {
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:289", "!!!!!!!!!!!!!!!!!!");
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:290", teamDetails.value.id);
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:291", memberId);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:317", "!!!!!!!!!!!!!!!!!!");
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:318", teamDetails.value.id);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:319", memberId);
       await api_api.kickMember(teamDetails.value.id, memberId);
       const res = await api_api.getTeamDetails(teamDetails.value.id);
       if (res)
@@ -79,7 +88,8 @@ const _sfc_main = {
         f: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
           return {
             a: common_vendor.t(tag.name),
-            b: tag.id
+            b: tag.id,
+            c: common_vendor.o(($event) => onSearch(tag.name), tag.id)
           };
         })
       } : {}, {
@@ -111,7 +121,8 @@ const _sfc_main = {
         q: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
           return {
             a: common_vendor.t(tag.name),
-            b: tag.id
+            b: tag.id,
+            c: common_vendor.o(($event) => onSearch(tag.name), tag.id)
           };
         })
       } : {}, {
@@ -139,7 +150,8 @@ const _sfc_main = {
         C: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
           return {
             a: common_vendor.t(tag.name),
-            b: tag.id
+            b: tag.id,
+            c: common_vendor.o(($event) => onSearch(tag.name), tag.id)
           };
         })
       } : {}, {

@@ -18,14 +18,11 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    },
-    "urlCheck": true,
-    "ignoreUploadUnusedFiles": false
+    }
   },
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  },
-  "projectname": "myJoinup"
+  }
 }

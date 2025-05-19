@@ -191,7 +191,7 @@ export const deleteTeam = (teamId) => {
 export const quitTeam = (teamId) => {
 	return http(`/team/${teamId}/leave`,{},'POST')
 }	
-//获取用户创建的队伍
+//获取与用户有关的队伍
 export const getMyTeam = (role) => {
 	return http('/team/my/list',role,'GET')
 }
@@ -210,4 +210,8 @@ export const deleteMessage = (id) => {
 //获取所有标签
 export const getAllTags = () => {
 	return http(`/tag/list`, 'd', 'GET')
+}
+//获取新的token
+export const getNewToken = () => {
+	return http(`/user/refreshToken`, 'd', 'GET')
 }

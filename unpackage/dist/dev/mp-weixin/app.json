@@ -13,7 +13,8 @@
     "pages/boya/boya",
     "pages/blank/blank",
     "pages/team/team",
-    "pages/sign/sign"
+    "pages/sign/sign",
+    "pages/message/message"
   ],
   "window": {
     "navigationBarTextStyle": "black",

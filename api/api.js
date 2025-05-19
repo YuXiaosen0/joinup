@@ -217,15 +217,12 @@ export const deleteMessage = (id) => {
 //获取所有标签
 export const getAllTags = () => {
 	return http(`/tag/list`, 'd', 'GET')
-<<<<<<< HEAD
 }
 //获取新的token
 export const getNewToken = () => {
 	return http(`/user/refreshToken`, 'd', 'GET')
-=======
 }
 //上传文件
 export const uploadFile=(file) => {
 	return http(`/oss/file/upload`, file, 'POST')
->>>>>>> caf3343dad9a29eef3db9746657ee854bffa0640
 }

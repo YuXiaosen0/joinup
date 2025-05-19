@@ -101,6 +101,13 @@
 			}
 		},
 		{
+			"path" : "pages/message/message",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
 			"path" : "pages/contacts/contacts",
 			"style" : 
 			{

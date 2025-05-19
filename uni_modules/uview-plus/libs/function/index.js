@@ -49,12 +49,29 @@ export function sleep(value = 30) {
  * @returns {string} 返回所在平台(小写) 
  * @link 运行期判断平台 https://uniapp.dcloud.io/frame?id=判断平台
  */
+// export function os() {
+//   let info = {};
+//   try {
+//     info = uni.getSystemInfoSync();
+//   } catch (e) {}
+//   return info.platform ? info.platform.toLowerCase() : '';
+// }
 export function os() {
 	// #ifdef APP || H5 || MP-WEIXIN
-	return uni.getDeviceInfo().platform.toLowerCase()
+	// 优先用 getDeviceInfo，如果不可用则用 getSystemInfoSync
+	        const info = typeof uni.getDeviceInfo === 'function'
+	            ? uni.getDeviceInfo()
+	            : uni.getSystemInfoSync();
+	        platform = info && info.platform ? info.platform.toLowerCase() : '';
+	return platform
 	// #endif
 	// #ifndef APP || H5 || MP-WEIXIN
-	return uni.getSystemInfoSync().platform.toLowerCase()
+	// 优先用 getDeviceInfo，如果不可用则用 getSystemInfoSync
+	        const info = typeof uni.getDeviceInfo === 'function'
+	            ? uni.getDeviceInfo()
+	            : uni.getSystemInfoSync();
+	        platform = info && info.platform ? info.platform.toLowerCase() : '';
+	return platform
 	// #endif
 }
 /**

@@ -17,7 +17,12 @@ if (!Math) {
   "./pages/blank/blank.js";
   "./pages/team/team.js";
   "./pages/sign/sign.js";
+<<<<<<< HEAD
+  "./pages/contacts/contacts.js";
+  "./pages/chat/chat.js";
+=======
   "./pages/message/message.js";
+>>>>>>> f384d68eaef0ecd694e4a405c0d1a159a7f00049
 }
 const _sfc_main = {
   onLaunch: function() {

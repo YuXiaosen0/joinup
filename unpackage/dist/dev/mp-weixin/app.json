@@ -14,8 +14,12 @@
     "pages/blank/blank",
     "pages/team/team",
     "pages/sign/sign",
+<<<<<<< HEAD
     "pages/contacts/contacts",
     "pages/chat/chat"
+=======
+    "pages/message/message"
+>>>>>>> f384d68eaef0ecd694e4a405c0d1a159a7f00049
   ],
   "window": {
     "navigationBarTextStyle": "black",

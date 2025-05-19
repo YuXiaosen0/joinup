@@ -1,7 +1,28 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const api_api = require("../../api/api.js");
+const MessagePopup = () => "../message/message2.js";
 const _sfc_main = {
+  components: {
+    MessagePopup
+  },
+  setup() {
+    const currentTypeMessage = common_vendor.ref(null);
+    const showMessagePopup = common_vendor.ref(false);
+    const openMessagePopup = (type) => {
+      currentTypeMessage.value = type;
+      showMessagePopup.value = true;
+    };
+    const closeMessagePopup = () => {
+      showMessagePopup.value = false;
+    };
+    return {
+      currentTypeMessage,
+      showMessagePopup,
+      openMessagePopup,
+      closeMessagePopup
+    };
+  },
   data() {
     return {
       isRefreshing: false,
@@ -17,6 +38,11 @@ const _sfc_main = {
       // 标记是否已选择消息类型
       // 消息列表
       messageList: [],
+      // 队伍列表
+      createdTeams: [],
+      // 用户创建的队伍
+      joinedTeams: [],
+      // 用户加入的队伍
       // 图标页面链接
       pageLinks: {
         team: "/pages/team/team",
@@ -26,7 +52,46 @@ const _sfc_main = {
       }
     };
   },
+  // 页面加载时获取队伍信息
+  onLoad() {
+    this.fetchTeams();
+  },
   methods: {
+    // 获取用户相关的队伍
+    fetchTeams() {
+      api_api.getMyTeam({
+        role: "CREATOR"
+      }).then((res) => {
+        if (res) {
+          this.createdTeams = res || [];
+        } else {
+          common_vendor.index.__f__("error", "at pages/order/order.vue:262", "获取创建的队伍失败:", res.msg);
+        }
+      }).catch((err) => {
+        common_vendor.index.__f__("error", "at pages/order/order.vue:265", "获取创建的队伍异常:", err);
+      });
+      api_api.getMyTeam({
+        role: "MEMBER"
+      }).then((res) => {
+        if (res.code === 1) {
+          this.joinedTeams = res.data || [];
+        } else {
+          common_vendor.index.__f__("error", "at pages/order/order.vue:275", "获取加入的队伍失败:", res.msg);
+        }
+      }).catch((err) => {
+        common_vendor.index.__f__("error", "at pages/order/order.vue:278", "获取加入的队伍异常:", err);
+      });
+    },
+    // 跳转到队伍详情
+    goTeamDetail(team) {
+      if (!team || !team.id) {
+        common_vendor.index.__f__("error", "at pages/order/order.vue:285", "无效的队伍对象", team);
+        return;
+      }
+      common_vendor.index.navigateTo({
+        url: `/pages/team/detail?teamId=${team.id}`
+      });
+    },
     // 导航到对应页面
     navigateTo(type) {
       const url = this.pageLinks[type] || "/pages/index/index";
@@ -97,7 +162,7 @@ const _sfc_main = {
           this.isRefreshing = false;
         }
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/order/order.vue:237", "获取消息失败", err);
+        common_vendor.index.__f__("error", "at pages/order/order.vue:373", "获取消息失败", err);
         this.messageList = [];
         this.isLoading = false;
         if (this.isRefreshing) {
@@ -139,7 +204,7 @@ const _sfc_main = {
         }
         this.isLoading = false;
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/order/order.vue:287", "加载更多消息失败", err);
+        common_vendor.index.__f__("error", "at pages/order/order.vue:423", "加载更多消息失败", err);
         this.isLoading = false;
         common_vendor.index.showToast({
           title: "加载更多失败",
@@ -183,7 +248,7 @@ const _sfc_main = {
               }
             }).catch((err) => {
               common_vendor.index.hideLoading();
-              common_vendor.index.__f__("error", "at pages/order/order.vue:344", "确认消息失败", err);
+              common_vendor.index.__f__("error", "at pages/order/order.vue:480", "确认消息失败", err);
               common_vendor.index.showToast({
                 title: "确认失败，请稍后重试",
                 icon: "none"
@@ -238,7 +303,7 @@ const _sfc_main = {
         }
       }).catch((err) => {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/order/order.vue:411", "删除消息失败", err);
+        common_vendor.index.__f__("error", "at pages/order/order.vue:547", "删除消息失败", err);
         common_vendor.index.showToast({
           title: "删除失败，请稍后重试",
           icon: "none"
@@ -254,54 +319,50 @@ const _sfc_main = {
     }
   }
 };
+if (!Array) {
+  const _component_message_popup = common_vendor.resolveComponent("message-popup");
+  _component_message_popup();
+}
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return common_vendor.e({
     a: $data.currentType === 0 ? 1 : "",
     b: $data.currentType === 0 ? 1 : "",
-    c: common_vendor.o(($event) => $options.selectMessageType(0)),
+    c: common_vendor.o(($event) => ($options.selectMessageType(0), $setup.openMessagePopup(0))),
     d: $data.currentType === 2 ? 1 : "",
     e: $data.currentType === 2 ? 1 : "",
-    f: common_vendor.o(($event) => $options.selectMessageType(2)),
+    f: common_vendor.o(($event) => ($options.selectMessageType(2), $setup.openMessagePopup(2))),
     g: $data.currentType === 1 ? 1 : "",
     h: $data.currentType === 1 ? 1 : "",
-    i: common_vendor.o(($event) => $options.selectMessageType(1)),
-    j: $data.hasSelectedType
-  }, $data.hasSelectedType ? {
-    k: $data.readStatus === null ? 1 : "",
-    l: common_vendor.o(($event) => $options.switchReadStatus(null)),
-    m: $data.readStatus === false ? 1 : "",
-    n: common_vendor.o(($event) => $options.switchReadStatus(false)),
-    o: $data.readStatus === true ? 1 : "",
-    p: common_vendor.o(($event) => $options.switchReadStatus(true))
+    i: common_vendor.o(($event) => ($options.selectMessageType(1), $setup.openMessagePopup(1))),
+    j: $data.createdTeams.length > 0
+  }, $data.createdTeams.length > 0 ? {
+    k: common_vendor.f($data.createdTeams, (team, index, i0) => {
+      return {
+        a: common_vendor.t(team.name),
+        b: "created-" + team.id,
+        c: common_vendor.o(($event) => $options.goTeamDetail(team), "created-" + team.id)
+      };
+    })
   } : {}, {
-    q: !$data.hasSelectedType
-  }, !$data.hasSelectedType ? {} : common_vendor.e({
-    r: common_vendor.f($data.messageList, (item, index, i0) => {
-      return common_vendor.e({
-        a: common_vendor.t($options.formatTime(item.createTime)),
-        b: item.read
-      }, item.read ? {} : {}, {
-        c: common_vendor.t(item.title),
-        d: common_vendor.t(item.content),
-        e: common_vendor.t(item.read ? "已确认" : "确认收到"),
-        f: common_vendor.o(($event) => $options.confirmMessage(item.id, index), index),
-        g: item.read,
-        h: common_vendor.o(($event) => $options.handleDeleteMessage(item.id, item.read, index), index),
-        i: index
-      });
-    }),
-    s: $data.messageList.length === 0
-  }, $data.messageList.length === 0 ? {
-    t: common_vendor.t($options.getReadStatusText()),
-    v: common_vendor.t($options.getTypeText($data.currentType))
+    l: $data.joinedTeams.length > 0
+  }, $data.joinedTeams.length > 0 ? {
+    m: common_vendor.f($data.joinedTeams, (team, index, i0) => {
+      return {
+        a: common_vendor.t(team.name),
+        b: "joined-" + team.id,
+        c: common_vendor.o(($event) => $options.goTeamDetail(team), "joined-" + team.id)
+      };
+    })
   } : {}, {
-    w: $data.isLoading
-  }, $data.isLoading ? {} : {}), {
-    x: $data.hasSelectedType ? 1 : "",
-    y: common_vendor.o((...args) => $options.loadMore && $options.loadMore(...args)),
-    z: $data.isRefreshing,
-    A: common_vendor.o((...args) => $options.onRefresh && $options.onRefresh(...args))
-  });
+    n: $data.createdTeams.length === 0 && $data.joinedTeams.length === 0
+  }, $data.createdTeams.length === 0 && $data.joinedTeams.length === 0 ? {} : {}, {
+    o: $setup.showMessagePopup
+  }, $setup.showMessagePopup ? {
+    p: common_vendor.o($setup.closeMessagePopup),
+    q: common_vendor.p({
+      type: $setup.currentTypeMessage
+    })
+  } : {});
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);
 wx.createPage(MiniProgramPage);

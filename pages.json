@@ -107,6 +107,7 @@
 				"navigationBarTitleText" : ""
 			}
 		},
+<<<<<<< HEAD
 	
 		{
 			"path" : "pages/chat/chat",
@@ -114,6 +115,21 @@
 			{
 				"navigationBarTitleText" : ""
 			}
+=======
+		{
+			"path" : "pages/sign/sign",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/message/message",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+>>>>>>> f384d68eaef0ecd694e4a405c0d1a159a7f00049
 		}
 	],
 	"easycom": {

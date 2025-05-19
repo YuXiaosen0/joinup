@@ -78,11 +78,15 @@
 		    <text>加载失败或暂无数据</text>
 		  </view>
 		
-		  <view class="application-btn-wrapper">
-		    <button class="application-btn u-shadow-lg" @click="goToApplicationList">
+		  <view class="creator-btns-row">
+		    <button class="application-btn" @click="goToApplicationList">
 		      📬 查看加入申请
 		    </button>
+		    <button class="modify-btn" @click="modifyTeamInfo(teamDetails.name, teamDetails.description, teamDetails.currentMembersCount)">
+		      ✏️ 修改队伍信息
+		    </button>
 		  </view>
+
 
 
 	</view>
@@ -225,7 +229,7 @@
 		
 		  <!-- 加入按钮 -->
 		  <view class="apply-btn-wrapper">
-		    <button class="apply-btn" @click="openDialog">申请加入</button>
+		    <button class="apply-btn" @click="openDialog(teamDetails.currentMembersCount, teamDetails.maxMembers)">申请加入</button>
 		  </view>
 		  <ApplyToJoinDialog :show="showInputArea" :teamId="teamDetails?.id" @update:show="showInputArea = $event" />
 	</view>
@@ -238,6 +242,7 @@
 <script setup>
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import { onShow } from '@dcloudio/uni-app'
 import {
   getTeamDetails,
   judgeRole,
@@ -290,10 +295,57 @@ onLoad(async (opt) => {
   }
 })
 
+onShow(async () => {
+  if (teamId.value) {
+    const res = await getTeamDetails(teamId.value)
+    if (res) {
+      teamDetails.value = res
+    }
+
+    const roleRes = await judgeRole(teamId.value)
+    if (roleRes === null) {
+      userRole.value = 'vistor'
+    } else if (roleRes === "成员") {
+      userRole.value = 'teamMember'
+    } else {
+      userRole.value = 'creator'
+    }
+
+    // 如果是创建者可以加载申请列表（你目前注释掉了）
+    // if (userRole.value === 'creator') {
+    //   const list = await getApplicationList(teamId.value)
+    //   applicationList.value = list || []
+    // }
+  }
+})
+
 // 打开弹窗
-const openDialog = () => {
-  showInputArea.value = true
+const openDialog = (currentMembersCount, maxMembers) => {
+	
+	console.log(currentMembersCount)
+	console.log(maxMembers)
+  // 判断是否满员
+  if (currentMembersCount >= maxMembers) {
+    wx.showToast({
+      title: '团队已满员',
+      icon: 'none'
+    });
+  } else {
+    // 未满员时打开对话框
+    showInputArea.value = true;
+  }
 }
+
+// 修改队伍信息
+const modifyTeamInfo = (name, description,currentMembersCount) => {
+	
+  uni.navigateTo({
+    url: `/pages/detail/modifyTeam?teamId=${teamId.value}&currentMembers=${currentMembersCount}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`
+
+  });
+};
+
+
 
 function onSearch(value) {
   if (!value.trim()) {
@@ -572,6 +624,49 @@ const formatDate = (dateStr) => {
   text-align: center;
   color: #999999;
   margin-top: 60rpx;
+}
+
+.modify-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20rpx;
+}
+
+.modify-btn {
+  background: #4CAF50; /* 修改按钮的绿色 */
+  color: white;
+  padding: 20rpx 40rpx;
+  border: none;
+  border-radius: 50rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.modify-btn:hover {
+  opacity: 0.9;
+}
+.creator-btns-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-top: 30rpx;
+}
+
+.application-btn,
+.modify-btn {
+  flex: 1;
+  padding: 20rpx;
+  font-size: 28rpx;
+  border-radius: 12rpx;
+  background-color: #4caf50;
+  color: white;
+  text-align: center;
+}
+
+.modify-btn {
+  background-color: #2196f3;
 }
 
 

@@ -7,21 +7,21 @@
 	  
 	  <!-- 四个图标导航区域 -->
 	  <view class="icon-nav">
-		<view class="icon-item" @tap="selectMessageType(0)">
+		<view class="icon-item" @tap="selectMessageType(0), openMessagePopup(0)">
 		  <view class="icon-box" :class="{ active: currentType === 0 }">
 			<image src="https://joinup.oss-cn-beijing.aliyuncs.com/images/message/team.png" mode="aspectFit"></image>
 		  </view>
 		  <text class="icon-text" :class="{ active: currentType === 0 }">组队</text>
 		</view>
 		
-		<view class="icon-item" @tap="selectMessageType(2)">
+		<view class="icon-item" @tap="selectMessageType(2), openMessagePopup(2)">
 		  <view class="icon-box" :class="{ active: currentType === 2 }">
 			<image src="https://joinup.oss-cn-beijing.aliyuncs.com/images/message/boya.png" mode="aspectFit"></image>
 		  </view>
 		  <text class="icon-text" :class="{ active: currentType === 2 }">博雅</text>
 		</view>
 		
-		<view class="icon-item" @tap="selectMessageType(1)">
+		<view class="icon-item" @tap="selectMessageType(1), openMessagePopup(1)">
 		  <view class="icon-box" :class="{ active: currentType === 1 }">
 			<image src="https://joinup.oss-cn-beijing.aliyuncs.com/images/message/course.png" mode="aspectFit"></image>
 		  </view>
@@ -39,8 +39,49 @@
 		
 	  </view>
 	  
+	   <!-- 队伍信息展示 -->
+	    <view class="teams-container">
+	      <!-- 用户创建的队伍 -->
+	      <view v-if="createdTeams.length > 0" class="team-section">
+		  <!--
+	        <view class="section-title">我创建的队伍</view>
+			-->
+	        <view class="team-list">
+	          <view 
+	            v-for="(team, index) in createdTeams" 
+	            :key="'created-'+team.id" 
+	            class="team-item"
+	            @click="goTeamDetail(team)">
+	            {{ team.name }}
+	          </view>
+	        </view>
+	      </view>
+	      
+	      <!-- 用户加入的队伍 -->
+	      <view v-if="joinedTeams.length > 0" class="team-section">
+		  <!--
+	        <view class="section-title">我加入的队伍</view>
+			-->
+	        <view class="team-list">
+	          <view 
+	            v-for="(team, index) in joinedTeams" 
+	            :key="'joined-'+team.id" 
+	            class="team-item"
+	            @click="goTeamDetail(team)">
+	            {{ team.name }}
+	          </view>
+	        </view>
+	      </view>
+	      
+	      <!-- 没有队伍时显示 -->
+	      <view v-if="createdTeams.length === 0 && joinedTeams.length === 0" class="empty-team-tips">
+	        <text>暂无相关队伍</text>
+	      </view>
+	    </view>
+	  
 	  <!-- 选择消息分类的Tab -->
-	  <view class="message-tabs" v-if="hasSelectedType">
+	  
+	  <!-- <view class="message-tabs" v-if="hasSelectedType">
 		<view 
 		  class="tab-item" 
 		  :class="{ active: readStatus === null }" 
@@ -62,10 +103,11 @@
 		>
 		  已读
 		</view>
-	  </view>
+	  </view> -->
+	  
 	  
 	  <!-- 消息列表 -->
-	  <scroll-view 
+	  <!-- <scroll-view 
 		scroll-y 
 		class="message-list" 
 		:class="{'with-tabs': hasSelectedType}"
@@ -103,20 +145,30 @@
 		  
 		  <view v-if="messageList.length === 0" class="empty-tips">
 			<text>暂无{{getReadStatusText()}}{{getTypeText(currentType)}}消息</text>
-		  </view>
+		  </view> -->
 		  
 		  <!-- 加载更多提示 -->
-		  <view class="loading-more" v-if="isLoading">
+		  
+		  <!-- <view class="loading-more" v-if="isLoading">
 			<text>加载中...</text>
 		  </view>
 		</block>
-	  </scroll-view>
+	  </scroll-view> -->
+	  
 	</view>
+	
+	<!-- 消息弹窗组件 -->
+	  <message-popup 
+	    v-if="showMessagePopup" 
+	    :type="currentTypeMessage"
+	    @close="closeMessagePopup"
+	  />
   </template>
   
   <script>
   import { ref, reactive } from 'vue'
-  import { getUserInfo, login, modifyUserInfo, getMyMessage, markMessageRead, deleteMessage } from "../../api/api"
+  import MessagePopup from '../message/message.vue'
+  import { getUserInfo, login, modifyUserInfo, getMyMessage, markMessageRead, deleteMessage, getMyTeam} from "../../api/api"
   
   // 跳转详情页
   const goDetail = (item) => {
@@ -130,6 +182,38 @@
   }
   
   export default {
+	  
+	  components: {
+	      MessagePopup
+	    },
+	    setup() {
+	      const currentTypeMessage = ref(null)
+	      const showMessagePopup = ref(false)
+	      
+	      // 打开消息弹窗
+	      const openMessagePopup = (type) => {
+			// if (type === 0) {
+			// 	return 
+			// } else {
+				
+			// }
+	        currentTypeMessage.value = type
+	        showMessagePopup.value = true
+	      }
+	      
+	      // 关闭消息弹窗
+	      const closeMessagePopup = () => {
+	        showMessagePopup.value = false
+	      }
+	      
+	      return {
+	        currentTypeMessage,
+	        showMessagePopup,
+	        openMessagePopup,
+	        closeMessagePopup
+	      }
+	    },
+		
 	data() {
 	  return {
 		isRefreshing: false,
@@ -144,6 +228,10 @@
 		// 消息列表
 		messageList: [],
 		
+		// 队伍列表
+		createdTeams: [],  // 用户创建的队伍
+		joinedTeams: [],   // 用户加入的队伍
+		
 		// 图标页面链接
 		pageLinks: {
 		  team: '/pages/team/team',
@@ -153,7 +241,55 @@
 		}
 	  };
 	},
+	
+	// 页面加载时获取队伍信息
+	onLoad() {
+		this.fetchTeams();
+	},
+	
+	
 	methods: {
+		
+	// 获取用户相关的队伍
+	    fetchTeams() {
+	      // 先获取用户创建的队伍
+	      getMyTeam({
+	        role: 'CREATOR'
+	      }).then(res => {
+	        if (res) {
+	          this.createdTeams = res || [];
+	        } else {
+	          console.error('获取创建的队伍失败:', res.msg);
+	        }
+	      }).catch(err => {
+	        console.error('获取创建的队伍异常:', err);
+	      });
+	      
+	      // 再获取用户加入的队伍
+	      getMyTeam({
+	        role: 'MEMBER'
+	      }).then(res => {
+	        if (res.code === 1) {
+	          this.joinedTeams = res.data || [];
+	        } else {
+	          console.error('获取加入的队伍失败:', res.msg);
+	        }
+	      }).catch(err => {
+	        console.error('获取加入的队伍异常:', err);
+	      });
+	    },
+	    
+	    // 跳转到队伍详情
+	    goTeamDetail(team) {
+	      if (!team || !team.id) {
+	        console.error('无效的队伍对象', team);
+	        return;
+	      }
+	      uni.navigateTo({
+	        url: `/pages/team/detail?teamId=${team.id}`
+	      });
+	    },	
+		
 	  // 导航到对应页面
 	  navigateTo(type) {
 		const url = this.pageLinks[type] || '/pages/index/index';
@@ -686,4 +822,62 @@
 	  color: #999;
 	}
   }
+  
+  .teams-container {
+      padding: 20rpx;
+      margin-top: 20rpx;
+    }
+    
+    .team-section {
+      margin-bottom: 20rpx;
+    }
+    
+    .section-title {
+      font-size: 30rpx;
+      font-weight: bold;
+      margin-bottom: 10rpx;
+      color: #333;
+    }
+    
+    .team-list {
+      background-color: #fff;
+      border-radius: 8rpx;
+    }
+    
+    .team-item {
+      padding: 20rpx;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .team-item:last-child {
+      border-bottom: none;
+    }
+    
+    .empty-team-tips {
+      text-align: center;
+      color: #999;
+      padding: 30rpx 0;
+    }
+	
+	.container {
+	  padding: 20px;
+	}
+	
+	.message-types {
+	  display: flex;
+	  justify-content: space-around;
+	  margin-bottom: 20px;
+	}
+	
+	.type-button {
+	  padding: 10px 15px;
+	  background-color: #f5f5f5;
+	  border-radius: 5px;
+	  font-size: 14px;
+	}
+	
+	.type-button.active {
+	  background-color: #007AFF;
+	  color: #ffffff;
+	}
   </style>

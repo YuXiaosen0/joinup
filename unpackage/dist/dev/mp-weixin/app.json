@@ -13,7 +13,9 @@
     "pages/boya/boya",
     "pages/blank/blank",
     "pages/team/team",
-    "pages/sign/sign"
+    "pages/sign/sign",
+    "pages/contacts/contacts",
+    "pages/chat/chat"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -33,7 +35,7 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/order/order",
+        "pagePath": "pages/contacts/contacts",
         "iconPath": "/static/resource/images/tab_pub.png",
         "selectedIconPath": "/static/resource/images/tab_pub_seled.png",
         "text": "消息"

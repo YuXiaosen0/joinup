@@ -23,7 +23,9 @@ function sleep(value = 30) {
   });
 }
 function os() {
-  return common_vendor.index.getDeviceInfo().platform.toLowerCase();
+  const info = typeof common_vendor.index.getDeviceInfo === "function" ? common_vendor.index.getDeviceInfo() : common_vendor.index.getSystemInfoSync();
+  platform = info && info.platform ? info.platform.toLowerCase() : "";
+  return platform;
 }
 function sys() {
   return common_vendor.index.getSystemInfoSync();
@@ -181,7 +183,7 @@ function shallowMerge(target, source = {}) {
 }
 function error(err) {
   {
-    common_vendor.index.__f__("error", "at uni_modules/uview-plus/libs/function/index.js:304", `uView提示：${err}`);
+    common_vendor.index.__f__("error", "at uni_modules/uview-plus/libs/function/index.js:321", `uView提示：${err}`);
   }
 }
 function randomArray(array = []) {

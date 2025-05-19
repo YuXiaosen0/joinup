@@ -99,6 +99,21 @@
 			{
 				"navigationBarTitleText" : ""
 			}
+		},
+		{
+			"path" : "pages/contacts/contacts",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+	
+		{
+			"path" : "pages/chat/chat",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
 		}
 	],
 	"easycom": {
@@ -120,7 +135,7 @@
 				"text": "首页"
 			}, 
 			{
-				"pagePath": "pages/order/order",
+				"pagePath": "pages/contacts/contacts",
 				"iconPath": "/static/resource/images/tab_pub.png",
 				"selectedIconPath": "/static/resource/images/tab_pub_seled.png",
 				"text": "消息"

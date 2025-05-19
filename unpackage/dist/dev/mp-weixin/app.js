@@ -17,6 +17,8 @@ if (!Math) {
   "./pages/blank/blank.js";
   "./pages/team/team.js";
   "./pages/sign/sign.js";
+  "./pages/contacts/contacts.js";
+  "./pages/chat/chat.js";
 }
 const _sfc_main = {
   onLaunch: function() {

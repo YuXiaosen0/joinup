@@ -22,7 +22,7 @@ if (!Math) {
 const _sfc_main = {
   onLaunch: function() {
     common_vendor.index.setEnableDebug({
-      enableDebug: true
+      enableDebug: false
     });
     common_vendor.index.__f__("log", "at App.vue:7", "App Launch");
   },

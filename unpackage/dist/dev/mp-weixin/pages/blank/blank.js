@@ -238,9 +238,6 @@ const _sfc_main = {
           });
           return;
         }
-        common_vendor.index.showLoading({
-          title: "创建中..."
-        });
         const teamData = {
           name: this.teamForm.name,
           description: this.teamForm.description,

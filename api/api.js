@@ -8,7 +8,7 @@ export const getTeamList = ( themeId ) => {
     "pageSize": 100,
     "isAsc": true,
     "sortBy": "name"
-}, 'POST')
+	}, 'POST')
 }
 
 
@@ -71,14 +71,21 @@ export const searchTeam = async (searchString) => {
 
 // 创建标签
 export const applyCreateTag = (name, description) => {
-	console.log('name:',name)
-	console.log('description',description)
   return http(`/tag/apply`, {
 	  "name":name,
 	  "description":description
   }, 'POST')
 }
 
+//修改队伍信息
+export const modifyTeam = (teamId, name, description, open, maxMembers) => {
+  return http(`/team/${teamId}`, {
+	  "name":name,
+	  "description":description,
+	  "open":open,
+	  "maxMembers":maxMembers
+  }, 'PUT')
+}
 
 // 登录
 export const login = (code) => {
@@ -210,8 +217,15 @@ export const deleteMessage = (id) => {
 //获取所有标签
 export const getAllTags = () => {
 	return http(`/tag/list`, 'd', 'GET')
+<<<<<<< HEAD
 }
 //获取新的token
 export const getNewToken = () => {
 	return http(`/user/refreshToken`, 'd', 'GET')
+=======
+}
+//上传文件
+export const uploadFile=(file) => {
+	return http(`/oss/file/upload`, file, 'POST')
+>>>>>>> caf3343dad9a29eef3db9746657ee854bffa0640
 }

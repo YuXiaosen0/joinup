@@ -37,6 +37,59 @@ const _sfc_main = {
     const selectedSubject = common_vendor.ref("");
     const feedbackContent = common_vendor.ref("");
     const contactInfo = common_vendor.ref("");
+    common_vendor.ref();
+    const chooseFile = async () => {
+      try {
+        const res = await common_vendor.index.chooseImage({
+          count: 1,
+          // 只允许选择一个文件
+          sizeType: ["compressed"],
+          // 压缩图像
+          sourceType: ["album", "camera"]
+          // 允许从相册或拍照选择
+        });
+        const filePath = res.tempFilePaths[0];
+        common_vendor.index.__f__("log", "at pages/user/user.vue:303", "选择的文件路径:", filePath);
+        const uploadRes = await common_vendor.index.uploadFile({
+          url: "https://joinup.org.cn/api-dev/oss/file/upload",
+          // 替换为实际的上传接口
+          filePath,
+          // 文件路径
+          name: "file",
+          // 后端接收文件的字段名
+          header: {
+            "Authorization": common_vendor.index.getStorageSync("token") || ""
+            // 如果需要鉴权，传递 token
+          },
+          formData: {
+            // 如果需要额外的表单数据，可以在这里添加
+            userId: "12345"
+            // 示例：用户 ID
+          }
+        });
+        if (uploadRes.statusCode === 200) {
+          const data = JSON.parse(uploadRes.data);
+          common_vendor.index.__f__("log", "at pages/user/user.vue:322", "上传成功:", data);
+          userInfo.value.avatar = data.data.url;
+          common_vendor.index.showToast({
+            title: "上传成功",
+            icon: "success"
+          });
+        } else {
+          common_vendor.index.__f__("error", "at pages/user/user.vue:329", "上传失败，状态码:", uploadRes.statusCode);
+          common_vendor.index.showToast({
+            title: "上传失败",
+            icon: "none"
+          });
+        }
+      } catch (error) {
+        common_vendor.index.__f__("error", "at pages/user/user.vue:336", "文件选择或上传失败:", error);
+        common_vendor.index.showToast({
+          title: "上传失败",
+          icon: "none"
+        });
+      }
+    };
     const openFeedbackPopup = () => {
       showFeedbackPopup.value = true;
     };
@@ -61,16 +114,16 @@ const _sfc_main = {
         });
         return;
       }
-      common_vendor.index.__f__("log", "at pages/user/user.vue:333", "反馈主题:", selectedSubject.value);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:334", "反馈内容:", feedbackContent.value);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:335", "联系方式:", contactInfo.value);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:377", "反馈主题:", selectedSubject.value);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:378", "反馈内容:", feedbackContent.value);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:379", "联系方式:", contactInfo.value);
       const data = {
         "subject": selectedSubject.value,
         "content": feedbackContent.value,
         "contact": contactInfo.value
       };
       const res = await api_api.feedback(data);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:342", "feedback", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:386", "feedback", res);
       common_vendor.index.showToast({
         title: "反馈已提交",
         icon: "success"
@@ -95,7 +148,7 @@ const _sfc_main = {
     };
     const getSignList = async () => {
       const res = await api_api.getSignRecord(pageQuery);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:369", "res", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:413", "res", res);
       signList.value = res.list;
     };
     const close = () => {
@@ -123,17 +176,16 @@ const _sfc_main = {
     common_vendor.onLoad(async () => {
       common_vendor.index.login({
         success: async (data) => {
-          common_vendor.index.__f__("log", "at pages/user/user.vue:400", "微信登录 code:", data.code);
+          common_vendor.index.__f__("log", "at pages/user/user.vue:444", "微信登录 code:", data.code);
           try {
             const { token } = await api_api.login(data.code);
             common_vendor.index.setStorageSync("token", token);
-            common_vendor.index.__f__("log", "at pages/user/user.vue:404", "登录成功，获取到 token:", token);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:448", "登录成功，获取到 token:", token);
             const res = await api_api.getUserInfo();
             Object.assign(userInfo.value, res);
-            common_vendor.index.setStorageSync("userInfo", JSON.stringify(userInfo));
-            common_vendor.index.__f__("log", "at pages/user/user.vue:412", "用户信息:", userInfo);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:454", "用户信息:", userInfo);
           } catch (error) {
-            common_vendor.index.__f__("error", "at pages/user/user.vue:414", "登录或获取用户信息失败:", error);
+            common_vendor.index.__f__("error", "at pages/user/user.vue:456", "登录或获取用户信息失败:", error);
             common_vendor.index.showToast({
               title: "登录失败，请稍后重试",
               icon: "none"
@@ -141,7 +193,7 @@ const _sfc_main = {
           }
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/user/user.vue:422", "微信登录失败:", err);
+          common_vendor.index.__f__("error", "at pages/user/user.vue:464", "微信登录失败:", err);
           common_vendor.index.showToast({
             title: "微信登录失败",
             icon: "none"
@@ -157,15 +209,12 @@ const _sfc_main = {
         "ssoPassword": userInfo.value.ssoPassword
       };
       const res = await api_api.modifyUserInfo(data);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:441", "modifyUserInfo", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:483", "modifyUserInfo", res);
       show.value = false;
-    };
-    const onChooseavatar = (e) => {
-      userInfo.value.avatar = e.detail.avatarUrl;
     };
     const changeName = (e) => {
       userInfo.value.username = e.detail.value;
-      common_vendor.index.__f__("log", "at pages/user/user.vue:453", "userInfo", userInfo);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:495", "userInfo", userInfo);
     };
     const setFun = () => {
       common_vendor.index.showModal({
@@ -291,17 +340,16 @@ const _sfc_main = {
           show: showFeedbackPopup.value,
           round: "20"
         }),
-        W: userInfo.value.avatar,
-        X: common_vendor.o(onChooseavatar),
-        Y: common_vendor.o(changeName),
-        Z: common_vendor.t(userInfo.value.gender || "请选择性别"),
-        aa: genderOptions,
-        ab: common_vendor.o(changeGender),
-        ac: userInfo.value.ssoPassword,
-        ad: common_vendor.o(($event) => userInfo.value.ssoPassword = $event.detail.value),
-        ae: common_vendor.o(userSubmit),
-        af: common_vendor.o(close),
-        ag: common_vendor.p({
+        W: common_vendor.o(chooseFile),
+        X: common_vendor.o(changeName),
+        Y: common_vendor.t(userInfo.value.gender || "请选择性别"),
+        Z: genderOptions,
+        aa: common_vendor.o(changeGender),
+        ab: userInfo.value.ssoPassword,
+        ac: common_vendor.o(($event) => userInfo.value.ssoPassword = $event.detail.value),
+        ad: common_vendor.o(userSubmit),
+        ae: common_vendor.o(close),
+        af: common_vendor.p({
           closeable: true,
           show: show.value,
           round: "20"

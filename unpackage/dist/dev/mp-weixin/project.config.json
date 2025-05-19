@@ -1,25 +1,31 @@
 {
-  "appid": "wxe701ecf3c1a4b865",
-  "compileType": "miniprogram",
-  "libVersion": "3.8.2",
+  "description": "项目配置文件。",
   "packOptions": {
     "ignore": [],
     "include": []
   },
   "setting": {
-    "coverView": true,
+    "urlCheck": false,
     "es6": true,
-    "postcss": true,
+    "postcss": false,
     "minified": true,
-    "enhance": true,
-    "showShadowRootInWxmlPanel": true,
-    "packNpmRelationList": [],
+    "newFeature": true,
+    "bigPackageSizeSupport": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
+<<<<<<< HEAD
     }
+=======
+    },
+    "ignoreUploadUnusedFiles": false
+>>>>>>> caf3343dad9a29eef3db9746657ee854bffa0640
   },
+  "compileType": "miniprogram",
+  "libVersion": "3.8.2",
+  "appid": "wxe701ecf3c1a4b865",
+  "projectname": "myJoinup",
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",

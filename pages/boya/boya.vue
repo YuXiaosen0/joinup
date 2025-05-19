@@ -35,7 +35,8 @@
         <view class="course-actions">
           <button 
             v-if="!isCourseSelected(course.course_id)
-            &&isWithinSelectPeriod(course.select_start_date, course.select_end_date)"
+            &&isWithinSelectPeriod(course.select_start_date, course.select_end_date)
+			&&course.max_count>course.current_count"
             class="action-btn select-btn"
             @click="xuanKe(course.course_id)"
           >
@@ -52,7 +53,7 @@
             v-else
             class="action-btn disabled-btn"
           >
-            当前时间无法选课
+            无法选课
           </button>
 		  <button
 		    v-if="!hasAppointment(course.course_id)

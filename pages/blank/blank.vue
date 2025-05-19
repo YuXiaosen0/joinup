@@ -463,9 +463,9 @@ export default {
 			return;
 		}
         
-        uni.showLoading({
-          title: '创建中...'
-        });
+        // uni.showLoading({
+        //   title: '创建中...'
+        // });
 
         // 准备提交数据
         const teamData = {

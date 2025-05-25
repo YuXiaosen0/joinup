@@ -101,13 +101,6 @@
 			}
 		},
 		{
-			"path" : "pages/message/message",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
 			"path" : "pages/contacts/contacts",
 			"style" : 
 			{
@@ -122,14 +115,14 @@
 			}
 		},
 		{
-			"path" : "pages/sign/sign",
+			"path" : "pages/message/message",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
 			}
 		},
 		{
-			"path" : "pages/message/message",
+			"path" : "pages/detail/browseHistory",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""

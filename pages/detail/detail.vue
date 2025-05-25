@@ -248,7 +248,8 @@ import {
   judgeRole,
   getApplicationList,
   kickMember,
-  leaveTeamApi
+  leaveTeamApi,
+  uploadBrowse
 } from '../../api/api'
 import ApplyToJoinDialog from '@/components/applyToJoinDialog.vue'
 
@@ -269,6 +270,9 @@ onLoad(async (opt) => {
 	
     if (item?.id) {
 	  teamId.value = item.id
+	  
+	  await uploadBrowse(item.id)
+	  
       const res = await getTeamDetails(item.id)
       if (res) {
         teamDetails.value = res
@@ -297,6 +301,7 @@ onLoad(async (opt) => {
 
 onShow(async () => {
   if (teamId.value) {
+	await uploadBrowse(item.id)
     const res = await getTeamDetails(teamId.value)
     if (res) {
       teamDetails.value = res
@@ -304,7 +309,7 @@ onShow(async () => {
 
     const roleRes = await judgeRole(teamId.value)
     if (roleRes === null) {
-      userRole.value = 'vistor'
+      userRole.value = 'visitor'
     } else if (roleRes === "成员") {
       userRole.value = 'teamMember'
     } else {

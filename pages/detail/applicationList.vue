@@ -39,7 +39,9 @@ export default {
       applications: [],
       loading: true,
       error: '',
-      teamDetails: null
+      teamDetails: null,
+	  maxMember: 0,
+	  currentMember: 0
     }
   },
   async onLoad(options) {
@@ -49,7 +51,9 @@ export default {
       // 获取团队详情并解析成员列表
       const teamRes = await getTeamDetails(this.teamId)
       const memberList = teamRes.members || []
-
+	  this.maxMember = teamRes.maxMembers || 0
+	  this.currentMember = teamRes.currentMembersCount || 0
+	  console.log('!!!!!!!!!',this.maxMember)
   
       // 提取出成员 userId 列表（注意全是字符串）
       const memberUserIds = memberList.map(m => String(m.userId))
@@ -72,10 +76,22 @@ export default {
   },
   methods: {
     async handleProcess(applicationId, action) {
+		 if (action === 0) { // 同意操作，先判断是否满员
+		      if (this.currentMember >= this.maxMember) {
+		        uni.showToast({
+		          title: '队伍已满员，无法再同意新成员',
+		          icon: 'none'
+		        });
+		        return; // 阻止后续调用
+		      }
+		    }
       try {
         await processApplication(this.teamId, applicationId, action)
         // 处理成功后从列表中移除该条申请
         this.applications = this.applications.filter(item => item.id !== applicationId)
+		if (action === 0) {
+		        this.currentMember += 1;
+		      }
         uni.showToast({
           title: action === 0 ? '已同意' : '已拒绝',
           icon: 'success'

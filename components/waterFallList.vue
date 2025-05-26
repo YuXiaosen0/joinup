@@ -8,35 +8,47 @@
         class="display-card"
         @click="handleClick(item)"
       >
-        <view class="display-card-header">
-          <view class="title" v-html="highlight(item.name)"></view>
-        </view>
-
-        <view class="display-field">
-          <text class="field-name">简介：</text>
-          <view class="field-value">{{ item.description }}</view>
-        </view>
-
-        <view class="display-field">
-          <text class="field-name">人数：</text>
-          <text class="field-value">
-            {{ item.currentMembersCount }}/{{ item.maxMembers }}
-          </text>
-        </view>
-
-        <!-- 用户名和头像显示区域 -->
-        <view class="creator-info">
+        <!-- 封面图 + 标题浮层 -->
+        <view class="cover-wrapper">
           <image
-            class="creator-avatar"
-            :src="item.creatorAvatar || defaultAvatar"
+            class="cover-image"
+            :src="item.cover || defaultCover"
             mode="aspectFill"
+            :lazy-load="true"
           />
-          <text class="creator-name">{{ item.creatorUserName || '匿名用户' }}</text>
+          <view class="overlay">
+            <view class="title" v-html="highlight(item.name)"></view>
+          </view>
+        </view>
+
+        <!-- 信息内容 -->
+        <view class="info-section">
+          <view class="display-field">
+            <text class="field-name">简介：</text>
+            <view class="field-value">{{ item.description }}</view>
+          </view>
+
+          <view class="display-field">
+            <text class="field-name">人数：</text>
+            <text class="field-value">
+              {{ item.currentMembersCount }}/{{ item.maxMembers }}
+            </text>
+          </view>
+
+          <!-- 创建者信息 -->
+          <view class="creator-info">
+            <image
+              class="creator-avatar"
+              :src="item.creatorAvatar || defaultAvatar"
+              mode="aspectFill"
+            />
+            <text class="creator-name">{{ item.creatorUserName || '匿名用户' }}</text>
+          </view>
         </view>
       </view>
     </view>
 
-    <!-- 右列 -->
+    <!-- 右列（同上） -->
     <view class="column">
       <view
         v-for="(item, index) in rightList"
@@ -44,30 +56,39 @@
         class="display-card"
         @click="handleClick(item)"
       >
-        <view class="display-card-header">
-          <view class="title" v-html="highlight(item.name)"></view>
-        </view>
-
-        <view class="display-field">
-          <text class="field-name">简介：</text>
-          <view class="field-value">{{ item.description }}</view>
-        </view>
-
-        <view class="display-field">
-          <text class="field-name">人数：</text>
-          <text class="field-value">
-            {{ item.currentMembersCount }}/{{ item.maxMembers }}
-          </text>
-        </view>
-
-        <!-- 用户名和头像显示区域 -->
-        <view class="creator-info">
+        <view class="cover-wrapper">
           <image
-            class="creator-avatar"
-            :src="item.creatorAvatar || defaultAvatar"
+            class="cover-image"
+            :src="item.cover || defaultCover"
             mode="aspectFill"
+            :lazy-load="true"
           />
-          <text class="creator-name">{{ item.creatorUserName || '匿名用户' }}</text>
+          <view class="overlay">
+            <view class="title" v-html="highlight(item.name)"></view>
+          </view>
+        </view>
+
+        <view class="info-section">
+          <view class="display-field">
+            <text class="field-name">简介：</text>
+            <view class="field-value">{{ item.description }}</view>
+          </view>
+
+          <view class="display-field">
+            <text class="field-name">人数：</text>
+            <text class="field-value">
+              {{ item.currentMembersCount }}/{{ item.maxMembers }}
+            </text>
+          </view>
+
+          <view class="creator-info">
+            <image
+              class="creator-avatar"
+              :src="item.creatorAvatar ? item.creatorAvatar : defaultAvatar"
+              mode="aspectFill"
+            />
+            <text class="creator-name">{{ item.creatorUserName || '匿名用户' }}</text>
+          </view>
         </view>
       </view>
     </view>
@@ -87,11 +108,10 @@ const emit = defineEmits(['update:modelValue', 'itemClick'])
 const flowList = ref(props.modelValue)
 
 onMounted(() => {
-  //console.log('组件初始接收到的数据：', props.modelValue)
+  // console.log('组件初始接收到的数据：', props.modelValue)
 })
 
 watch(() => props.modelValue, (newVal) => {
-  //console.log('组件收到的新数据：', newVal)
   flowList.value = newVal
 })
 
@@ -117,6 +137,7 @@ const highlight = (text) => {
 }
 
 const defaultAvatar = 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
+const defaultCover = 'https://cdn-icons-png.flaticon.com/512/1055/1055687.png'
 </script>
 
 <style scoped>
@@ -135,37 +156,57 @@ const defaultAvatar = 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
 
 .display-card {
   margin-bottom: 24rpx;
-  background-color: #e0f7fa;
+  background-color: #ffffff;
   border-radius: 24rpx;
-  padding: 32rpx;
-  box-shadow: 0 12rpx 24rpx rgba(0, 0, 0, 0.12);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  break-inside: avoid;
+  overflow: hidden;
+  box-shadow: 0 12rpx 24rpx rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .display-card:hover {
   transform: translateY(-8rpx);
-  box-shadow: 0 14rpx 28rpx rgba(0, 0, 0, 0.18);
 }
 
-.display-card-header {
-  text-align: center;
-  margin-bottom: 24rpx;
+.cover-wrapper {
+  position: relative;
+  width: 100%;
+  height: 240rpx;
 }
 
-.title {
-  font-size: 36rpx;
+.cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16rpx;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+}
+
+.overlay .title {
+  font-size: 32rpx;
   font-weight: bold;
-  color: #333;
+  color: #fff;
+  text-shadow: 0 0 8rpx rgba(0, 0, 0, 0.5);
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
+}
+
+.info-section {
+  padding: 24rpx;
 }
 
 .display-field {
   margin-bottom: 16rpx;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .field-name {
@@ -173,22 +214,23 @@ const defaultAvatar = 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
   color: #555;
   font-weight: 600;
   margin-right: 8rpx;
+  white-space: nowrap;
 }
 
 .field-value {
   font-size: 28rpx;
   color: #0055aa;
-  flex: 1;
   word-break: break-word;
+  flex: 1;
 }
 
 mark {
   background-color: #ffeb3b;
   color: black;
   font-weight: bold;
+  padding: 0 4rpx;
 }
 
-/* 新增样式 */
 .creator-info {
   display: flex;
   align-items: center;

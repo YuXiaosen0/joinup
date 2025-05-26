@@ -7,6 +7,11 @@
       border
       customStyle="margin-bottom: 20rpx;"
     />
+	
+	<view>
+		<view class="label">上传封面：</view>
+		<button class="upload-btn" @click="chooseFile">选择文件</button>
+	</view>
 
     <view class="input-title">队伍描述：</view>
     <u-input
@@ -55,6 +60,7 @@ export default {
         description: '',
         open: true, // 默认公开
         maxMembers: 0,
+		cover:'',
       },
     };
   },
@@ -70,6 +76,44 @@ export default {
 	  }
   },
   methods: {
+	async chooseFile() {
+	      try {
+	        const res = await uni.chooseImage({
+	          count: 1,
+	          sizeType: ['compressed'],
+	          sourceType: ['album', 'camera'],
+	        });
+	
+	        const filePath = res.tempFilePaths[0];
+	        console.log("选择的文件路径:", filePath);
+	
+	        const uploadRes = await uni.uploadFile({
+	          url: 'https://joinup.org.cn/api-dev/oss/file/upload',
+	          filePath,
+	          name: 'file',
+	          header: {
+	            'Authorization': uni.getStorageSync('token') || '',
+	          },
+	          formData: {
+	            userId: '12345',
+	          },
+	        });
+	
+	        if (uploadRes.statusCode === 200) {
+	          const data = JSON.parse(uploadRes.data);
+	          console.log("上传成功:", data);
+	          this.teamInfo.cover = data.data.url; // 保存封面地址
+			  console.log("新封面url:", this.teamInfo.cover);
+	          uni.showToast({ title: "上传成功", icon: "success" });
+	        } else {
+	          console.error("上传失败，状态码:", uploadRes.statusCode);
+	          uni.showToast({ title: "上传失败", icon: "none" });
+	        }
+	      } catch (error) {
+	        console.error("文件选择或上传失败:", error);
+	        uni.showToast({ title: "上传失败", icon: "none" });
+	      }
+	    },  
     cancel() {
       uni.navigateBack();
     },
@@ -88,7 +132,8 @@ export default {
           this.teamInfo.name,
           this.teamInfo.description,
           this.teamInfo.open,
-          this.teamInfo.maxMembers
+          this.teamInfo.maxMembers,
+		  this.teamInfo.cover
         );
         uni.showToast({ title: '修改成功', icon: 'success' });
         uni.navigateBack();

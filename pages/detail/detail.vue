@@ -6,7 +6,12 @@
 		    <view class="team-intro">
 		      <view class="team-header">
 		        <view class="team-info">
-				  <image src="https://joinup.oss-cn-beijing.aliyuncs.com/images/img-0424/11.png" class="cover-img" mode="aspectFill"/>
+				  <image
+				    :src="teamDetails.cover || 'https://joinup.oss-cn-beijing.aliyuncs.com/images/img-0424/11.png'"
+				    class="cover-img"
+				    mode="aspectFill"
+				  />
+
 		          <view class="team-name">{{ teamDetails.name }}</view>
 		          <view class="team-description">🌟{{ teamDetails.description }}</view>
 		        </view>

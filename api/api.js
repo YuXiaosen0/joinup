@@ -78,12 +78,13 @@ export const applyCreateTag = (name, description) => {
 }
 
 //修改队伍信息
-export const modifyTeam = (teamId, name, description, open, maxMembers) => {
+export const modifyTeam = (teamId, name, description, open, maxMembers, cover) => {
   return http(`/team/${teamId}`, {
 	  "name":name,
 	  "description":description,
 	  "open":open,
-	  "maxMembers":maxMembers
+	  "maxMembers":maxMembers,
+	  "cover":cover
   }, 'PUT')
 }
 

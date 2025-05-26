@@ -6,7 +6,12 @@
 		    <view class="team-intro">
 		      <view class="team-header">
 		        <view class="team-info">
-				  <image src="https://joinup.oss-cn-beijing.aliyuncs.com/images/img-0424/11.png" class="cover-img" mode="aspectFill"/>
+				  <image
+				    :src="teamDetails.cover || 'https://joinup.oss-cn-beijing.aliyuncs.com/images/img-0424/11.png'"
+				    class="cover-img"
+				    mode="aspectFill"
+				  />
+
 		          <view class="team-name">{{ teamDetails.name }}</view>
 		          <view class="team-description">🌟{{ teamDetails.description }}</view>
 		        </view>
@@ -82,8 +87,14 @@
 		    <button class="application-btn" @click="goToApplicationList">
 		      📬 查看加入申请
 		    </button>
-		    <button class="modify-btn" @click="modifyTeamInfo(teamDetails.name, teamDetails.description, teamDetails.currentMembersCount)">
+		    <button class="modify-btn" @click="modifyTeamInfo(teamDetails.name, teamDetails.description, teamDetails.currentMembersCount, teamDetails.cover)">
 		      ✏️ 修改队伍信息
+		    </button>
+		  </view>
+		  <!-- 聊天按钮 -->
+		  <view class="chat-button-wrapper">
+		    <button class="chat-button" @click="goToChat">
+		      💬
 		    </button>
 		  </view>
 
@@ -159,6 +170,12 @@
 		  <!-- 退出队伍按钮 -->
 		  <view class="leave-btn-wrapper">
 		    <button class="leave-btn" @click="leaveTeam">退出队伍</button>
+		  </view>
+		  <!-- 聊天按钮 -->
+		  <view class="chat-button-wrapper">
+		    <button class="chat-button" @click="goToChat">
+		      💬
+		    </button>
 		  </view>
 	</view>
 	
@@ -249,7 +266,8 @@ import {
   getApplicationList,
   kickMember,
   leaveTeamApi,
-	faQiConversation
+	faQiConversation,
+  uploadBrowse
 } from '../../api/api'
 import ApplyToJoinDialog from '@/components/applyToJoinDialog.vue'
 
@@ -270,6 +288,9 @@ onLoad(async (opt) => {
 	
     if (item?.id) {
 	  teamId.value = item.id
+	  
+	  await uploadBrowse(item.id)
+	  
       const res = await getTeamDetails(item.id)
       if (res) {
         teamDetails.value = res
@@ -297,15 +318,19 @@ onLoad(async (opt) => {
 })
 
 onShow(async () => {
+	
   if (teamId.value) {
+	await uploadBrowse(teamId.value)
     const res = await getTeamDetails(teamId.value)
-    if (res) {
+    /* if (res) {
       teamDetails.value = res
-    }
-
+    } */
+	
+	teamDetails.value = res
+	
     const roleRes = await judgeRole(teamId.value)
     if (roleRes === null) {
-      userRole.value = 'vistor'
+      userRole.value = 'visitor'
     } else if (roleRes === "成员") {
       userRole.value = 'teamMember'
     } else {
@@ -344,14 +369,20 @@ const openDialog = (currentMembersCount, maxMembers) => {
 }
 
 // 修改队伍信息
-const modifyTeamInfo = (name, description,currentMembersCount) => {
+const modifyTeamInfo = (name, description,currentMembersCount, cover) => {
 	
   uni.navigateTo({
-    url: `/pages/detail/modifyTeam?teamId=${teamId.value}&currentMembers=${currentMembersCount}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`
+    url: `/pages/detail/modifyTeam?teamId=${teamId.value}&currentMembers=${currentMembersCount}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}&cover=${encodeURIComponent(cover)}`
 
   });
 };
 
+const goToChat = () => {
+  if (!teamId.value) return
+  uni.navigateTo({
+    url: `/pages/chat/chat?teamId=${teamId.value}`
+  })
+}
 
 
 function onSearch(value) {
@@ -676,5 +707,28 @@ const formatDate = (dateStr) => {
   background-color: #2196f3;
 }
 
+.chat-button-wrapper {
+  position: fixed;
+  bottom: 80rpx;
+  right: 40rpx;
+  z-index: 999;
+}
+
+.chat-button {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: #007aff;
+  color: white;
+  font-size: 40rpx;
+  text-align: center;
+  line-height: 100rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.2);
+  border: none;
+}
+
+.chat-button::after {
+  display: none;
+}
 
 </style>

@@ -22,6 +22,7 @@ const _sfc_main = {
         item = JSON.parse(decodeURIComponent(item));
         if (item == null ? void 0 : item.id) {
           teamId.value = item.id;
+          await api_api.uploadBrowse(item.id);
           const res = await api_api.getTeamDetails(item.id);
           if (res) {
             teamDetails.value = res;
@@ -34,22 +35,21 @@ const _sfc_main = {
           } else {
             userRole.value = "creator";
           }
-          common_vendor.index.__f__("log", "at pages/detail/detail.vue:286", "!!!", userRole.value);
+          common_vendor.index.__f__("log", "at pages/detail/detail.vue:307", "!!!", userRole.value);
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/detail/detail.vue:294", "加载失败：", error);
+        common_vendor.index.__f__("error", "at pages/detail/detail.vue:315", "加载失败：", error);
         teamDetails.value = null;
       }
     });
     common_vendor.onShow(async () => {
       if (teamId.value) {
+        await api_api.uploadBrowse(teamId.value);
         const res = await api_api.getTeamDetails(teamId.value);
-        if (res) {
-          teamDetails.value = res;
-        }
+        teamDetails.value = res;
         const roleRes = await api_api.judgeRole(teamId.value);
         if (roleRes === null) {
-          userRole.value = "vistor";
+          userRole.value = "visitor";
         } else if (roleRes === "成员") {
           userRole.value = "teamMember";
         } else {
@@ -59,11 +59,11 @@ const _sfc_main = {
     });
     const add = async (userId) => {
       const res = await api_api.faQiConversation(userId);
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:325", "res", res);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:350", "res", res);
     };
     const openDialog = (currentMembersCount, maxMembers) => {
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:332", currentMembersCount);
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:333", maxMembers);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:357", currentMembersCount);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:358", maxMembers);
       if (currentMembersCount >= maxMembers) {
         common_vendor.wx$1.showToast({
           title: "团队已满员",
@@ -73,9 +73,16 @@ const _sfc_main = {
         showInputArea.value = true;
       }
     };
-    const modifyTeamInfo = (name, description, currentMembersCount) => {
+    const modifyTeamInfo = (name, description, currentMembersCount, cover) => {
       common_vendor.index.navigateTo({
-        url: `/pages/detail/modifyTeam?teamId=${teamId.value}&currentMembers=${currentMembersCount}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`
+        url: `/pages/detail/modifyTeam?teamId=${teamId.value}&currentMembers=${currentMembersCount}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}&cover=${encodeURIComponent(cover)}`
+      });
+    };
+    const goToChat = () => {
+      if (!teamId.value)
+        return;
+      common_vendor.index.navigateTo({
+        url: `/pages/chat/chat?teamId=${teamId.value}`
       });
     };
     function onSearch(value) {
@@ -88,9 +95,9 @@ const _sfc_main = {
       });
     }
     const handleKick = async (memberId) => {
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:376", "!!!!!!!!!!!!!!!!!!");
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:377", teamDetails.value.id);
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:378", memberId);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:407", "!!!!!!!!!!!!!!!!!!");
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:408", teamDetails.value.id);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:409", memberId);
       await api_api.kickMember(teamDetails.value.id, memberId);
       const res = await api_api.getTeamDetails(teamDetails.value.id);
       if (res)
@@ -115,11 +122,12 @@ const _sfc_main = {
       }, userRole.value === "creator" ? common_vendor.e({
         b: teamDetails.value
       }, teamDetails.value ? common_vendor.e({
-        c: common_vendor.t(teamDetails.value.name),
-        d: common_vendor.t(teamDetails.value.description),
-        e: teamDetails.value.tags && teamDetails.value.tags.length > 0
+        c: teamDetails.value.cover || "https://joinup.oss-cn-beijing.aliyuncs.com/images/img-0424/11.png",
+        d: common_vendor.t(teamDetails.value.name),
+        e: common_vendor.t(teamDetails.value.description),
+        f: teamDetails.value.tags && teamDetails.value.tags.length > 0
       }, teamDetails.value.tags && teamDetails.value.tags.length > 0 ? {
-        f: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
+        g: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
           return {
             a: common_vendor.t(tag.name),
             b: tag.id,
@@ -127,11 +135,11 @@ const _sfc_main = {
           };
         })
       } : {}, {
-        g: teamDetails.value.members && teamDetails.value.members.length > 0
+        h: teamDetails.value.members && teamDetails.value.members.length > 0
       }, teamDetails.value.members && teamDetails.value.members.length > 0 ? {
-        h: common_vendor.t(teamDetails.value.maxMembers),
-        i: common_vendor.t(teamDetails.value.currentMembersCount),
-        j: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
+        i: common_vendor.t(teamDetails.value.maxMembers),
+        j: common_vendor.t(teamDetails.value.currentMembersCount),
+        k: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
           return common_vendor.e({
             a: member.avatar || defaultAvatar,
             b: common_vendor.o(($event) => add(member.userId), member.id),
@@ -145,16 +153,17 @@ const _sfc_main = {
           });
         })
       } : {}) : {}, {
-        k: common_vendor.o(goToApplicationList),
-        l: common_vendor.o(($event) => modifyTeamInfo(teamDetails.value.name, teamDetails.value.description, teamDetails.value.currentMembersCount))
+        l: common_vendor.o(goToApplicationList),
+        m: common_vendor.o(($event) => modifyTeamInfo(teamDetails.value.name, teamDetails.value.description, teamDetails.value.currentMembersCount, teamDetails.value.cover)),
+        n: common_vendor.o(goToChat)
       }) : userRole.value === "teamMember" ? common_vendor.e({
-        n: teamDetails.value
+        p: teamDetails.value
       }, teamDetails.value ? common_vendor.e({
-        o: common_vendor.t(teamDetails.value.name),
-        p: common_vendor.t(teamDetails.value.description),
-        q: teamDetails.value.tags && teamDetails.value.tags.length > 0
+        q: common_vendor.t(teamDetails.value.name),
+        r: common_vendor.t(teamDetails.value.description),
+        s: teamDetails.value.tags && teamDetails.value.tags.length > 0
       }, teamDetails.value.tags && teamDetails.value.tags.length > 0 ? {
-        r: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
+        t: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
           return {
             a: common_vendor.t(tag.name),
             b: tag.id,
@@ -162,11 +171,11 @@ const _sfc_main = {
           };
         })
       } : {}, {
-        s: teamDetails.value.members && teamDetails.value.members.length > 0
+        v: teamDetails.value.members && teamDetails.value.members.length > 0
       }, teamDetails.value.members && teamDetails.value.members.length > 0 ? {
-        t: common_vendor.t(teamDetails.value.maxMembers),
-        v: common_vendor.t(teamDetails.value.currentMembersCount),
-        w: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
+        w: common_vendor.t(teamDetails.value.maxMembers),
+        x: common_vendor.t(teamDetails.value.currentMembersCount),
+        y: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
           return {
             a: member.avatar || defaultAvatar,
             b: common_vendor.o(($event) => add(member.userId), member.id),
@@ -176,15 +185,16 @@ const _sfc_main = {
           };
         })
       } : {}) : {}, {
-        x: common_vendor.o(leaveTeam)
+        z: common_vendor.o(leaveTeam),
+        A: common_vendor.o(goToChat)
       }) : common_vendor.e({
-        z: teamDetails.value
+        C: teamDetails.value
       }, teamDetails.value ? common_vendor.e({
-        A: common_vendor.t(teamDetails.value.name),
-        B: common_vendor.t(teamDetails.value.description),
-        C: teamDetails.value.tags && teamDetails.value.tags.length > 0
+        D: common_vendor.t(teamDetails.value.name),
+        E: common_vendor.t(teamDetails.value.description),
+        F: teamDetails.value.tags && teamDetails.value.tags.length > 0
       }, teamDetails.value.tags && teamDetails.value.tags.length > 0 ? {
-        D: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
+        G: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
           return {
             a: common_vendor.t(tag.name),
             b: tag.id,
@@ -192,11 +202,11 @@ const _sfc_main = {
           };
         })
       } : {}, {
-        E: teamDetails.value.members && teamDetails.value.members.length > 0
+        H: teamDetails.value.members && teamDetails.value.members.length > 0
       }, teamDetails.value.members && teamDetails.value.members.length > 0 ? {
-        F: common_vendor.t(teamDetails.value.maxMembers),
-        G: common_vendor.t(teamDetails.value.currentMembersCount),
-        H: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
+        I: common_vendor.t(teamDetails.value.maxMembers),
+        J: common_vendor.t(teamDetails.value.currentMembersCount),
+        K: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
           return {
             a: member.avatar || defaultAvatar,
             b: common_vendor.o(($event) => add(member.userId), member.id),
@@ -206,15 +216,15 @@ const _sfc_main = {
           };
         })
       } : {}) : {}, {
-        I: common_vendor.o(($event) => openDialog(teamDetails.value.currentMembersCount, teamDetails.value.maxMembers)),
-        J: common_vendor.o(($event) => showInputArea.value = $event),
-        K: common_vendor.p({
+        L: common_vendor.o(($event) => openDialog(teamDetails.value.currentMembersCount, teamDetails.value.maxMembers)),
+        M: common_vendor.o(($event) => showInputArea.value = $event),
+        N: common_vendor.p({
           show: showInputArea.value,
           teamId: (_a = teamDetails.value) == null ? void 0 : _a.id
         })
       }), {
-        m: userRole.value === "teamMember",
-        y: userRole.value === "visitor"
+        o: userRole.value === "teamMember",
+        B: userRole.value === "visitor"
       });
     };
   }

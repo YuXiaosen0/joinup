@@ -258,3 +258,24 @@
 .modify-btn.data-v-eca06f3c {
   background-color: #2196f3;
 }
+.chat-button-wrapper.data-v-eca06f3c {
+  position: fixed;
+  bottom: 80rpx;
+  right: 40rpx;
+  z-index: 999;
+}
+.chat-button.data-v-eca06f3c {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: #007aff;
+  color: white;
+  font-size: 40rpx;
+  text-align: center;
+  line-height: 100rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.2);
+  border: none;
+}
+.chat-button.data-v-eca06f3c::after {
+  display: none;
+}

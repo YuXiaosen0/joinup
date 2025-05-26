@@ -38,11 +38,6 @@ function getWindowInfo() {
   ret = common_vendor.index.getWindowInfo();
   return ret;
 }
-function getDeviceInfo() {
-  let ret = {};
-  ret = common_vendor.index.getDeviceInfo();
-  return ret;
-}
 function random(min, max) {
   if (min >= 0 && max > 0 && max >= min) {
     const gab = max - min + 1;
@@ -587,12 +582,9 @@ exports.addUnit = addUnit;
 exports.deepMerge = deepMerge;
 exports.error = error;
 exports.formValidate = formValidate;
-exports.getDeviceInfo = getDeviceInfo;
 exports.getPx = getPx;
 exports.getWindowInfo = getWindowInfo;
-exports.guid = guid;
 exports.index = index;
-exports.os = os;
 exports.page = page;
 exports.queryParams = queryParams;
 exports.shallowMerge = shallowMerge;

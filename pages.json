@@ -58,6 +58,22 @@
 		},
 		{
 			
+			"path" : "pages/detail/modifyTeam",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			
+			"path" : "pages/detail/createTag",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			
 			"path" : "pages/technology/technology",
 			"style" : 
 			{
@@ -94,13 +110,6 @@
 			}
 		},
 		{
-			"path" : "pages/message/message",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
 			"path" : "pages/contacts/contacts",
 			"style" : 
 			{
@@ -115,7 +124,14 @@
 			}
 		},
 		{
-			"path" : "pages/sign/sign",
+			"path" : "pages/message/message",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/detail/browseHistory",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""

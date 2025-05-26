@@ -49,7 +49,7 @@ const _sfc_main = {
           // 允许从相册或拍照选择
         });
         const filePath = res.tempFilePaths[0];
-        common_vendor.index.__f__("log", "at pages/user/user.vue:303", "选择的文件路径:", filePath);
+        common_vendor.index.__f__("log", "at pages/user/user.vue:304", "选择的文件路径:", filePath);
         const uploadRes = await common_vendor.index.uploadFile({
           url: "https://joinup.org.cn/api-dev/oss/file/upload",
           // 替换为实际的上传接口
@@ -69,21 +69,21 @@ const _sfc_main = {
         });
         if (uploadRes.statusCode === 200) {
           const data = JSON.parse(uploadRes.data);
-          common_vendor.index.__f__("log", "at pages/user/user.vue:322", "上传成功:", data);
+          common_vendor.index.__f__("log", "at pages/user/user.vue:323", "上传成功:", data);
           userInfo.value.avatar = data.data.url;
           common_vendor.index.showToast({
             title: "上传成功",
             icon: "success"
           });
         } else {
-          common_vendor.index.__f__("error", "at pages/user/user.vue:329", "上传失败，状态码:", uploadRes.statusCode);
+          common_vendor.index.__f__("error", "at pages/user/user.vue:330", "上传失败，状态码:", uploadRes.statusCode);
           common_vendor.index.showToast({
             title: "上传失败",
             icon: "none"
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/user/user.vue:336", "文件选择或上传失败:", error);
+        common_vendor.index.__f__("error", "at pages/user/user.vue:337", "文件选择或上传失败:", error);
         common_vendor.index.showToast({
           title: "上传失败",
           icon: "none"
@@ -114,16 +114,16 @@ const _sfc_main = {
         });
         return;
       }
-      common_vendor.index.__f__("log", "at pages/user/user.vue:377", "反馈主题:", selectedSubject.value);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:378", "反馈内容:", feedbackContent.value);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:379", "联系方式:", contactInfo.value);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:378", "反馈主题:", selectedSubject.value);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:379", "反馈内容:", feedbackContent.value);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:380", "联系方式:", contactInfo.value);
       const data = {
         "subject": selectedSubject.value,
         "content": feedbackContent.value,
         "contact": contactInfo.value
       };
       const res = await api_api.feedback(data);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:386", "feedback", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:387", "feedback", res);
       common_vendor.index.showToast({
         title: "反馈已提交",
         icon: "success"
@@ -148,7 +148,7 @@ const _sfc_main = {
     };
     const getSignList = async () => {
       const res = await api_api.getSignRecord(pageQuery);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:413", "res", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:414", "res", res);
       signList.value = res.list;
     };
     const close = () => {
@@ -176,17 +176,17 @@ const _sfc_main = {
     common_vendor.onLoad(async () => {
       common_vendor.index.login({
         success: async (data) => {
-          common_vendor.index.__f__("log", "at pages/user/user.vue:444", "微信登录 code:", data.code);
+          common_vendor.index.__f__("log", "at pages/user/user.vue:445", "微信登录 code:", data.code);
           try {
             const { token } = await api_api.login(data.code);
             common_vendor.index.setStorageSync("token", token);
-            common_vendor.index.__f__("log", "at pages/user/user.vue:448", "登录成功，获取到 token:", token);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:449", "登录成功，获取到 token:", token);
             const res = await api_api.getUserInfo();
             Object.assign(userInfo.value, res);
             common_vendor.index.setStorageSync("userInfo", userInfo);
-            common_vendor.index.__f__("log", "at pages/user/user.vue:454", "用户信息:", userInfo);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:455", "用户信息:", userInfo);
           } catch (error) {
-            common_vendor.index.__f__("error", "at pages/user/user.vue:456", "登录或获取用户信息失败:", error);
+            common_vendor.index.__f__("error", "at pages/user/user.vue:457", "登录或获取用户信息失败:", error);
             common_vendor.index.showToast({
               title: "登录失败，请稍后重试",
               icon: "none"
@@ -194,7 +194,7 @@ const _sfc_main = {
           }
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/user/user.vue:464", "微信登录失败:", err);
+          common_vendor.index.__f__("error", "at pages/user/user.vue:465", "微信登录失败:", err);
           common_vendor.index.showToast({
             title: "微信登录失败",
             icon: "none"
@@ -210,12 +210,12 @@ const _sfc_main = {
         "ssoPassword": userInfo.value.ssoPassword
       };
       const res = await api_api.modifyUserInfo(data);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:483", "modifyUserInfo", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:484", "modifyUserInfo", res);
       show.value = false;
     };
     const changeName = (e) => {
       userInfo.value.username = e.detail.value;
-      common_vendor.index.__f__("log", "at pages/user/user.vue:495", "userInfo", userInfo);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:496", "userInfo", userInfo);
     };
     const setFun = () => {
       common_vendor.index.showModal({
@@ -313,44 +313,49 @@ const _sfc_main = {
         G: common_vendor.t(userInfo.value.joinedTeamCount),
         H: common_vendor.t(userInfo.value.createdTeamCount),
         I: common_vendor.p({
+          title: "浏览历史",
+          ["is-link"]: true,
+          url: "/pages/detail/browseHistory"
+        }),
+        J: common_vendor.p({
           title: "课程助手",
           ["is-link"]: true,
           url: userInfo.value.studentId ? "/pages/course/course" : "/pages/veri/veri"
         }),
-        J: common_vendor.p({
+        K: common_vendor.p({
           title: "博雅助手",
           ["is-link"]: true,
           url: "/pages/boya/boya"
         }),
-        K: common_vendor.o(openFeedbackPopup),
-        L: common_vendor.p({
+        L: common_vendor.o(openFeedbackPopup),
+        M: common_vendor.p({
           title: "反馈问题",
           ["is-link"]: true
         }),
-        M: common_vendor.t(selectedSubject.value || "请选择反馈主题"),
-        N: subjectOptions,
-        O: common_vendor.o(onSubjectChange),
-        P: feedbackContent.value,
-        Q: common_vendor.o(($event) => feedbackContent.value = $event.detail.value),
-        R: contactInfo.value,
-        S: common_vendor.o(($event) => contactInfo.value = $event.detail.value),
-        T: common_vendor.o(submitFeedback),
-        U: common_vendor.o(closeFeedbackPopup),
-        V: common_vendor.p({
+        N: common_vendor.t(selectedSubject.value || "请选择反馈主题"),
+        O: subjectOptions,
+        P: common_vendor.o(onSubjectChange),
+        Q: feedbackContent.value,
+        R: common_vendor.o(($event) => feedbackContent.value = $event.detail.value),
+        S: contactInfo.value,
+        T: common_vendor.o(($event) => contactInfo.value = $event.detail.value),
+        U: common_vendor.o(submitFeedback),
+        V: common_vendor.o(closeFeedbackPopup),
+        W: common_vendor.p({
           closeable: true,
           show: showFeedbackPopup.value,
           round: "20"
         }),
-        W: common_vendor.o(chooseFile),
-        X: common_vendor.o(changeName),
-        Y: common_vendor.t(userInfo.value.gender || "请选择性别"),
-        Z: genderOptions,
-        aa: common_vendor.o(changeGender),
-        ab: userInfo.value.ssoPassword,
-        ac: common_vendor.o(($event) => userInfo.value.ssoPassword = $event.detail.value),
-        ad: common_vendor.o(userSubmit),
-        ae: common_vendor.o(close),
-        af: common_vendor.p({
+        X: common_vendor.o(chooseFile),
+        Y: common_vendor.o(changeName),
+        Z: common_vendor.t(userInfo.value.gender || "请选择性别"),
+        aa: genderOptions,
+        ab: common_vendor.o(changeGender),
+        ac: userInfo.value.ssoPassword,
+        ad: common_vendor.o(($event) => userInfo.value.ssoPassword = $event.detail.value),
+        ae: common_vendor.o(userSubmit),
+        af: common_vendor.o(close),
+        ag: common_vendor.p({
           closeable: true,
           show: show.value,
           round: "20"

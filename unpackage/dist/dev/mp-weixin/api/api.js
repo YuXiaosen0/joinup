@@ -44,6 +44,27 @@ const kickMember = (teamId, userId) => {
 const searchTeam = async (searchString) => {
   return api_http.http(`/team/search?keyword=${searchString}`, "", "GET");
 };
+const applyCreateTag = (name, description) => {
+  return api_http.http(`/tag/apply`, {
+    "name": name,
+    "description": description
+  }, "POST");
+};
+const modifyTeam = (teamId, name, description, open, maxMembers, cover) => {
+  return api_http.http(`/team/${teamId}`, {
+    "name": name,
+    "description": description,
+    "open": open,
+    "maxMembers": maxMembers,
+    "cover": cover
+  }, "PUT");
+};
+const uploadBrowse = (teamId) => {
+  return api_http.http(`/team/${teamId}/browse`, "", "POST");
+};
+const getBrowse = () => {
+  return api_http.http(`/team/browse`, "", "GET");
+};
 const login = (code) => {
   return api_http.http("/user/wxLogin", { code }, "POST");
 };
@@ -142,6 +163,7 @@ const faQiConversation = (userId) => {
 };
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
+exports.applyCreateTag = applyCreateTag;
 exports.applyToJoin = applyToJoin;
 exports.appointBoya = appointBoya;
 exports.cancelAppoint = cancelAppoint;
@@ -157,6 +179,7 @@ exports.getAnnouncementDetails = getAnnouncementDetails;
 exports.getApplicationList = getApplicationList;
 exports.getAppointList = getAppointList;
 exports.getBoyaCourse = getBoyaCourse;
+exports.getBrowse = getBrowse;
 exports.getConversionRecord = getConversionRecord;
 exports.getCourseInfo = getCourseInfo;
 exports.getListByPage = getListByPage;
@@ -177,11 +200,13 @@ exports.listAll = listAll;
 exports.login = login;
 exports.lookupYiXuan = lookupYiXuan;
 exports.markMessageRead = markMessageRead;
+exports.modifyTeam = modifyTeam;
 exports.modifyUserInfo = modifyUserInfo;
 exports.processApplication = processApplication;
 exports.searchTeam = searchTeam;
 exports.sendVerifyCode = sendVerifyCode;
 exports.signClass = signClass;
+exports.uploadBrowse = uploadBrowse;
 exports.xuanBoya = xuanBoya;
 exports.yanzheng = yanzheng;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/api.js.map

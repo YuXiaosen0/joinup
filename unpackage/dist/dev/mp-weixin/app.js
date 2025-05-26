@@ -13,15 +13,17 @@ if (!Math) {
   "./pages/detail/announcement.js";
   "./pages/veri/veri.js";
   "./pages/detail/applicationList.js";
+  "./pages/detail/modifyTeam.js";
+  "./pages/detail/createTag.js";
   "./pages/technology/technology.js";
   "./pages/detail/searchResult.js";
   "./pages/boya/boya.js";
   "./pages/blank/blank.js";
   "./pages/team/team.js";
-  "./pages/message/message.js";
   "./pages/contacts/contacts.js";
   "./pages/chat/chat.js";
-  "./pages/sign/sign.js";
+  "./pages/message/message.js";
+  "./pages/detail/browseHistory.js";
 }
 const _sfc_main = {
   onLaunch: function() {

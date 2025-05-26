@@ -8,7 +8,9 @@ const _sfc_main = {
       applications: [],
       loading: true,
       error: "",
-      teamDetails: null
+      teamDetails: null,
+      maxMember: 0,
+      currentMember: 0
     };
   },
   async onLoad(options) {
@@ -16,6 +18,9 @@ const _sfc_main = {
       this.teamId = parseInt(options.teamId);
       const teamRes = await api_api.getTeamDetails(this.teamId);
       const memberList = teamRes.members || [];
+      this.maxMember = teamRes.maxMembers || 0;
+      this.currentMember = teamRes.currentMembersCount || 0;
+      common_vendor.index.__f__("log", "at pages/detail/applicationList.vue:56", "!!!!!!!!!", this.maxMember);
       const memberUserIds = memberList.map((m) => String(m.userId));
       const appRes = await api_api.getApplicationList(this.teamId);
       const rawList = appRes || [];
@@ -24,22 +29,34 @@ const _sfc_main = {
       });
     } catch (err) {
       this.error = "获取申请列表失败，请稍后再试";
-      common_vendor.index.__f__("error", "at pages/detail/applicationList.vue:68", err);
+      common_vendor.index.__f__("error", "at pages/detail/applicationList.vue:72", err);
     } finally {
       this.loading = false;
     }
   },
   methods: {
     async handleProcess(applicationId, action) {
+      if (action === 0) {
+        if (this.currentMember >= this.maxMember) {
+          common_vendor.index.showToast({
+            title: "队伍已满员，无法再同意新成员",
+            icon: "none"
+          });
+          return;
+        }
+      }
       try {
         await api_api.processApplication(this.teamId, applicationId, action);
         this.applications = this.applications.filter((item) => item.id !== applicationId);
+        if (action === 0) {
+          this.currentMember += 1;
+        }
         common_vendor.index.showToast({
           title: action === 0 ? "已同意" : "已拒绝",
           icon: "success"
         });
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/detail/applicationList.vue:84", err);
+        common_vendor.index.__f__("error", "at pages/detail/applicationList.vue:100", err);
         common_vendor.index.showToast({
           title: "操作失败",
           icon: "none"

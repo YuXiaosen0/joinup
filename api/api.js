@@ -78,14 +78,28 @@ export const applyCreateTag = (name, description) => {
 }
 
 //修改队伍信息
-export const modifyTeam = (teamId, name, description, open, maxMembers) => {
+export const modifyTeam = (teamId, name, description, open, maxMembers, cover) => {
   return http(`/team/${teamId}`, {
 	  "name":name,
 	  "description":description,
 	  "open":open,
-	  "maxMembers":maxMembers
+	  "maxMembers":maxMembers,
+	  "cover":cover
   }, 'PUT')
 }
+
+// 上传浏览记录
+export const uploadBrowse = (teamId) => {
+	return http(`/team/${teamId}/browse`, '', 'POST')
+}
+
+//获取浏览记录
+export const getBrowse = () => {
+	return http(`/team/browse`, '', 'GET')
+}
+
+
+
 
 // 登录
 export const login = (code) => {

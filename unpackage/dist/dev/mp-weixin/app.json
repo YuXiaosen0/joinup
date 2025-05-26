@@ -8,15 +8,17 @@
     "pages/detail/announcement",
     "pages/veri/veri",
     "pages/detail/applicationList",
+    "pages/detail/modifyTeam",
+    "pages/detail/createTag",
     "pages/technology/technology",
     "pages/detail/searchResult",
     "pages/boya/boya",
     "pages/blank/blank",
     "pages/team/team",
-    "pages/message/message",
     "pages/contacts/contacts",
     "pages/chat/chat",
-    "pages/sign/sign"
+    "pages/message/message",
+    "pages/detail/browseHistory"
   ],
   "window": {
     "navigationBarTextStyle": "black",

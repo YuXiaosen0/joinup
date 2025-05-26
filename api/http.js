@@ -17,7 +17,7 @@ export default function http(url1, data = {}, method) {
       success: res => {
         if (res.statusCode == 200||res.statusCode == 201) {
           if(data=='r'||url1=="/user/verify"||url1=="/course/task/add"){
-			if (res.data.code == 1) {
+			    if (res.data.code == 1) {
               resolve(res.data)
             } else if (res.data.code == 0) {
               uni.showToast({

@@ -94,13 +94,6 @@
 			}
 		},
 		{
-			"path" : "pages/sign/sign",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
 			"path" : "pages/message/message",
 			"style" : 
 			{
@@ -123,13 +116,6 @@
 		},
 		{
 			"path" : "pages/sign/sign",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
-			"path" : "pages/message/message",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
@@ -164,7 +150,14 @@
 				"pagePath": "pages/blank/blank",
 				"iconPath": "/static/resource/images/image_add.png",
 				"selectedIconPath": "/static/resource/images/image_add.png",
-				"text": "创建"
+				"text": "创建",
+				"midButton": true
+			},
+			{
+				"pagePath": "pages/order/order",
+				"iconPath": "/static/resource/images/tab_pub.png",
+				"selectedIconPath": "/static/resource/images/tab_pub_seled.png",
+				"text": "通知"
 			},
 			{
 				"pagePath": "pages/user/user",

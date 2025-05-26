@@ -23,9 +23,12 @@ function sleep(value = 30) {
   });
 }
 function os() {
-  const info = typeof common_vendor.index.getDeviceInfo === "function" ? common_vendor.index.getDeviceInfo() : common_vendor.index.getSystemInfoSync();
-  platform = info && info.platform ? info.platform.toLowerCase() : "";
-  return platform;
+  let info = {};
+  try {
+    info = common_vendor.index.getSystemInfoSync();
+  } catch (e) {
+  }
+  return info.platform ? info.platform.toLowerCase() : "";
 }
 function sys() {
   return common_vendor.index.getSystemInfoSync();

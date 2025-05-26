@@ -1,5 +1,4 @@
 "use strict";
-require("../common/vendor.js");
 const api_http = require("./http.js");
 const getTeamList = (themeId) => {
   return api_http.http(`/team/list?themeId=${themeId}`, {
@@ -132,6 +131,15 @@ const deleteMessage = (id) => {
 const getAllTags = () => {
   return api_http.http(`/tag/list`, "d", "GET");
 };
+const getListByPage = (num, size) => {
+  return api_http.http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`, "d", "GET");
+};
+const getConversionRecord = (conversationId, pageNumber, pageSize) => {
+  return api_http.http(`/message/chat/${conversationId}?pageNumber=${pageNumber}&pageSize=${pageSize}`, "d", "GET");
+};
+const faQiConversation = (userId) => {
+  return api_http.http(`/conversation/create?userId=${userId}`, "d", "POST");
+};
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
 exports.applyToJoin = applyToJoin;
@@ -142,13 +150,16 @@ exports.deleteBoya = deleteBoya;
 exports.deleteMessage = deleteMessage;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
+exports.faQiConversation = faQiConversation;
 exports.feedback = feedback;
 exports.getAllTags = getAllTags;
 exports.getAnnouncementDetails = getAnnouncementDetails;
 exports.getApplicationList = getApplicationList;
 exports.getAppointList = getAppointList;
 exports.getBoyaCourse = getBoyaCourse;
+exports.getConversionRecord = getConversionRecord;
 exports.getCourseInfo = getCourseInfo;
+exports.getListByPage = getListByPage;
 exports.getMyInterest = getMyInterest;
 exports.getMyMessage = getMyMessage;
 exports.getMyTeam = getMyTeam;

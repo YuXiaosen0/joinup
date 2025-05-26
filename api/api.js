@@ -226,3 +226,15 @@ export const getNewToken = () => {
 export const uploadFile=(file) => {
 	return http(`/oss/file/upload`, file, 'POST')
 }
+//分页获取会话列表
+export const getListByPage=(num,size) => {
+	return http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`,'d' , 'GET')
+}
+//获取会话的聊天记录
+export const getConversionRecord=(conversationId,pageNumber,pageSize) => {
+	return http(`/message/chat/${conversationId}?pageNumber=${pageNumber}&pageSize=${pageSize}`,'d' , 'GET')
+}
+//发起会话
+export const faQiConversation=(userId) => {
+	return http(`/conversation/create?userId=${userId}`,'d' , 'POST')
+}

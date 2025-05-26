@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
+const utils_useWebSocket = require("./utils/useWebSocket.js");
+const api_api = require("./api/api.js");
 const uni_modules_uviewPlus_index = require("./uni_modules/uview-plus/index.js");
 if (!Math) {
   "./pages/index/index.js";
@@ -16,26 +18,52 @@ if (!Math) {
   "./pages/boya/boya.js";
   "./pages/blank/blank.js";
   "./pages/team/team.js";
-  "./pages/sign/sign.js";
-<<<<<<< HEAD
+  "./pages/message/message.js";
   "./pages/contacts/contacts.js";
   "./pages/chat/chat.js";
-=======
-  "./pages/message/message.js";
->>>>>>> f384d68eaef0ecd694e4a405c0d1a159a7f00049
+  "./pages/sign/sign.js";
 }
 const _sfc_main = {
   onLaunch: function() {
-    common_vendor.index.setEnableDebug({
-      enableDebug: false
-    });
+    common_vendor.index.setEnableDebug({ enableDebug: false });
     common_vendor.index.__f__("log", "at App.vue:7", "App Launch");
+    common_vendor.index.login({
+      success: async (data) => {
+        common_vendor.index.__f__("log", "at App.vue:11", "微信登录 code:", data.code);
+        try {
+          const { token } = await api_api.login(data.code);
+          common_vendor.index.setStorageSync("token", token);
+          common_vendor.index.__f__("log", "at App.vue:15", "登录成功，获取到 token:", token);
+          const res = await api_api.getUserInfo();
+          common_vendor.index.setStorageSync("userInfo", res);
+          common_vendor.index.__f__("log", "at App.vue:19", "用户信息:", res);
+          const ws = utils_useWebSocket.useWebSocket(token);
+          ws.connect();
+          ws.onMessage((event) => {
+            common_vendor.index.__f__("log", "at App.vue:26", "全局收到消息:", event.data);
+          });
+        } catch (error) {
+          common_vendor.index.__f__("error", "at App.vue:30", "登录或获取用户信息失败:", error);
+          common_vendor.index.showToast({
+            title: "登录失败，请稍后重试",
+            icon: "none"
+          });
+        }
+      },
+      fail: (err) => {
+        common_vendor.index.__f__("error", "at App.vue:38", "微信登录失败:", err);
+        common_vendor.index.showToast({
+          title: "微信登录失败",
+          icon: "none"
+        });
+      }
+    });
   },
   onShow: function() {
-    common_vendor.index.__f__("log", "at App.vue:10", "App Show");
+    common_vendor.index.__f__("log", "at App.vue:47", "App Show");
   },
   onHide: function() {
-    common_vendor.index.__f__("log", "at App.vue:13", "App Hide");
+    common_vendor.index.__f__("log", "at App.vue:50", "App Hide");
   }
 };
 const pinia1 = common_vendor.createPinia();

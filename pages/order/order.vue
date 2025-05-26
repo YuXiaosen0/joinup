@@ -28,133 +28,8 @@
 		  <text class="icon-text" :class="{ active: currentType === 1 }">课程</text>
 		</view>
 		
-		<!-- 新增第四个图标 -->
-		
-		<!-- <view class="icon-item" @tap="navigateTo('newFeature')">
-		  <view class="icon-box">
-			<image src="https://joinup.oss-cn-beijing.aliyuncs.com/images/message/plus.png" mode="aspectFit"></image>
-		  </view>
-		  <text class="icon-text">+++</text>
-		</view> -->
-		
 	  </view>
-	  
-	   <!-- 队伍信息展示 -->
-	    <view class="teams-container">
-	      <!-- 用户创建的队伍 -->
-	      <view v-if="createdTeams.length > 0" class="team-section">
-		  <!--
-	        <view class="section-title">我创建的队伍</view>
-			-->
-	        <view class="team-list">
-	          <view 
-	            v-for="(team, index) in createdTeams" 
-	            :key="'created-'+team.id" 
-	            class="team-item"
-	            @click="goTeamDetail(team)">
-	            {{ team.name }}
-	          </view>
-	        </view>
-	      </view>
-	      
-	      <!-- 用户加入的队伍 -->
-	      <view v-if="joinedTeams.length > 0" class="team-section">
-		  <!--
-	        <view class="section-title">我加入的队伍</view>
-			-->
-	        <view class="team-list">
-	          <view 
-	            v-for="(team, index) in joinedTeams" 
-	            :key="'joined-'+team.id" 
-	            class="team-item"
-	            @click="goTeamDetail(team)">
-	            {{ team.name }}
-	          </view>
-	        </view>
-	      </view>
-	      
-	      <!-- 没有队伍时显示 -->
-	      <view v-if="createdTeams.length === 0 && joinedTeams.length === 0" class="empty-team-tips">
-	        <text>暂无相关队伍</text>
-	      </view>
-	    </view>
-	  
-	  <!-- 选择消息分类的Tab -->
-	  
-	  <!-- <view class="message-tabs" v-if="hasSelectedType">
-		<view 
-		  class="tab-item" 
-		  :class="{ active: readStatus === null }" 
-		  @tap="switchReadStatus(null)"
-		>
-		  全部
-		</view>
-		<view 
-		  class="tab-item" 
-		  :class="{ active: readStatus === false }" 
-		  @tap="switchReadStatus(false)"
-		>
-		  未读
-		</view>
-		<view 
-		  class="tab-item" 
-		  :class="{ active: readStatus === true }" 
-		  @tap="switchReadStatus(true)"
-		>
-		  已读
-		</view>
-	  </view> -->
-	  
-	  
-	  <!-- 消息列表 -->
-	  <!-- <scroll-view 
-		scroll-y 
-		class="message-list" 
-		:class="{'with-tabs': hasSelectedType}"
-		@scrolltolower="loadMore"
-		refresher-enabled
-		:refresher-triggered="isRefreshing"
-		@refresherrefresh="onRefresh">
-		
-		<view v-if="!hasSelectedType" class="select-type-tips">
-		  <text>请选择消息类型</text>
-		</view>
-		
-		<block v-else>
-		  <view v-for="(item, index) in messageList" :key="index" class="message-item">
-			<view class="message-header">
-			  <view class="message-info">
-				<text class="message-time">{{formatTime(item.createTime)}}</text>
-			  </view>
-			  <text class="message-read-status" v-if="item.read">已读</text>
-			  <text class="message-read-status unread" v-else>未读</text>
-			</view>
-			
-			<view class="message-content">
-			  <text class="message-title">{{item.title}}</text>
-			  <text class="message-text">{{item.content}}</text>
-			</view>
-			
-			<view class="message-actions">
-			  <button class="action-btn confirm" @tap="confirmMessage(item.id, index)" :disabled="item.read">
-				{{ item.read ? '已确认' : '确认收到' }}
-			  </button>
-			  <button class="action-btn delete" @tap="handleDeleteMessage(item.id, item.read, index)">删除</button>
-			</view>
-		  </view>
-		  
-		  <view v-if="messageList.length === 0" class="empty-tips">
-			<text>暂无{{getReadStatusText()}}{{getTypeText(currentType)}}消息</text>
-		  </view> -->
-		  
-		  <!-- 加载更多提示 -->
-		  
-		  <!-- <view class="loading-more" v-if="isLoading">
-			<text>加载中...</text>
-		  </view>
-		</block>
-	  </scroll-view> -->
-	  
+	
 	</view>
 	
 	<!-- 消息弹窗组件 -->
@@ -192,11 +67,6 @@
 	      
 	      // 打开消息弹窗
 	      const openMessagePopup = (type) => {
-			// if (type === 0) {
-			// 	return 
-			// } else {
-				
-			// }
 	        currentTypeMessage.value = type
 	        showMessagePopup.value = true
 	      }

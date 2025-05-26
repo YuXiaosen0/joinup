@@ -183,6 +183,7 @@ const _sfc_main = {
             common_vendor.index.__f__("log", "at pages/user/user.vue:448", "登录成功，获取到 token:", token);
             const res = await api_api.getUserInfo();
             Object.assign(userInfo.value, res);
+            common_vendor.index.setStorageSync("userInfo", userInfo);
             common_vendor.index.__f__("log", "at pages/user/user.vue:454", "用户信息:", userInfo);
           } catch (error) {
             common_vendor.index.__f__("error", "at pages/user/user.vue:456", "登录或获取用户信息失败:", error);

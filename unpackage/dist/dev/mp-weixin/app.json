@@ -13,13 +13,10 @@
     "pages/boya/boya",
     "pages/blank/blank",
     "pages/team/team",
-    "pages/sign/sign",
-<<<<<<< HEAD
+    "pages/message/message",
     "pages/contacts/contacts",
-    "pages/chat/chat"
-=======
-    "pages/message/message"
->>>>>>> f384d68eaef0ecd694e4a405c0d1a159a7f00049
+    "pages/chat/chat",
+    "pages/sign/sign"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -48,7 +45,14 @@
         "pagePath": "pages/blank/blank",
         "iconPath": "/static/resource/images/image_add.png",
         "selectedIconPath": "/static/resource/images/image_add.png",
-        "text": "创建"
+        "text": "创建",
+        "midButton": true
+      },
+      {
+        "pagePath": "pages/order/order",
+        "iconPath": "/static/resource/images/tab_pub.png",
+        "selectedIconPath": "/static/resource/images/tab_pub_seled.png",
+        "text": "通知"
       },
       {
         "pagePath": "pages/user/user",

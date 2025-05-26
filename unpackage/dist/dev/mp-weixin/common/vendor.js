@@ -7141,27 +7141,9 @@ function isConsoleWritable() {
   return isWritable;
 }
 function initRuntimeSocketService() {
-<<<<<<< HEAD
-  const hosts = "10.192.173.184,127.0.0.1";
+  const hosts = "10.192.234.85,127.0.0.1";
   const port = "8090";
-  const id = "mp-weixin_rwlWsI";
-=======
-<<<<<<< HEAD
-  const hosts = "169.254.231.3,192.168.160.1,192.168.87.1,10.193.72.16,127.0.0.1";
-  const port = "8090";
-  const id = "mp-weixin_6yTPPd";
-=======
-<<<<<<< HEAD
-  const hosts = "192.168.154.1,192.168.136.1,10.192.195.243,127.0.0.1";
-  const port = "8090";
-  const id = "mp-weixin_x_uUrJ";
-=======
-  const hosts = "169.254.231.3,192.168.160.1,192.168.87.1,10.192.23.193,127.0.0.1";
-  const port = "8090";
-  const id = "mp-weixin_SrVcDG";
->>>>>>> 86836d0ec79c45c6074cb6c55ea4201e63185cf7
->>>>>>> caf3343dad9a29eef3db9746657ee854bffa0640
->>>>>>> f384d68eaef0ecd694e4a405c0d1a159a7f00049
+  const id = "mp-weixin_P0mGcQ";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -9849,4 +9831,5 @@ exports.sr = sr;
 exports.t = t;
 exports.unref = unref;
 exports.watch = watch;
+exports.wx$1 = wx$1;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

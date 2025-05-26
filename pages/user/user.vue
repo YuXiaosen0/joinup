@@ -450,7 +450,7 @@ const submitFeedback = async() => {
 			  // 获取用户信息
 			  const res = await getUserInfo();
 				Object.assign(userInfo.value, res);
-
+				uni.setStorageSync('userInfo', userInfo);
 			  console.log("用户信息:", userInfo);
 			} catch (error) {
 			  console.error("登录或获取用户信息失败:", error);

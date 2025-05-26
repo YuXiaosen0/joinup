@@ -50,7 +50,7 @@
 		        </view>
 		      </view>
 		      <view v-for="member in teamDetails.members" :key="member.id" class="member">
-		        <image :src="member.avatar || defaultAvatar" class="member-avatar" />
+		        <image  :src="member.avatar || defaultAvatar" class="member-avatar" @click="add(member.userId)"/>
 		        <view class="member-info">
 		          <view class="member-name">{{ member.userName }}</view>
 		          <view class="member-role">角色: {{ member.role }} </view>
@@ -142,7 +142,7 @@
 		        </view>
 		      </view>
 		      <view v-for="member in teamDetails.members" :key="member.id" class="member">
-		        <image :src="member.avatar || defaultAvatar" class="member-avatar" />
+		        <image :src="member.avatar || defaultAvatar" class="member-avatar" @click="add(member.userId)"/>
 		        <view class="member-info">
 		          <view class="member-name">{{ member.userName }}</view>
 		          <view class="member-role">角色: {{ member.role }}</view>
@@ -213,7 +213,7 @@
 		        </view>
 		      </view>
 		      <view v-for="member in teamDetails.members" :key="member.id" class="member">
-		        <image :src="member.avatar || defaultAvatar" class="member-avatar" />
+		        <image :src="member.avatar || defaultAvatar" class="member-avatar" @click="add(member.userId)"/>
 		        <view class="member-info">
 		          <view class="member-name">{{ member.userName }}</view>
 		          <view class="member-role">角色: {{ member.role }}</view>
@@ -248,7 +248,8 @@ import {
   judgeRole,
   getApplicationList,
   kickMember,
-  leaveTeamApi
+  leaveTeamApi,
+	faQiConversation
 } from '../../api/api'
 import ApplyToJoinDialog from '@/components/applyToJoinDialog.vue'
 
@@ -318,6 +319,12 @@ onShow(async () => {
     // }
   }
 })
+
+const add=async(userId)=> {
+	const res= await faQiConversation(userId)
+  console.log('res', res);
+	//TODO 导航到chat页面,传入对应参数
+}
 
 // 打开弹窗
 const openDialog = (currentMembersCount, maxMembers) => {

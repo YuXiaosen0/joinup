@@ -22,15 +22,16 @@
         v-for="contact in filteredContacts" 
         :key="contact.id" 
         class="contact-item" 
-        @click="goToChat(contact.id)"
+        @click="goToChat(contact.conversation)"
       >
+      <!-- contact.unreadMessageCount为0时不显示,大于99显示99+ -->
         <view class="avatar">
-          <image :src="contact.avatar" :alt="contact.name" />
-          <view v-if="contact.unread" class="badge">{{ contact.unread > 99 ? '99+' : contact.unread }}</view>
+          <image :src="contact.cover" :alt="contact.name" />
+          <view v-if="contact.unreadMessageCount" class="badge">{{ contact.unreadMessageCount > 99 ? '99+' : contact.unreadMessageCount }}</view>
         </view>
         <view class="info">
           <view class="name">{{ contact.name }}</view>
-          <view class="last-msg">{{ contact.lastMessage }}</view>
+          <view class="last-msg">{{ contact.lastMessageContent }}</view>
         </view>
         <view class="right-content">
           <view class="time">{{ formatTime(contact.lastTime) }}</view>
@@ -38,133 +39,88 @@
       </view>
     </scroll-view>
   </view>
-  <button @click="sendMessage(`Hello, rcx,gaochaole! `)">点击</button>
+  <button @click="sendMessage()">点击</button>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
-
+import { onLoad,onShow } from '@dcloudio/uni-app';
+import {getListByPage} from "../../api/api";
+import { useWebSocket } from '../../utils/useWebSocket.js';
 // 搜索框绑定的值
 const searchQuery = ref('');
-
+const token = uni.getStorageSync('token');
+const ws = useWebSocket(token);
 // 联系人列表数据
-const contacts = ref([
-  {
-    id: 1,
-    name: '张三',
-    avatar: '../../static/resource/images/avatar_def.png',
-    lastMessage: '你好，最近怎么样？',
-    lastTime: new Date(),
-    unread: 2
-  },
-  {
-    id: 2,
-    name: '李四',
-    avatar: '../../static/resource/images/avatar_def.png',
-    lastMessage: '项目文档我已经发给你了',
-    lastTime: new Date(Date.now() - 86400000), // 昨天
-    unread: 0
-  },
-  {
-    id: 3,
-    name: '王五',
-    avatar: '../../static/resource/images/avatar_def.png',
-    lastMessage: '会议安排在下午3点',
-    lastTime: new Date(Date.now() - 3 * 86400000), // 3天前
-    unread: 5
-  }
-]);
+const contacts = ref([]);
 
 // 过滤联系人列表
 const filteredContacts = computed(() => {
   if (!searchQuery.value) return contacts.value;
   return contacts.value.filter(contact =>
     contact.name.includes(searchQuery.value) || 
-    contact.lastMessage.includes(searchQuery.value)
+    contact.lastMessageContent.includes(searchQuery.value)
   );
 });
-let time=null;
-let wss=null;
-let url=null;
-let isConnected = false; // 自定义连接状态
-
-onLoad(async() => {
-  url = "wss://joinup.org.cn/chat";
-  // 如果有 Token，将其作为查询参数附加到 URL
-  // 使用 encodeURIComponent 对参数值进行编码，避免特殊字符破坏 URL
-  let token = uni.getStorageSync('token');
-  const separator = url.includes('?') ? '&' : '?';
-  url = `${url}${separator}token=${encodeURIComponent(token)}`;
-  console.log("WebSocket连接地址:", url);
-
-  // 使用 uni.connectSocket 创建 WebSocket 连接
-  wss = uni.connectSocket({
-    url: url,
-    success: () => {
-      console.log("WebSocket连接已创建");
-    },
-    fail: (err) => {
-      console.error("WebSocket连接失败:", err);
-    }
-  });
-
-  // 绑定事件
-  wss.onOpen(openHandle);
-  wss.onClose(closeHandle);
-  wss.onMessage(messageHandle);
-  wss.onError(errorHandle);
-  
-});
-
-const openHandle = () => {
-  isConnected = true;
-  console.log("WebSocket连接已打开");
-};
-
-const closeHandle = () => {
-  isConnected = false;
-  console.log("WebSocket连接已关闭");
-};
-
-const messageHandle = (event) => {
-  console.log("收到消息:", event.data);
-};
-
-const errorHandle = () => {
-  console.error("WebSocket错误");
-};
-
-const sendMessage = (message) => {
-  if (isConnected) {
-    wss.send({
-      data: message,
-      success: () => {
-        console.log("消息发送成功:", message);
-      },
-      fail: (err) => {
-        console.error("消息发送失败:", err);
+const beforeTime=ref(new Date().getTime()-9000000);
+let wsMessageListener = async(event) => {
+    try {
+      console.log('WebSocket 消息:', event.data);
+      const data = JSON.parse(event.data);
+      console.log('解析后的消息:', data);
+      // 判断当前时间与 beforeTime 的差值是否大于 1 秒
+      const now = new Date().getTime();
+      console.log('当前时间:', now, '上次更新时间:', beforeTime.value);
+      if (now - beforeTime.value > 1000) {
+        beforeTime.value = now;
+        const res = await getListByPage(1, 100);
+        console.log("获取联系人列表:", res);
+        contacts.value = res.list.map(item => ({
+          id: item.id,
+          name: item.name,
+          cover: item.cover, 
+          lastMessageContent: item.lastMessage?.content?.text || '', 
+          lastTime: item.lastMessage?.createTime,
+          unreadMessageCount: item.unreadMessageCount,
+          type: item.type,
+          lastMessage: item.lastMessage,
+          conversation: {
+            "id": item.id,
+            "type": item.type,
+            "name": item.name,
+            "cover": item.cover
+          }
+        }));
+      } else {
+        // 跳过刷新
+        console.log('1秒内重复消息，跳过刷新');
       }
-    });
-  } else {
-    console.error("WebSocket未连接");
-  }
+    } catch (e) {
+      console.error('消息解析失败', e);
+    }
 };
 
-const restart=()=>{
-  time=setInterval(() => {
-    wss=new WebSocket(url);
-    if(wss.readyState===0){
-      clearInterval(time);
-      time=null;
-      wss.addEventListener("open",openHandle);
-      wss.addEventListener("close",closeHandle);
-      wss.addEventListener("message",messageHandle);
-      wss.addEventListener("error",errorHandle);
-      console.log("重连成功");
-    }
-  }, 1000);
-};
+onShow(async() => {
+  const res=await getListByPage(1, 100);
+  console.log("获取联系人列表:", res);
+  contacts.value = res.list.map(item => ({
+      id: item.id,
+      name: item.name,
+      cover: item.cover, 
+      lastMessageContent: item.lastMessage?.content?.text || '', 
+      lastTime: item.lastMessage?.createTime ,
+      unreadMessageCount: item.unreadMessageCount,
+      type: item.type,
+      lastMessage:item.lastMessage,
+      conversation:{"id":item.id,
+        "type":item.type,
+        "name":item.name,
+        "cover":item.cover
+      }
+  }));
+  // 注册 WebSocket 消息监听
+  ws.onMessage(wsMessageListener);
+});
 
 // 格式化时间显示
 const formatTime = (time) => {
@@ -187,10 +143,12 @@ const formatTime = (time) => {
 };
 
 // 跳转到聊天页面
-const goToChat = (contactId) => {
-  uni.navigateTo({
-    url: `/pages/chat/chat?id=${contactId}`
-  });
+const goToChat = (conversation) => {
+  console.log("跳转到聊天页面conversation", conversation);
+  const conversationStr = encodeURIComponent(JSON.stringify(conversation));
+    uni.navigateTo({
+      url: `/pages/chat/chat?conversation=${conversationStr}`
+    });
 };
 
 </script>

@@ -87,7 +87,7 @@
 		    <button class="application-btn" @click="goToApplicationList">
 		      📬 查看加入申请
 		    </button>
-		    <button class="modify-btn" @click="modifyTeamInfo(teamDetails.name, teamDetails.description, teamDetails.currentMembersCount)">
+		    <button class="modify-btn" @click="modifyTeamInfo(teamDetails.name, teamDetails.description, teamDetails.currentMembersCount, teamDetails.cover)">
 		      ✏️ 修改队伍信息
 		    </button>
 		  </view>
@@ -305,13 +305,16 @@ onLoad(async (opt) => {
 })
 
 onShow(async () => {
+	
   if (teamId.value) {
-	await uploadBrowse(item.id)
+	await uploadBrowse(teamId.value)
     const res = await getTeamDetails(teamId.value)
-    if (res) {
+    /* if (res) {
       teamDetails.value = res
-    }
-
+    } */
+	
+	teamDetails.value = res
+	
     const roleRes = await judgeRole(teamId.value)
     if (roleRes === null) {
       userRole.value = 'visitor'
@@ -347,10 +350,10 @@ const openDialog = (currentMembersCount, maxMembers) => {
 }
 
 // 修改队伍信息
-const modifyTeamInfo = (name, description,currentMembersCount) => {
+const modifyTeamInfo = (name, description,currentMembersCount, cover) => {
 	
   uni.navigateTo({
-    url: `/pages/detail/modifyTeam?teamId=${teamId.value}&currentMembers=${currentMembersCount}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`
+    url: `/pages/detail/modifyTeam?teamId=${teamId.value}&currentMembers=${currentMembersCount}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}&cover=${encodeURIComponent(cover)}`
 
   });
 };

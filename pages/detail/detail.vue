@@ -91,6 +91,12 @@
 		      ✏️ 修改队伍信息
 		    </button>
 		  </view>
+		  <!-- 聊天按钮 -->
+		  <view class="chat-button-wrapper">
+		    <button class="chat-button" @click="goToChat">
+		      💬
+		    </button>
+		  </view>
 
 
 
@@ -164,6 +170,12 @@
 		  <!-- 退出队伍按钮 -->
 		  <view class="leave-btn-wrapper">
 		    <button class="leave-btn" @click="leaveTeam">退出队伍</button>
+		  </view>
+		  <!-- 聊天按钮 -->
+		  <view class="chat-button-wrapper">
+		    <button class="chat-button" @click="goToChat">
+		      💬
+		    </button>
 		  </view>
 	</view>
 	
@@ -358,6 +370,12 @@ const modifyTeamInfo = (name, description,currentMembersCount, cover) => {
   });
 };
 
+const goToChat = () => {
+  if (!teamId.value) return
+  uni.navigateTo({
+    url: `/pages/chat/chat?teamId=${teamId.value}`
+  })
+}
 
 
 function onSearch(value) {
@@ -682,5 +700,28 @@ const formatDate = (dateStr) => {
   background-color: #2196f3;
 }
 
+.chat-button-wrapper {
+  position: fixed;
+  bottom: 80rpx;
+  right: 40rpx;
+  z-index: 999;
+}
+
+.chat-button {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: #007aff;
+  color: white;
+  font-size: 40rpx;
+  text-align: center;
+  line-height: 100rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.2);
+  border: none;
+}
+
+.chat-button::after {
+  display: none;
+}
 
 </style>

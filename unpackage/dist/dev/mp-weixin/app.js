@@ -21,17 +21,14 @@ if (!Math) {
   "./pages/boya/boya.js";
   "./pages/blank/blank.js";
   "./pages/team/team.js";
-<<<<<<< HEAD
   "./pages/sign/sign.js";
   "./pages/message/message.js";
   "./pages/contacts/contacts.js";
   "./pages/chat/chat.js";
-=======
   "./pages/contacts/contacts.js";
   "./pages/chat/chat.js";
   "./pages/message/message.js";
   "./pages/detail/browseHistory.js";
->>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
 }
 const _sfc_main = {
   onLaunch: function() {

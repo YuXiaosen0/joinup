@@ -153,6 +153,7 @@
 		        <u-cell-group>
 		            <!-- 列出多个功能项，点击时跳转到相应页面 -->
 
+					<u-cell  title="浏览历史" is-link url="/pages/detail/browseHistory"></u-cell>
 		            <u-cell  title="课程助手" is-link 
 								:url="userInfo.studentId ? '/pages/course/course' : '/pages/veri/veri'"></u-cell>
 		            <u-cell  title="博雅助手" is-link url="/pages/boya/boya"></u-cell>
@@ -450,7 +451,7 @@ const submitFeedback = async() => {
 			  // 获取用户信息
 			  const res = await getUserInfo();
 				Object.assign(userInfo.value, res);
-
+				uni.setStorageSync('userInfo', userInfo);
 			  console.log("用户信息:", userInfo);
 			} catch (error) {
 			  console.error("登录或获取用户信息失败:", error);

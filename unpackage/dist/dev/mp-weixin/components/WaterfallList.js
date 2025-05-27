@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../common/vendor.js");
 const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+const defaultCover = "https://cdn-icons-png.flaticon.com/512/1055/1055687.png";
 const _sfc_main = {
   __name: "WaterfallList",
   props: {
@@ -39,26 +40,28 @@ const _sfc_main = {
       return {
         a: common_vendor.f(leftList.value, (item, index, i0) => {
           return {
-            a: highlight(item.name),
-            b: common_vendor.t(item.description),
-            c: common_vendor.t(item.currentMembersCount),
-            d: common_vendor.t(item.maxMembers),
-            e: item.creatorAvatar || defaultAvatar,
-            f: common_vendor.t(item.creatorUserName || "匿名用户"),
-            g: item.id || `left-${index}`,
-            h: common_vendor.o(($event) => handleClick(item), item.id || `left-${index}`)
+            a: item.cover || defaultCover,
+            b: highlight(item.name),
+            c: common_vendor.t(item.description),
+            d: common_vendor.t(item.currentMembersCount),
+            e: common_vendor.t(item.maxMembers),
+            f: item.creatorAvatar || defaultAvatar,
+            g: common_vendor.t(item.creatorUserName || "匿名用户"),
+            h: item.id || `left-${index}`,
+            i: common_vendor.o(($event) => handleClick(item), item.id || `left-${index}`)
           };
         }),
         b: common_vendor.f(rightList.value, (item, index, i0) => {
           return {
-            a: highlight(item.name),
-            b: common_vendor.t(item.description),
-            c: common_vendor.t(item.currentMembersCount),
-            d: common_vendor.t(item.maxMembers),
-            e: item.creatorAvatar || defaultAvatar,
-            f: common_vendor.t(item.creatorUserName || "匿名用户"),
-            g: item.id || `right-${index}`,
-            h: common_vendor.o(($event) => handleClick(item), item.id || `right-${index}`)
+            a: item.cover || defaultCover,
+            b: highlight(item.name),
+            c: common_vendor.t(item.description),
+            d: common_vendor.t(item.currentMembersCount),
+            e: common_vendor.t(item.maxMembers),
+            f: item.creatorAvatar ? item.creatorAvatar : defaultAvatar,
+            g: common_vendor.t(item.creatorUserName || "匿名用户"),
+            h: item.id || `right-${index}`,
+            i: common_vendor.o(($event) => handleClick(item), item.id || `right-${index}`)
           };
         })
       };

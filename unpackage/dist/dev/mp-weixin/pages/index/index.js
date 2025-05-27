@@ -3,13 +3,11 @@ const common_vendor = require("../../common/vendor.js");
 const api_api = require("../../api/api.js");
 if (!Array) {
   const _easycom_up_tabs2 = common_vendor.resolveComponent("up-tabs");
-  const _easycom_up_sticky2 = common_vendor.resolveComponent("up-sticky");
-  (_easycom_up_tabs2 + _easycom_up_sticky2)();
+  _easycom_up_tabs2();
 }
 const _easycom_up_tabs = () => "../../uni_modules/uview-plus/components/u-tabs/u-tabs.js";
-const _easycom_up_sticky = () => "../../uni_modules/uview-plus/components/u-sticky/u-sticky.js";
 if (!Math) {
-  (SearchBar + SwiperBanner + _easycom_up_tabs + _easycom_up_sticky + WaterfallList)();
+  (SearchBar + SwiperBanner + _easycom_up_tabs + WaterfallList)();
 }
 const WaterfallList = () => "../../components/WaterfallList.js";
 const SearchBar = () => "../../components/SearchBar.js";
@@ -140,17 +138,15 @@ const _sfc_main = {
           current: common_vendor.unref(currentTab),
           ["active-color"]: "#3c9cff"
         }),
-        i: common_vendor.p({
-          bgColor: "#fff"
-        }),
-        j: common_vendor.o(goDetail),
-        k: common_vendor.o(($event) => common_vendor.isRef(flowList) ? flowList.value = $event : flowList = $event),
-        l: common_vendor.p({
+        i: common_vendor.o(goDetail),
+        j: common_vendor.o(($event) => common_vendor.isRef(flowList) ? flowList.value = $event : flowList = $event),
+        k: common_vendor.p({
           modelValue: common_vendor.unref(flowList)
         })
       };
     };
   }
 };
-wx.createPage(_sfc_main);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-1cf27b2a"]]);
+wx.createPage(MiniProgramPage);
 //# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/index/index.js.map

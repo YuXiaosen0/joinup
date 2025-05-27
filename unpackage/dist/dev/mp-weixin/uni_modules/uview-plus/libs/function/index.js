@@ -23,9 +23,12 @@ function sleep(value = 30) {
   });
 }
 function os() {
-  const info = typeof common_vendor.index.getDeviceInfo === "function" ? common_vendor.index.getDeviceInfo() : common_vendor.index.getSystemInfoSync();
-  platform = info && info.platform ? info.platform.toLowerCase() : "";
-  return platform;
+  let info = {};
+  try {
+    info = common_vendor.index.getSystemInfoSync();
+  } catch (e) {
+  }
+  return info.platform ? info.platform.toLowerCase() : "";
 }
 function sys() {
   return common_vendor.index.getSystemInfoSync();
@@ -33,11 +36,6 @@ function sys() {
 function getWindowInfo() {
   let ret = {};
   ret = common_vendor.index.getWindowInfo();
-  return ret;
-}
-function getDeviceInfo() {
-  let ret = {};
-  ret = common_vendor.index.getDeviceInfo();
   return ret;
 }
 function random(min, max) {
@@ -584,12 +582,9 @@ exports.addUnit = addUnit;
 exports.deepMerge = deepMerge;
 exports.error = error;
 exports.formValidate = formValidate;
-exports.getDeviceInfo = getDeviceInfo;
 exports.getPx = getPx;
 exports.getWindowInfo = getWindowInfo;
-exports.guid = guid;
 exports.index = index;
-exports.os = os;
 exports.page = page;
 exports.queryParams = queryParams;
 exports.shallowMerge = shallowMerge;

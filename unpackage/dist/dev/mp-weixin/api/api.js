@@ -1,5 +1,8 @@
 "use strict";
+<<<<<<< HEAD
 const common_vendor = require("../common/vendor.js");
+=======
+>>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
 const api_http = require("./http.js");
 const getTeamList = (themeId) => {
   return api_http.http(`/team/list?themeId=${themeId}`, {
@@ -44,6 +47,27 @@ const kickMember = (teamId, userId) => {
 };
 const searchTeam = async (searchString) => {
   return api_http.http(`/team/search?keyword=${searchString}`, "", "GET");
+};
+const applyCreateTag = (name, description) => {
+  return api_http.http(`/tag/apply`, {
+    "name": name,
+    "description": description
+  }, "POST");
+};
+const modifyTeam = (teamId, name, description, open, maxMembers, cover) => {
+  return api_http.http(`/team/${teamId}`, {
+    "name": name,
+    "description": description,
+    "open": open,
+    "maxMembers": maxMembers,
+    "cover": cover
+  }, "PUT");
+};
+const uploadBrowse = (teamId) => {
+  return api_http.http(`/team/${teamId}/browse`, "", "POST");
+};
+const getBrowse = () => {
+  return api_http.http(`/team/browse`, "", "GET");
 };
 const login = (code) => {
   return api_http.http("/user/wxLogin", { code }, "POST");
@@ -132,6 +156,7 @@ const deleteMessage = (id) => {
 const getAllTags = () => {
   return api_http.http(`/tag/list`, "d", "GET");
 };
+<<<<<<< HEAD
 const getNewToken = () => {
   return api_http.http(`/user/refreshToken`, "d", "GET");
 };
@@ -150,9 +175,20 @@ const updateToken = async () => {
     common_vendor.index.__f__("error", "at api/api.js:243", "更新token失败:", error);
     return false;
   }
+=======
+const getListByPage = (num, size) => {
+  return api_http.http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`, "d", "GET");
+};
+const getConversionRecord = (conversationId, pageNumber, pageSize) => {
+  return api_http.http(`/message/chat/${conversationId}?pageNumber=${pageNumber}&pageSize=${pageSize}`, "d", "GET");
+};
+const faQiConversation = (userId) => {
+  return api_http.http(`/conversation/create?userId=${userId}`, "d", "POST");
+>>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
 };
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
+exports.applyCreateTag = applyCreateTag;
 exports.applyToJoin = applyToJoin;
 exports.appointBoya = appointBoya;
 exports.cancelAppoint = cancelAppoint;
@@ -161,13 +197,17 @@ exports.deleteBoya = deleteBoya;
 exports.deleteMessage = deleteMessage;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
+exports.faQiConversation = faQiConversation;
 exports.feedback = feedback;
 exports.getAllTags = getAllTags;
 exports.getAnnouncementDetails = getAnnouncementDetails;
 exports.getApplicationList = getApplicationList;
 exports.getAppointList = getAppointList;
 exports.getBoyaCourse = getBoyaCourse;
+exports.getBrowse = getBrowse;
+exports.getConversionRecord = getConversionRecord;
 exports.getCourseInfo = getCourseInfo;
+exports.getListByPage = getListByPage;
 exports.getMyInterest = getMyInterest;
 exports.getMyMessage = getMyMessage;
 exports.getMyTeam = getMyTeam;
@@ -185,12 +225,17 @@ exports.listAll = listAll;
 exports.login = login;
 exports.lookupYiXuan = lookupYiXuan;
 exports.markMessageRead = markMessageRead;
+exports.modifyTeam = modifyTeam;
 exports.modifyUserInfo = modifyUserInfo;
 exports.processApplication = processApplication;
 exports.searchTeam = searchTeam;
 exports.sendVerifyCode = sendVerifyCode;
 exports.signClass = signClass;
+<<<<<<< HEAD
 exports.updateToken = updateToken;
+=======
+exports.uploadBrowse = uploadBrowse;
+>>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
 exports.xuanBoya = xuanBoya;
 exports.yanzheng = yanzheng;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/api.js.map

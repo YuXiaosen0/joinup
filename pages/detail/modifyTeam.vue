@@ -5,17 +5,28 @@
       v-model="teamInfo.name"
       placeholder="请输入队伍名称"
       border
-      customStyle="margin-bottom: 20rpx;"
+      customStyle="margin-bottom: 32rpx;"
     />
+
+    <view class="input-title">上传封面：</view>
+    <view class="upload-section">
+      <button class="upload-btn" @click="chooseFile">📁 选择封面</button>
+      <image
+        v-if="teamInfo.cover"
+        :src="teamInfo.cover"
+        class="cover-preview"
+        mode="aspectFill"
+      />
+    </view>
 
     <view class="input-title">队伍描述：</view>
     <u-input
       v-model="teamInfo.description"
       placeholder="请输入队伍描述"
       type="textarea"
-      height="140"
+      height="160"
       border
-      customStyle="margin-bottom: 20rpx;"
+      customStyle="margin-bottom: 32rpx;"
     />
 
     <view class="input-title">
@@ -27,7 +38,7 @@
       placeholder="请输入最大成员数"
       type="number"
       border
-      customStyle="margin-bottom: 20rpx;"
+      customStyle="margin-bottom: 32rpx;"
     />
 
     <view class="input-title">是否公开：</view>
@@ -53,8 +64,9 @@ export default {
       teamInfo: {
         name: '',
         description: '',
-        open: true, // 默认公开
+        open: true,
         maxMembers: 0,
+        cover: '',
       },
     };
   },
@@ -62,14 +74,55 @@ export default {
     this.teamId = Number(options.teamId);
     this.currentMembers = Number(options.currentMembers || 0);
     this.teamInfo.maxMembers = this.currentMembers;
-	if (options.name) {
-	    this.teamInfo.name = decodeURIComponent(options.name);
-	  }
-	  if (options.description) {
-	    this.teamInfo.description = decodeURIComponent(options.description);
-	  }
+    if (options.name) {
+      this.teamInfo.name = decodeURIComponent(options.name);
+    }
+    if (options.description) {
+      this.teamInfo.description = decodeURIComponent(options.description);
+    }
+    if (options.cover) {
+      this.teamInfo.cover = decodeURIComponent(options.cover);
+    }
   },
   methods: {
+    async chooseFile() {
+      try {
+        const res = await uni.chooseImage({
+          count: 1,
+          sizeType: ['compressed'],
+          sourceType: ['album', 'camera'],
+        });
+
+        const filePath = res.tempFilePaths[0];
+        console.log("选择的文件路径:", filePath);
+
+        const uploadRes = await uni.uploadFile({
+          url: 'https://joinup.org.cn/api-dev/oss/file/upload',
+          filePath,
+          name: 'file',
+          header: {
+            'Authorization': uni.getStorageSync('token') || '',
+          },
+          formData: {
+            userId: '12345',
+          },
+        });
+
+        if (uploadRes.statusCode === 200) {
+          const data = JSON.parse(uploadRes.data);
+          console.log("上传成功:", data);
+          this.teamInfo.cover = data.data.url;
+          console.log("新封面url:", this.teamInfo.cover);
+          uni.showToast({ title: "上传成功", icon: "success" });
+        } else {
+          console.error("上传失败，状态码:", uploadRes.statusCode);
+          uni.showToast({ title: "上传失败", icon: "none" });
+        }
+      } catch (error) {
+        console.error("文件选择或上传失败:", error);
+        uni.showToast({ title: "上传失败", icon: "none" });
+      }
+    },
     cancel() {
       uni.navigateBack();
     },
@@ -88,7 +141,8 @@ export default {
           this.teamInfo.name,
           this.teamInfo.description,
           this.teamInfo.open,
-          this.teamInfo.maxMembers
+          this.teamInfo.maxMembers,
+          this.teamInfo.cover
         );
         uni.showToast({ title: '修改成功', icon: 'success' });
         uni.navigateBack();
@@ -104,38 +158,66 @@ export default {
 .popup-content {
   padding: 40rpx;
   background-color: #ffffff;
-  border-radius: 16rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
 }
 
 .input-title {
   font-size: 30rpx;
-  margin-bottom: 10rpx;
+  margin-bottom: 16rpx;
   font-weight: 600;
-  color: #333;
+  color: #2c3e50;
 }
 
 .member-hint {
   font-weight: normal;
   font-size: 26rpx;
-  color: #999;
+  color: #888;
+}
+
+.upload-section {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 32rpx;
+}
+
+.upload-btn {
+  background-color: #f0f4ff;
+  color: #2979ff;
+  border: 2rpx dashed #2979ff;
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.cover-preview {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  border: 1rpx solid #eee;
+  object-fit: cover;
 }
 
 .switch-wrapper {
-  margin-bottom: 30rpx;
+  margin-bottom: 40rpx;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .input-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 50rpx;
+  margin-top: 60rpx;
 }
 
 .dialog-btn {
   flex: 1;
   margin: 0 10rpx;
   padding: 20rpx 0;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   font-size: 30rpx;
   font-weight: bold;
   box-shadow: 0 6rpx 12rpx rgba(0, 0, 0, 0.05);
@@ -143,7 +225,7 @@ export default {
 }
 
 .cancel {
-  background-color: #f2f2f2;
+  background-color: #f5f5f5;
   color: #666;
 }
 

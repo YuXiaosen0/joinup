@@ -65,10 +65,10 @@ const _sfc_main = {
         if (res) {
           this.createdTeams = res || [];
         } else {
-          common_vendor.index.__f__("error", "at pages/order/order.vue:262", "获取创建的队伍失败:", res.msg);
+          common_vendor.index.__f__("error", "at pages/order/order.vue:132", "获取创建的队伍失败:", res.msg);
         }
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/order/order.vue:265", "获取创建的队伍异常:", err);
+        common_vendor.index.__f__("error", "at pages/order/order.vue:135", "获取创建的队伍异常:", err);
       });
       api_api.getMyTeam({
         role: "MEMBER"
@@ -76,16 +76,16 @@ const _sfc_main = {
         if (res.code === 1) {
           this.joinedTeams = res.data || [];
         } else {
-          common_vendor.index.__f__("error", "at pages/order/order.vue:275", "获取加入的队伍失败:", res.msg);
+          common_vendor.index.__f__("error", "at pages/order/order.vue:145", "获取加入的队伍失败:", res.msg);
         }
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/order/order.vue:278", "获取加入的队伍异常:", err);
+        common_vendor.index.__f__("error", "at pages/order/order.vue:148", "获取加入的队伍异常:", err);
       });
     },
     // 跳转到队伍详情
     goTeamDetail(team) {
       if (!team || !team.id) {
-        common_vendor.index.__f__("error", "at pages/order/order.vue:285", "无效的队伍对象", team);
+        common_vendor.index.__f__("error", "at pages/order/order.vue:155", "无效的队伍对象", team);
         return;
       }
       common_vendor.index.navigateTo({
@@ -162,7 +162,7 @@ const _sfc_main = {
           this.isRefreshing = false;
         }
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/order/order.vue:373", "获取消息失败", err);
+        common_vendor.index.__f__("error", "at pages/order/order.vue:243", "获取消息失败", err);
         this.messageList = [];
         this.isLoading = false;
         if (this.isRefreshing) {
@@ -204,7 +204,7 @@ const _sfc_main = {
         }
         this.isLoading = false;
       }).catch((err) => {
-        common_vendor.index.__f__("error", "at pages/order/order.vue:423", "加载更多消息失败", err);
+        common_vendor.index.__f__("error", "at pages/order/order.vue:293", "加载更多消息失败", err);
         this.isLoading = false;
         common_vendor.index.showToast({
           title: "加载更多失败",
@@ -248,7 +248,7 @@ const _sfc_main = {
               }
             }).catch((err) => {
               common_vendor.index.hideLoading();
-              common_vendor.index.__f__("error", "at pages/order/order.vue:480", "确认消息失败", err);
+              common_vendor.index.__f__("error", "at pages/order/order.vue:350", "确认消息失败", err);
               common_vendor.index.showToast({
                 title: "确认失败，请稍后重试",
                 icon: "none"
@@ -303,7 +303,7 @@ const _sfc_main = {
         }
       }).catch((err) => {
         common_vendor.index.hideLoading();
-        common_vendor.index.__f__("error", "at pages/order/order.vue:547", "删除消息失败", err);
+        common_vendor.index.__f__("error", "at pages/order/order.vue:417", "删除消息失败", err);
         common_vendor.index.showToast({
           title: "删除失败，请稍后重试",
           icon: "none"
@@ -334,32 +334,10 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     g: $data.currentType === 1 ? 1 : "",
     h: $data.currentType === 1 ? 1 : "",
     i: common_vendor.o(($event) => ($options.selectMessageType(1), $setup.openMessagePopup(1))),
-    j: $data.createdTeams.length > 0
-  }, $data.createdTeams.length > 0 ? {
-    k: common_vendor.f($data.createdTeams, (team, index, i0) => {
-      return {
-        a: common_vendor.t(team.name),
-        b: "created-" + team.id,
-        c: common_vendor.o(($event) => $options.goTeamDetail(team), "created-" + team.id)
-      };
-    })
-  } : {}, {
-    l: $data.joinedTeams.length > 0
-  }, $data.joinedTeams.length > 0 ? {
-    m: common_vendor.f($data.joinedTeams, (team, index, i0) => {
-      return {
-        a: common_vendor.t(team.name),
-        b: "joined-" + team.id,
-        c: common_vendor.o(($event) => $options.goTeamDetail(team), "joined-" + team.id)
-      };
-    })
-  } : {}, {
-    n: $data.createdTeams.length === 0 && $data.joinedTeams.length === 0
-  }, $data.createdTeams.length === 0 && $data.joinedTeams.length === 0 ? {} : {}, {
-    o: $setup.showMessagePopup
+    j: $setup.showMessagePopup
   }, $setup.showMessagePopup ? {
-    p: common_vendor.o($setup.closeMessagePopup),
-    q: common_vendor.p({
+    k: common_vendor.o($setup.closeMessagePopup),
+    l: common_vendor.p({
       type: $setup.currentTypeMessage
     })
   } : {});

@@ -11,7 +11,7 @@
         ></uni-icons>
         <view class="header-info" >
           <view class="avatar">
-            <image :src="contact?.avatar" :alt="contact?.name" />
+            <image :src="contact?.cover" :alt="contact?.name" />
           </view>
           <view class="info">
             <text class="name">{{ contact?.name }}</text>
@@ -27,35 +27,48 @@
       :scroll-top="scrollTop" 
       scroll-with-animation
       @scroll="onScroll"
-      @scrolltolower="loadMoreMessages"
+      @scrolltoupper="loadMoreHistoryMessages"
     >
-      <view class="load-more" v-if="loading">
-        <uni-load-more status="loading"></uni-load-more>
+      <view v-if="isLoading" class="loading-indicator">
+        <text>加载中...</text>
       </view>
-      <!-- 展示每一条消息 -->
-      <view v-for="(msg, index) in messages"  :key="msg.id" 
+      <view
+        v-for="(msg, index) in messages.slice().reverse()"
+        :key="msg.id"
         class="message-container"
-        :class="{'message-left': msg.sender === 'other','message-right': msg.sender === 'me'}">
-        <!-- 头像（对方消息显示） -->
-        <view class="avatar" v-if="msg.sender === 'other'">
-          <image :src="contact?.avatar" :alt="contact?.name" />
-        </view>
-        
-        <!-- 消息内容 -->
-        <view class="message-content">
-          <view 
-            class="message-bubble" 
-            :class="{
-              'bubble-left': msg.sender === 'other',
-              'bubble-right': msg.sender === 'me'
-            }"
-          >
-            <text class="message-text">{{ msg.content }}</text>
-            <view class="message-meta">
-              <text class="message-time">{{ formatMessageTime(msg.time) }}</text>
+        :class="msg.sender?.id !== userInfo.id ? 'message-left' : 'message-right'"
+      >
+        <!-- 左侧消息（对方） -->
+        <template v-if="msg.sender.id !== userInfo.id">
+          <view class="avatar" v-if="contact?.type === 'private'">
+            <image :src="contact?.cover" :alt="contact?.name" />
+          </view>
+          <view class="avatar" v-else>
+            <image :src="msg.sender.avatar" :alt="msg.sender.username" />
+          </view>
+          <view class="message-content">
+            <view class="message-bubble bubble-left">
+              <text class="message-text">{{ msg.content.text }}</text>
+              <view class="message-meta">
+                <text class="message-time">{{ formatMessageTime(msg.createTime) }}</text>
+              </view>
             </view>
           </view>
-        </view>			
+        </template>
+        <!-- 右侧消息（自己） -->
+        <template v-else>
+          <view class="message-content">
+            <view class="message-bubble bubble-right">
+              <text class="message-text">{{ msg.content.text }}</text>
+              <view class="message-meta">
+                <text class="message-time">{{ formatMessageTime(msg.createTime) }}</text>
+              </view>
+            </view>
+          </view>
+          <view class="avatar">
+            <image :src="userInfo.avatar" :alt="userInfo.username" />
+          </view>
+        </template>
       </view>
     </scroll-view>
 
@@ -66,13 +79,11 @@
           type="mic" 
           size="24" 
           color="#7d7e80" 
-          @click="startVoiceInput"
         ></uni-icons>
         <uni-icons 
           type="plus" 
           size="24" 
           color="#7d7e80" 
-          @click="toggleMoreTools"
         ></uni-icons>
       </view>
       <view class="input-box">
@@ -93,7 +104,6 @@
         <text>发送</text>
       </view>
     </view>
-
     <!-- 更多工具 -->
     <view class="more-tools" v-if="showMoreTools">
       <view class="tool-item" @click="sendImage">
@@ -121,143 +131,141 @@
     </view>
 
   </view>
+
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue';
+import { ref, nextTick } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
+import { getConversionRecord } from "../../api/api";
+import { useWebSocket } from '../../utils/useWebSocket.js';
 
-// 当前联系人数据
+const userInfo = ref(uni.getStorageSync('userInfo'));
 const contact = ref(null);
 const messages = ref([]);
 const inputMessage = ref('');
-const scrollTop = ref(0);
-const loading = ref(false);
 const showMoreTools = ref(false);
 const voiceInputMode = ref(false);
+const scrollTop = ref(0);
 
-// 页面加载时获取联系人数据
-onLoad((options) => {
-  const contactId = Number(options.id);
-  
-  // 模拟从数据库获取联系人数据
-  const contacts = [
-    {
-      id: 1,
-      name: '张三',
-      avatar: '../../static/resource/images/avatar_def.png'
-    },
-    {
-      id: 2,
-      name: '李四',
-      avatar: '../../static/resource/images/avatar_def.png'
+const token = uni.getStorageSync('token');
+const ws = useWebSocket(token);
+const senderNow=ref(null);
+const receiverIdNow=ref(null);
+const conversationNow=ref(null);
+const lastSelectId=ref(null);
+const isLoading = ref(false);
+
+const loadMoreHistoryMessages = async () => {
+  if (isLoading.value) return; // 防止重复加载
+  isLoading.value = true; // 开始加载
+
+  try {
+    const res = await getConversionRecord(contact.value.id, lastSelectId.value, 10);
+    if (res.list && res.list.length) {
+      // 新历史消息追加到 messages 的末尾
+      messages.value = [...messages.value,...res.list]; // 将新消息放在前面
+      lastSelectId.value = lastSelectId.value+1; // 更新 lastSelectId
+    } else {
+      console.log("没有更多历史消息");
+      uni.showToast({
+        title: '没有更多历史消息',
+        icon: 'none'
+      });
     }
-  ];
-  
-  // 根据 ID 查找联系人
-  contact.value = contacts.find((c) => c.id === contactId);
-  
-  // 加载初始消息
-  loadMessages();
+  } catch (error) {
+    console.error('加载历史消息失败', error);
+    uni.showToast({
+      title: '加载失败，请重试',
+      icon: 'none'
+    });
+  } finally {
+    isLoading.value = false; // 加载结束
+  }
+};
 
+let wsMessageListener = async(event) => {
+    try {
+      console.log('WebSocket 消息:', event.data);
+      const data = JSON.parse(event.data);
+      console.log('解析后的消息:', data);
+      console.log('当前会话 ID:', contact.value.id);
+      // 判断是否是当前会话的消息
+      if (data.conversation.id === contact.value.id) {
+        messages.value = [
+          {
+            id: data.id,
+            sender: data.sender ,
+            content: data.content,
+            createTime: data.createTime,
+            type: data.type,
+            receiverId:data.receiverId,
+            conversation:data.conversation,
+          },
+          ...messages.value
+        ];  
+      }
+      nextTick(scrollToBottom);
+    } catch (e) {
+      console.error('消息解析失败', e);
+    }
+};
+
+onLoad(async (options) => {
+  contact.value = JSON.parse(decodeURIComponent(options.conversation));
+  conversationNow.value=JSON.parse(decodeURIComponent(options.conversation));
+  await loadMessages();
+
+  // 注册 WebSocket 消息监听
+  ws.onMessage(wsMessageListener);
 });
 
-// 加载消息
-const loadMessages = () => {
-  loading.value = true;
-  
-  // 模拟从数据库获取消息
-  setTimeout(() => {
-    const initialMessages = [
-      { id: 1, sender: 'other', content: '你好，最近怎么样？', time: new Date(Date.now() - 60000), status: 'sent' },
-      { id: 2, sender: 'me', content: '还不错，你呢？', time: new Date(Date.now() - 30000), status: 'sent' }
-    ];
-    
-    messages.value = initialMessages;
-    loading.value = false;
-    
-    // 滚动到底部
-    nextTick(() => {
-      scrollToBottom();
-    });
-  }, 500);
+const loadMessages = async () => {
+  const res = await getConversionRecord(contact.value.id, 1, 10);
+  lastSelectId.value=1;
+  messages.value = [ ...res.list];
+  nextTick(scrollToBottom);
+  //为发送消息做准备
+  if (messages.value.length > 0) {
+  senderNow.value = messages.value[0].sender;
+  senderNow.value.id=uni.getStorageSync('userInfo').id;
+  senderNow.value.avatar=uni.getStorageSync('userInfo').avatar;
+  receiverIdNow.value = messages.value[0].receiverId;
+  conversationNow.value = messages.value[0].conversation;
+  }
+  console.log('加载消息记录:', messages);
 };
 
-// 加载更多消息
-const loadMoreMessages = () => {
-  if (loading.value) return;
-  
-  loading.value = true;
-  
-  // 模拟加载更多消息
-  setTimeout(() => {
-    const moreMessages = [
-      { id: 3, sender: 'other', content: '上次说的项目进展如何了？', time: new Date(Date.now() - 86400000), status: 'sent' },
-      { id: 4, sender: 'me', content: '正在按计划进行，下周可以完成第一阶段', time: new Date(Date.now() - 86300000), status: 'sent' }
-    ];
-    
-    messages.value = [...moreMessages, ...messages.value];
-    loading.value = false;
-  }, 800);
-};
-
-// 发送消息
-const sendMessage = () => {
-	//  防止空消息发送
+const sendMessage = async() => {
   if (!inputMessage.value.trim()) return;
-  // TODO 新消息的id设置为
-  const newMsg = {
-    id: Date.now(),
-    sender: 'me',
-    content: inputMessage.value,
-    time: new Date(),
-    status: 'sending'
+  const msgObj = {
+    conversationId: contact.value.id,
+    content: { text: inputMessage.value },
+    type: 'TEXT'
   };
-  
-  // 添加到消息列表
-  messages.value = [...messages.value, newMsg];
-  
-  // 清空输入框
-  inputMessage.value = '';
-  
-  // 滚动到底部
-  nextTick(() => {
-    scrollToBottom();
-  });
-  
-  // 模拟发送成功
-  setTimeout(() => {
-    newMsg.status = 'sent';
-    messages.value = [...messages.value];
+  receiverIdNow.value= uni.getStorageSync('userInfo').id;
+  messages.value = [
+    {
+      id: 5,
+      sender: senderNow ,  //
+      content: msgObj.content,
+      createTime: new Date(),
+      type: msgObj.type,
+      receiverId:receiverIdNow,  //
+      conversation:conversationNow,  //
+    },
+    ...messages.value
     
-    // 模拟回复
-    setTimeout(() => {
-      receiveMessage('好的，有进展随时沟通');
-    }, 1500);
-  }, 800);
+  ];
+  // 通过 WebSocket 发送
+  ws.sendMessage(msgObj);
+  nextTick(scrollToBottom);
+  // await loadMessages();
+  inputMessage.value = '';
 };
 
-// 接收消息
-const receiveMessage = (content) => {
-  const newMsg = {
-    id: Date.now(),
-    sender: 'other',
-    content: content,
-    time: new Date(),
-    status: 'sent'
-  };
-  
-  messages.value = [...messages.value, newMsg];
-  
-  // 滚动到底部
-  nextTick(() => {
-    scrollToBottom();
-  });
-};
-
-// 滚动到底部
 const scrollToBottom = () => {
-  scrollTop.value = 999999;// 设置一个足够大的值，确保滚动到底部
+  scrollTop.value =  scrollTop.value+99999;
 };
 
 // 格式化消息时间
@@ -278,144 +286,9 @@ const formatMessageTime = (time) => {
   }
 };
 
-// 返回
 const goBack = () => {
   uni.navigateBack();
 };
-
-// 切换到语音输入
-const startVoiceInput = () => {
-  voiceInputMode.value = !voiceInputMode.value;
-};
-
-// 开始录音
-const startRecording = () => {
-  console.log('开始录音');
-};
-
-// 停止录音
-const stopRecording = () => {
-  console.log('停止录音');
-  voiceInputMode.value = false;
-};
-
-// 发送图片
-const sendImage = () => {
-  uni.chooseImage({
-    count: 1,
-    success: (res) => {
-      const tempFilePaths = res.tempFilePaths;
-      const newMsg = {
-        id: Date.now(),
-        sender: 'me',
-        content: '[图片]',
-        time: new Date(),
-        status: 'sending',
-        image: tempFilePaths[0]
-      };
-      
-      messages.value = [...messages.value, newMsg];
-      showMoreTools.value = false;
-      
-      // 滚动到底部
-      nextTick(() => {
-        scrollToBottom();
-      });
-      
-      // 模拟发送成功
-      setTimeout(() => {
-        newMsg.status = 'sent';
-        messages.value = [...messages.value];
-      }, 800);
-    }
-  });
-};
-
-// 发送拍摄照片
-const sendCamera = () => {
-  uni.chooseImage({
-    sourceType: ['camera'],
-    success: (res) => {
-      const tempFilePaths = res.tempFilePaths;
-      const newMsg = {
-        id: Date.now(),
-        sender: 'me',
-        content: '[照片]',
-        time: new Date(),
-        status: 'sending',
-        image: tempFilePaths[0]
-      };
-      
-      messages.value = [...messages.value, newMsg];
-      showMoreTools.value = false;
-      
-      // 滚动到底部
-      nextTick(() => {
-        scrollToBottom();
-      });
-      
-      // 模拟发送成功
-      setTimeout(() => {
-        newMsg.status = 'sent';
-        messages.value = [...messages.value];
-      }, 800);
-    }
-  });
-};
-
-// 发送位置
-const sendLocation = () => {
-  uni.chooseLocation({
-    success: (res) => {
-      const newMsg = {
-        id: Date.now(),
-        sender: 'me',
-        content: `[位置]${res.name}`,
-        time: new Date(),
-        status: 'sending',
-        location: res
-      };
-      
-      messages.value = [...messages.value, newMsg];
-      showMoreTools.value = false;
-      
-      // 滚动到底部
-      nextTick(() => {
-        scrollToBottom();
-      });
-      
-      // 模拟发送成功
-      setTimeout(() => {
-        newMsg.status = 'sent';
-        messages.value = [...messages.value];
-      }, 800);
-    }
-  });
-};
-
-// 切换更多工具
-const toggleMoreTools = () => {
-  showMoreTools.value = !showMoreTools.value;
-};
-
-// 输入框获取焦点
-const onInputFocus = () => {
-  showMoreTools.value = false;
-};
-
-// 输入框失去焦点
-const onInputBlur = () => {
-  // 延迟处理，避免影响其他点击事件
-  setTimeout(() => {
-    showMoreTools.value = false;
-  }, 200);
-};
-
-// 滚动事件
-const onScroll = (e) => {
-  // 可以在这里实现滚动到顶部加载更多消息
-};
-
 </script>
 
 <style scoped>

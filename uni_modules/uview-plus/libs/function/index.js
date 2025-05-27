@@ -49,31 +49,31 @@ export function sleep(value = 30) {
  * @returns {string} 返回所在平台(小写) 
  * @link 运行期判断平台 https://uniapp.dcloud.io/frame?id=判断平台
  */
-// export function os() {
-//   let info = {};
-//   try {
-//     info = uni.getSystemInfoSync();
-//   } catch (e) {}
-//   return info.platform ? info.platform.toLowerCase() : '';
-// }
 export function os() {
-	// #ifdef APP || H5 || MP-WEIXIN
-	// 优先用 getDeviceInfo，如果不可用则用 getSystemInfoSync
-	        const info = typeof uni.getDeviceInfo === 'function'
-	            ? uni.getDeviceInfo()
-	            : uni.getSystemInfoSync();
-	        platform = info && info.platform ? info.platform.toLowerCase() : '';
-	return platform
-	// #endif
-	// #ifndef APP || H5 || MP-WEIXIN
-	// 优先用 getDeviceInfo，如果不可用则用 getSystemInfoSync
-	        const info = typeof uni.getDeviceInfo === 'function'
-	            ? uni.getDeviceInfo()
-	            : uni.getSystemInfoSync();
-	        platform = info && info.platform ? info.platform.toLowerCase() : '';
-	return platform
-	// #endif
+  let info = {};
+  try {
+    info = uni.getSystemInfoSync();
+  } catch (e) {}
+  return info.platform ? info.platform.toLowerCase() : '';
 }
+// export function os() {
+// 	// #ifdef APP || H5 || MP-WEIXIN
+// 	// 优先用 getDeviceInfo，如果不可用则用 getSystemInfoSync
+// 	        const info = typeof uni.getDeviceInfo === 'function'
+// 	            ? uni.getDeviceInfo()
+// 	            : uni.getSystemInfoSync();
+// 	        platform = info && info.platform ? info.platform.toLowerCase() : '';
+// 	return platform
+// 	// #endif
+// 	// #ifndef APP || H5 || MP-WEIXIN
+// 	// 优先用 getDeviceInfo，如果不可用则用 getSystemInfoSync
+// 	        const info = typeof uni.getDeviceInfo === 'function'
+// 	            ? uni.getDeviceInfo()
+// 	            : uni.getSystemInfoSync();
+// 	        platform = info && info.platform ? info.platform.toLowerCase() : '';
+// 	return platform
+// 	// #endif
+// }
 /**
  * @description 获取系统信息同步接口
  * @link 获取系统信息同步接口 https://uniapp.dcloud.io/api/system/info?id=getsysteminfosync 

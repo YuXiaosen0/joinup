@@ -4,23 +4,23 @@
     <SearchBar v-model="keyword" @search="onSearch" @clear="onClear" />
 
     <!-- 轮播图 -->
-    <SwiperBanner :swiperList="swiperList" @itemClick="goAnnouncement"/>
+    <SwiperBanner :swiperList="swiperList" @itemClick="goAnnouncement" />
 
-    <!-- Tabs -->
-    <up-sticky bgColor="#fff">
-      <up-tabs :list="themes.map(item => ({ name: item.name }))" :current="currentTab" @change="onTabChange" active-color="#3c9cff" />
-    </up-sticky>
-
-    <!-- 主题描述 -->
-    <!-- <view v-if="themes.length" class="theme-description" style="margin: 12px; padding: 16px 20px; background: linear-gradient(135deg, #e0f7ff, #f9f9f9); border-radius: 12px; color: #333; font-size: 15px; line-height: 1.7; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; align-items: flex-start;">
-      <text style="font-size: 18px; color: #3c9cff; margin-right: 8px;">💡</text>
-      <text style="flex: 1;">{{ themes[currentTab]?.description || '暂无描述' }}</text>
-    </view> -->
+    <!-- Tabs：使用 position: sticky 实现吸顶 -->
+    <view class="tabs-sticky">
+      <up-tabs
+        :list="themes.map(item => ({ name: item.name }))"
+        :current="currentTab"
+        @change="onTabChange"
+        active-color="#3c9cff"
+      />
+    </view>
 
     <!-- 内容区 -->
     <WaterfallList v-model="flowList" @itemClick="goDetail" />
   </view>
 </template>
+
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
@@ -151,3 +151,12 @@ const goAnnouncement = (item) => {
   })
 }
 </script>
+
+<style scoped>
+.tabs-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #fff;
+}
+</style>

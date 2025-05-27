@@ -1,0 +1,8 @@
+
+.tabs-sticky.data-v-1cf27b2a {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #fff;
+}

@@ -8,15 +8,24 @@
     "pages/detail/announcement",
     "pages/veri/veri",
     "pages/detail/applicationList",
+    "pages/detail/modifyTeam",
+    "pages/detail/createTag",
     "pages/technology/technology",
     "pages/detail/searchResult",
     "pages/boya/boya",
     "pages/blank/blank",
     "pages/team/team",
+<<<<<<< HEAD
     "pages/sign/sign",
     "pages/message/message",
     "pages/contacts/contacts",
     "pages/chat/chat"
+=======
+    "pages/contacts/contacts",
+    "pages/chat/chat",
+    "pages/message/message",
+    "pages/detail/browseHistory"
+>>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -45,7 +54,14 @@
         "pagePath": "pages/blank/blank",
         "iconPath": "/static/resource/images/image_add.png",
         "selectedIconPath": "/static/resource/images/image_add.png",
-        "text": "创建"
+        "text": "创建",
+        "midButton": true
+      },
+      {
+        "pagePath": "pages/order/order",
+        "iconPath": "/static/resource/images/tab_pub.png",
+        "selectedIconPath": "/static/resource/images/tab_pub_seled.png",
+        "text": "通知"
       },
       {
         "pagePath": "pages/user/user",

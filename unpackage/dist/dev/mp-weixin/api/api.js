@@ -1,5 +1,5 @@
 "use strict";
-require("../common/vendor.js");
+const common_vendor = require("../common/vendor.js");
 const api_http = require("./http.js");
 const getTeamList = (themeId) => {
   return api_http.http(`/team/list?themeId=${themeId}`, {
@@ -132,6 +132,25 @@ const deleteMessage = (id) => {
 const getAllTags = () => {
   return api_http.http(`/tag/list`, "d", "GET");
 };
+const getNewToken = () => {
+  return api_http.http(`/user/refreshToken`, "d", "GET");
+};
+const updateToken = async () => {
+  try {
+    const res = await getNewToken();
+    common_vendor.index.__f__("log", "at api/api.js:233", "获取新的token:");
+    if (res) {
+      common_vendor.index.__f__("log", "at api/api.js:235", res);
+      common_vendor.index.setStorageSync("token", res.token);
+      common_vendor.index.__f__("log", "at api/api.js:238", "更新token成功:", common_vendor.index.getStorageSync("token"));
+      return true;
+    }
+    return false;
+  } catch (error) {
+    common_vendor.index.__f__("error", "at api/api.js:243", "更新token失败:", error);
+    return false;
+  }
+};
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
 exports.applyToJoin = applyToJoin;
@@ -171,6 +190,7 @@ exports.processApplication = processApplication;
 exports.searchTeam = searchTeam;
 exports.sendVerifyCode = sendVerifyCode;
 exports.signClass = signClass;
+exports.updateToken = updateToken;
 exports.xuanBoya = xuanBoya;
 exports.yanzheng = yanzheng;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/api.js.map

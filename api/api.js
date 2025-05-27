@@ -226,3 +226,21 @@ export const getNewToken = () => {
 export const uploadFile=(file) => {
 	return http(`/oss/file/upload`, file, 'POST')
 }
+
+export const updateToken = async () => {
+  try {
+    const res = await getNewToken()
+	console.log('获取新的token:')
+    if (res) {
+		console.log(res)
+      // 更新本地存储的token
+      uni.setStorageSync('token', res.token)
+	  console.log('更新token成功:', uni.getStorageSync('token'))
+      return true
+    }
+    return false
+  } catch (error) {
+    console.error('更新token失败:', error)
+    return false
+  }
+}

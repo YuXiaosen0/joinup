@@ -120,20 +120,6 @@
 			{
 				"navigationBarTitleText" : ""
 			}
-		},
-		{
-			"path" : "pages/sign/sign",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
-			"path" : "pages/message/message",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
 		}
 	],
 	"easycom": {

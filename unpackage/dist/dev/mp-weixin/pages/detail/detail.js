@@ -34,15 +34,45 @@ const _sfc_main = {
           } else {
             userRole.value = "creator";
           }
-          common_vendor.index.__f__("log", "at pages/detail/detail.vue:280", "!!!", userRole.value);
+          common_vendor.index.__f__("log", "at pages/detail/detail.vue:285", "!!!", userRole.value);
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/detail/detail.vue:288", "加载失败：", error);
+        common_vendor.index.__f__("error", "at pages/detail/detail.vue:293", "加载失败：", error);
         teamDetails.value = null;
       }
     });
-    const openDialog = () => {
-      showInputArea.value = true;
+    common_vendor.onShow(async () => {
+      if (teamId.value) {
+        const res = await api_api.getTeamDetails(teamId.value);
+        if (res) {
+          teamDetails.value = res;
+        }
+        const roleRes = await api_api.judgeRole(teamId.value);
+        if (roleRes === null) {
+          userRole.value = "vistor";
+        } else if (roleRes === "成员") {
+          userRole.value = "teamMember";
+        } else {
+          userRole.value = "creator";
+        }
+      }
+    });
+    const openDialog = (currentMembersCount, maxMembers) => {
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:325", currentMembersCount);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:326", maxMembers);
+      if (currentMembersCount >= maxMembers) {
+        common_vendor.wx$1.showToast({
+          title: "团队已满员",
+          icon: "none"
+        });
+      } else {
+        showInputArea.value = true;
+      }
+    };
+    const modifyTeamInfo = (name, description, currentMembersCount) => {
+      common_vendor.index.navigateTo({
+        url: `/pages/detail/modifyTeam?teamId=${teamId.value}&currentMembers=${currentMembersCount}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`
+      });
     };
     function onSearch(value) {
       if (!value.trim()) {
@@ -54,9 +84,9 @@ const _sfc_main = {
       });
     }
     const handleKick = async (memberId) => {
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:317", "!!!!!!!!!!!!!!!!!!");
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:318", teamDetails.value.id);
-      common_vendor.index.__f__("log", "at pages/detail/detail.vue:319", memberId);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:369", "!!!!!!!!!!!!!!!!!!");
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:370", teamDetails.value.id);
+      common_vendor.index.__f__("log", "at pages/detail/detail.vue:371", memberId);
       await api_api.kickMember(teamDetails.value.id, memberId);
       const res = await api_api.getTeamDetails(teamDetails.value.id);
       if (res)
@@ -110,15 +140,16 @@ const _sfc_main = {
           });
         })
       } : {}) : {}, {
-        k: common_vendor.o(goToApplicationList)
+        k: common_vendor.o(goToApplicationList),
+        l: common_vendor.o(($event) => modifyTeamInfo(teamDetails.value.name, teamDetails.value.description, teamDetails.value.currentMembersCount))
       }) : userRole.value === "teamMember" ? common_vendor.e({
-        m: teamDetails.value
+        n: teamDetails.value
       }, teamDetails.value ? common_vendor.e({
-        n: common_vendor.t(teamDetails.value.name),
-        o: common_vendor.t(teamDetails.value.description),
-        p: teamDetails.value.tags && teamDetails.value.tags.length > 0
+        o: common_vendor.t(teamDetails.value.name),
+        p: common_vendor.t(teamDetails.value.description),
+        q: teamDetails.value.tags && teamDetails.value.tags.length > 0
       }, teamDetails.value.tags && teamDetails.value.tags.length > 0 ? {
-        q: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
+        r: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
           return {
             a: common_vendor.t(tag.name),
             b: tag.id,
@@ -126,11 +157,11 @@ const _sfc_main = {
           };
         })
       } : {}, {
-        r: teamDetails.value.members && teamDetails.value.members.length > 0
+        s: teamDetails.value.members && teamDetails.value.members.length > 0
       }, teamDetails.value.members && teamDetails.value.members.length > 0 ? {
-        s: common_vendor.t(teamDetails.value.maxMembers),
-        t: common_vendor.t(teamDetails.value.currentMembersCount),
-        v: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
+        t: common_vendor.t(teamDetails.value.maxMembers),
+        v: common_vendor.t(teamDetails.value.currentMembersCount),
+        w: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
           return {
             a: member.avatar || defaultAvatar,
             b: common_vendor.t(member.userName),
@@ -139,15 +170,15 @@ const _sfc_main = {
           };
         })
       } : {}) : {}, {
-        w: common_vendor.o(leaveTeam)
+        x: common_vendor.o(leaveTeam)
       }) : common_vendor.e({
-        y: teamDetails.value
+        z: teamDetails.value
       }, teamDetails.value ? common_vendor.e({
-        z: common_vendor.t(teamDetails.value.name),
-        A: common_vendor.t(teamDetails.value.description),
-        B: teamDetails.value.tags && teamDetails.value.tags.length > 0
+        A: common_vendor.t(teamDetails.value.name),
+        B: common_vendor.t(teamDetails.value.description),
+        C: teamDetails.value.tags && teamDetails.value.tags.length > 0
       }, teamDetails.value.tags && teamDetails.value.tags.length > 0 ? {
-        C: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
+        D: common_vendor.f(teamDetails.value.tags, (tag, k0, i0) => {
           return {
             a: common_vendor.t(tag.name),
             b: tag.id,
@@ -155,11 +186,11 @@ const _sfc_main = {
           };
         })
       } : {}, {
-        D: teamDetails.value.members && teamDetails.value.members.length > 0
+        E: teamDetails.value.members && teamDetails.value.members.length > 0
       }, teamDetails.value.members && teamDetails.value.members.length > 0 ? {
-        E: common_vendor.t(teamDetails.value.maxMembers),
-        F: common_vendor.t(teamDetails.value.currentMembersCount),
-        G: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
+        F: common_vendor.t(teamDetails.value.maxMembers),
+        G: common_vendor.t(teamDetails.value.currentMembersCount),
+        H: common_vendor.f(teamDetails.value.members, (member, k0, i0) => {
           return {
             a: member.avatar || defaultAvatar,
             b: common_vendor.t(member.userName),
@@ -168,15 +199,15 @@ const _sfc_main = {
           };
         })
       } : {}) : {}, {
-        H: common_vendor.o(openDialog),
-        I: common_vendor.o(($event) => showInputArea.value = $event),
-        J: common_vendor.p({
+        I: common_vendor.o(($event) => openDialog(teamDetails.value.currentMembersCount, teamDetails.value.maxMembers)),
+        J: common_vendor.o(($event) => showInputArea.value = $event),
+        K: common_vendor.p({
           show: showInputArea.value,
           teamId: (_a = teamDetails.value) == null ? void 0 : _a.id
         })
       }), {
-        l: userRole.value === "teamMember",
-        x: userRole.value === "visitor"
+        m: userRole.value === "teamMember",
+        y: userRole.value === "visitor"
       });
     };
   }

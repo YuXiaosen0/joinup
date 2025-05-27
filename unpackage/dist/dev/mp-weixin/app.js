@@ -2,6 +2,7 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const uni_modules_uviewPlus_index = require("./uni_modules/uview-plus/index.js");
+const api_api = require("./api/api.js");
 if (!Math) {
   "./pages/index/index.js";
   "./pages/detail/detail.js";
@@ -17,12 +18,9 @@ if (!Math) {
   "./pages/blank/blank.js";
   "./pages/team/team.js";
   "./pages/sign/sign.js";
-<<<<<<< HEAD
+  "./pages/message/message.js";
   "./pages/contacts/contacts.js";
   "./pages/chat/chat.js";
-=======
-  "./pages/message/message.js";
->>>>>>> f384d68eaef0ecd694e4a405c0d1a159a7f00049
 }
 const _sfc_main = {
   onLaunch: function() {
@@ -43,6 +41,11 @@ function createApp() {
   const app = common_vendor.createSSRApp(_sfc_main);
   app.use(pinia1);
   app.use(uni_modules_uviewPlus_index.uviewPlus);
+  const REFRESH_INTERVAL = 10 * 60 * 1e3;
+  api_api.updateToken();
+  setInterval(() => {
+    api_api.updateToken();
+  }, REFRESH_INTERVAL);
   return {
     app
   };

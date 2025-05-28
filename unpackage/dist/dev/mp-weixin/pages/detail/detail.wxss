@@ -257,6 +257,8 @@
 }
 .modify-btn.data-v-eca06f3c {
   background-color: #2196f3;
+<<<<<<< HEAD
+=======
 }
 .chat-button-wrapper.data-v-eca06f3c {
   position: fixed;
@@ -278,6 +280,7 @@
 }
 .chat-button.data-v-eca06f3c::after {
   display: none;
+<<<<<<< HEAD
 }
 .modal-content.data-v-eca06f3c {
   background: white;
@@ -350,4 +353,7 @@
 }
 .contact-name.data-v-eca06f3c {
   font-size: 18px;
+=======
+>>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
+>>>>>>> 90b7105e053ef071c3e3200457250dea19701d6e
 }

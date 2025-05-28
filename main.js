@@ -1,6 +1,8 @@
 import App from './App'
 import uviewPlus from '@/uni_modules/uview-plus'
 
+import { updateToken } from './api/api.js'
+
 //条件编译（非Vue 3 环境）
 // #ifndef VUE3
 import Vue from 'vue'
@@ -27,6 +29,16 @@ export function createApp() {
   const app = createSSRApp(App)
   app.use(pinia1)
   app.use(uviewPlus)
+
+// 10分钟刷新一次token (600000毫秒)
+  const REFRESH_INTERVAL = 10 * 60 * 1000
+  // 首次刷新
+  updateToken()
+  
+  // 设置定时器
+  setInterval(() => {
+    updateToken()
+  }, REFRESH_INTERVAL)
   
   return {
     app

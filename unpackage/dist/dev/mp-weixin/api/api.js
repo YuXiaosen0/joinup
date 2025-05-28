@@ -1,4 +1,8 @@
 "use strict";
+<<<<<<< HEAD
+const common_vendor = require("../common/vendor.js");
+=======
+>>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
 const api_http = require("./http.js");
 const getTeamList = (themeId) => {
   return api_http.http(`/team/list?themeId=${themeId}`, {
@@ -152,6 +156,26 @@ const deleteMessage = (id) => {
 const getAllTags = () => {
   return api_http.http(`/tag/list`, "d", "GET");
 };
+<<<<<<< HEAD
+const getNewToken = () => {
+  return api_http.http(`/user/refreshToken`, "d", "GET");
+};
+const updateToken = async () => {
+  try {
+    const res = await getNewToken();
+    common_vendor.index.__f__("log", "at api/api.js:233", "获取新的token:");
+    if (res) {
+      common_vendor.index.__f__("log", "at api/api.js:235", res);
+      common_vendor.index.setStorageSync("token", res.token);
+      common_vendor.index.__f__("log", "at api/api.js:238", "更新token成功:", common_vendor.index.getStorageSync("token"));
+      return true;
+    }
+    return false;
+  } catch (error) {
+    common_vendor.index.__f__("error", "at api/api.js:243", "更新token失败:", error);
+    return false;
+  }
+=======
 const getListByPage = (num, size) => {
   return api_http.http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`, "d", "GET");
 };
@@ -160,6 +184,7 @@ const getConversionRecord = (conversationId, lastSelectId, pageSize) => {
 };
 const faQiConversation = (userId) => {
   return api_http.http(`/conversation/create?userId=${userId}`, "d", "POST");
+>>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
 };
 const faQiDuiWuConversation = (teamId) => {
   return api_http.http(`/conversation/create?teamId=${teamId}`, "d", "POST");
@@ -222,7 +247,11 @@ exports.searchMessagesApi = searchMessagesApi;
 exports.searchTeam = searchTeam;
 exports.sendVerifyCode = sendVerifyCode;
 exports.signClass = signClass;
+<<<<<<< HEAD
+exports.updateToken = updateToken;
+=======
 exports.uploadBrowse = uploadBrowse;
+>>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
 exports.xuanBoya = xuanBoya;
 exports.yanzheng = yanzheng;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/api/api.js.map

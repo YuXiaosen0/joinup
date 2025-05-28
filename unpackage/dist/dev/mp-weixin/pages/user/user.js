@@ -174,33 +174,7 @@ const _sfc_main = {
       showSignPopup.value = false;
     };
     common_vendor.onLoad(async () => {
-      common_vendor.index.login({
-        success: async (data) => {
-          common_vendor.index.__f__("log", "at pages/user/user.vue:445", "微信登录 code:", data.code);
-          try {
-            const { token } = await api_api.login(data.code);
-            common_vendor.index.setStorageSync("token", token);
-            common_vendor.index.__f__("log", "at pages/user/user.vue:449", "登录成功，获取到 token:", token);
-            const res = await api_api.getUserInfo();
-            Object.assign(userInfo.value, res);
-            common_vendor.index.setStorageSync("userInfo", userInfo);
-            common_vendor.index.__f__("log", "at pages/user/user.vue:455", "用户信息:", userInfo);
-          } catch (error) {
-            common_vendor.index.__f__("error", "at pages/user/user.vue:457", "登录或获取用户信息失败:", error);
-            common_vendor.index.showToast({
-              title: "登录失败，请稍后重试",
-              icon: "none"
-            });
-          }
-        },
-        fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/user/user.vue:465", "微信登录失败:", err);
-          common_vendor.index.showToast({
-            title: "微信登录失败",
-            icon: "none"
-          });
-        }
-      });
+      userInfo.value = common_vendor.index.getStorageSync("userInfo");
     });
     const userSubmit = async () => {
       const data = {
@@ -210,12 +184,12 @@ const _sfc_main = {
         "ssoPassword": userInfo.value.ssoPassword
       };
       const res = await api_api.modifyUserInfo(data);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:484", "modifyUserInfo", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:456", "modifyUserInfo", res);
       show.value = false;
     };
     const changeName = (e) => {
       userInfo.value.username = e.detail.value;
-      common_vendor.index.__f__("log", "at pages/user/user.vue:496", "userInfo", userInfo);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:468", "userInfo", userInfo);
     };
     const setFun = () => {
       common_vendor.index.showModal({

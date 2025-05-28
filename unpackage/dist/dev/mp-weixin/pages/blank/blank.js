@@ -16,6 +16,7 @@ const _sfc_main = {
       // 创建队伍表单数据
       teamForm: {
         name: "",
+        cover: "",
         description: "",
         themeId: "",
         open: true,
@@ -75,6 +76,50 @@ const _sfc_main = {
     this.getTeamList();
   },
   methods: {
+    async chooseFile() {
+      try {
+        const res = await common_vendor.index.chooseImage({
+          count: 1,
+          sizeType: ["compressed"],
+          sourceType: ["album", "camera"]
+        });
+        const filePath = res.tempFilePaths[0];
+        common_vendor.index.__f__("log", "at pages/blank/blank.vue:290", "选择的文件路径:", filePath);
+        const uploadRes = await common_vendor.index.uploadFile({
+          url: "https://joinup.org.cn/api-dev/oss/file/upload",
+          filePath,
+          name: "file",
+          header: {
+            "Authorization": common_vendor.index.getStorageSync("token") || ""
+          },
+          formData: {
+            userId: "12345"
+          }
+        });
+        if (uploadRes.statusCode === 200) {
+          const data = JSON.parse(uploadRes.data);
+          common_vendor.index.__f__("log", "at pages/blank/blank.vue:306", "上传成功:", data);
+          this.teamForm.cover = data.data.url;
+          common_vendor.index.__f__("log", "at pages/blank/blank.vue:308", "新封面url:", this.teamForm.cover);
+          common_vendor.index.showToast({ title: "上传成功", icon: "success" });
+        } else {
+          common_vendor.index.__f__("error", "at pages/blank/blank.vue:311", "上传失败，状态码:", uploadRes.statusCode);
+          common_vendor.index.showToast({ title: "上传失败", icon: "none" });
+        }
+      } catch (error) {
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:315", "文件选择或上传失败:", error);
+        common_vendor.index.showToast({ title: "上传失败", icon: "none" });
+      }
+    },
+    // 切换创建表单显示
+    toggleCreateForm() {
+      this.showCreateForm = !this.showCreateForm;
+      this.loadTagList();
+      if (!this.showCreateForm) {
+        this.currentTeamType = "all";
+        this.getTeamList();
+      }
+    },
     // 切换创建表单显示
     toggleCreateForm() {
       this.showCreateForm = !this.showCreateForm;
@@ -86,7 +131,7 @@ const _sfc_main = {
     },
     goDetail(item) {
       if (!item || !item.id) {
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:283", "无效的 item 对象", item);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:343", "无效的 item 对象", item);
         return;
       }
       common_vendor.index.navigateTo({
@@ -114,7 +159,7 @@ const _sfc_main = {
         });
         common_vendor.index.hideLoading();
         this.isLoading = false;
-        common_vendor.index.__f__("log", "at pages/blank/blank.vue:320", response);
+        common_vendor.index.__f__("log", "at pages/blank/blank.vue:380", response);
         if (response) {
           this.teamList = response || [];
         } else {
@@ -131,7 +176,7 @@ const _sfc_main = {
           title: "获取队伍信息失败，请稍后重试",
           icon: "none"
         });
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:338", "获取队伍信息失败:", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:398", "获取队伍信息失败:", error);
         this.teamList = [];
       }
     },
@@ -142,14 +187,14 @@ const _sfc_main = {
         if (response) {
           this.tagList = response || [];
         } else {
-          common_vendor.index.__f__("error", "at pages/blank/blank.vue:351", "获取标签列表失败:", response.msg);
+          common_vendor.index.__f__("error", "at pages/blank/blank.vue:411", "获取标签列表失败:", response.msg);
           common_vendor.index.showToast({
             title: "获取标签列表失败",
             icon: "none"
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:358", "获取标签列表出错", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:418", "获取标签列表出错", error);
         common_vendor.index.showToast({
           title: "获取标签列表出错",
           icon: "none"
@@ -240,6 +285,7 @@ const _sfc_main = {
         }
         const teamData = {
           name: this.teamForm.name,
+          cover: this.teamForm.cover,
           description: this.teamForm.description,
           themeId: parseInt(this.teamForm.themeId),
           open: this.teamForm.open,
@@ -273,7 +319,7 @@ const _sfc_main = {
           title: error || "创建失败，请稍后重试",
           icon: "none"
         });
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:517", "创建组队失败:", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:578", "创建组队失败:", error);
       }
     },
     // 重置表单
@@ -331,9 +377,14 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   }, $data.showCreateForm ? common_vendor.e({
     e: $data.teamForm.name,
     f: common_vendor.o(($event) => $data.teamForm.name = $event.detail.value),
-    g: $data.teamForm.description,
-    h: common_vendor.o(($event) => $data.teamForm.description = $event.detail.value),
-    i: common_vendor.f($data.themeOptions, (theme, k0, i0) => {
+    g: common_vendor.o((...args) => $options.chooseFile && $options.chooseFile(...args)),
+    h: $data.teamForm.cover
+  }, $data.teamForm.cover ? {
+    i: $data.teamForm.cover
+  } : {}, {
+    j: $data.teamForm.description,
+    k: common_vendor.o(($event) => $data.teamForm.description = $event.detail.value),
+    l: common_vendor.f($data.themeOptions, (theme, k0, i0) => {
       return {
         a: common_vendor.t(theme.name),
         b: theme.id,
@@ -341,13 +392,13 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         d: common_vendor.o(($event) => $options.selectTheme(theme.id), theme.id)
       };
     }),
-    j: $data.teamForm.open,
-    k: common_vendor.o((...args) => $options.onOpenChange && $options.onOpenChange(...args)),
-    l: $data.teamForm.maxMembers,
-    m: common_vendor.o(($event) => $data.teamForm.maxMembers = $event.detail.value),
-    n: $data.tagList.length > 0
+    m: $data.teamForm.open,
+    n: common_vendor.o((...args) => $options.onOpenChange && $options.onOpenChange(...args)),
+    o: $data.teamForm.maxMembers,
+    p: common_vendor.o(($event) => $data.teamForm.maxMembers = $event.detail.value),
+    q: $data.tagList.length > 0
   }, $data.tagList.length > 0 ? {
-    o: common_vendor.f($data.tagList, (tag, k0, i0) => {
+    r: common_vendor.f($data.tagList, (tag, k0, i0) => {
       return {
         a: common_vendor.t(tag.name),
         b: tag.id,
@@ -356,13 +407,13 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       };
     })
   } : {}, {
-    p: common_vendor.o((...args) => $options.createTeam && $options.createTeam(...args))
+    s: common_vendor.o((...args) => $options.createTeam && $options.createTeam(...args))
   }) : {}, {
-    q: $data.currentTeamType !== "all"
+    t: $data.currentTeamType !== "all"
   }, $data.currentTeamType !== "all" ? {
-    r: common_vendor.t($options.currentTypeText)
+    v: common_vendor.t($options.currentTypeText)
   } : {}, {
-    s: common_vendor.f($data.teamList, (item, index, i0) => {
+    w: common_vendor.f($data.teamList, (item, index, i0) => {
       return common_vendor.e({
         a: common_vendor.t(item.name),
         b: item.description
@@ -377,15 +428,15 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         i: common_vendor.o(($event) => $options.goDetail(item), index)
       });
     }),
-    t: $data.teamList.length === 0
+    x: $data.teamList.length === 0
   }, $data.teamList.length === 0 ? {
-    v: common_vendor.t($options.emptyTipsText)
+    y: common_vendor.t($options.emptyTipsText)
   } : {}, {
-    w: $data.isLoading
+    z: $data.isLoading
   }, $data.isLoading ? {} : {}, {
-    x: common_vendor.o((...args) => $options.loadMore && $options.loadMore(...args)),
-    y: $data.isRefreshing,
-    z: common_vendor.o((...args) => $options.onRefresh && $options.onRefresh(...args))
+    A: common_vendor.o((...args) => $options.loadMore && $options.loadMore(...args)),
+    B: $data.isRefreshing,
+    C: common_vendor.o((...args) => $options.onRefresh && $options.onRefresh(...args))
   });
 }
 const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render]]);

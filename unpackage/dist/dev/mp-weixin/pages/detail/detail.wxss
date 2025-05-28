@@ -279,3 +279,75 @@
 .chat-button.data-v-eca06f3c::after {
   display: none;
 }
+.modal-content.data-v-eca06f3c {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 80%;
+  max-height: 80%;
+  overflow-y: auto;
+}
+.modal-header.data-v-eca06f3c {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.contact-list.data-v-eca06f3c {
+  margin-top: 10px;
+}
+.contact-item.data-v-eca06f3c {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+.contact-avatar.data-v-eca06f3c {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.contact-name.data-v-eca06f3c {
+  font-size: 18px;
+}
+.modal-content.data-v-eca06f3c {
+  position: fixed;
+  /* Fixed position to make it stay in place */
+  top: 50%;
+  /* Position from the top of the screen */
+  left: 50%;
+  /* Position from the left of the screen */
+  transform: translate(-50%, -50%);
+  /* Translate to center the modal */
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 80%;
+  max-height: 80%;
+  overflow-y: auto;
+  z-index: 999;
+  /* Make sure it's on top */
+}
+.modal-header.data-v-eca06f3c {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.contact-list.data-v-eca06f3c {
+  margin-top: 10px;
+}
+.contact-item.data-v-eca06f3c {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+.contact-avatar.data-v-eca06f3c {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.contact-name.data-v-eca06f3c {
+  font-size: 18px;
+}

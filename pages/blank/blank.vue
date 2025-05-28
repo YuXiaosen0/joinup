@@ -43,6 +43,16 @@
           maxlength="60"
         />
       </view>
+	  <view class="input-title">上传封面：</view>
+	  <view class="upload-section">
+	    <button class="upload-btn" @click="chooseFile">📁 选择封面</button>
+	    <image
+	      v-if="teamForm.cover"
+	      :src="teamForm.cover"
+	      class="cover-preview"
+	      mode="aspectFill"
+	    />
+	  </view>
       
       <view class="form-item">
         <text class="form-label">队伍介绍</text>
@@ -197,6 +207,7 @@ export default {
       // 创建队伍表单数据
       teamForm: {
         name: '',
+		cover:'',
         description: '',
         themeId: '',
         open: true,
@@ -267,6 +278,55 @@ export default {
     this.getTeamList();
   },
   methods: {
+	  async chooseFile() {
+	      try {
+	        const res = await uni.chooseImage({
+	          count: 1,
+	          sizeType: ['compressed'],
+	          sourceType: ['album', 'camera'],
+	        });
+	    
+	        const filePath = res.tempFilePaths[0];
+	        console.log("选择的文件路径:", filePath);
+	    
+	        const uploadRes = await uni.uploadFile({
+	          url: 'https://joinup.org.cn/api-dev/oss/file/upload',
+	          filePath,
+	          name: 'file',
+	          header: {
+	            'Authorization': uni.getStorageSync('token') || '',
+	          },
+	          formData: {
+	            userId: '12345',
+	          },
+	        });
+	    
+	        if (uploadRes.statusCode === 200) {
+	          const data = JSON.parse(uploadRes.data);
+	          console.log("上传成功:", data);
+	          this.teamForm.cover = data.data.url;
+	          console.log("新封面url:", this.teamForm.cover);
+	          uni.showToast({ title: "上传成功", icon: "success" });
+	        } else {
+	          console.error("上传失败，状态码:", uploadRes.statusCode);
+	          uni.showToast({ title: "上传失败", icon: "none" });
+	        }
+	      } catch (error) {
+	        console.error("文件选择或上传失败:", error);
+	        uni.showToast({ title: "上传失败", icon: "none" });
+	      }
+	    },
+	  
+	  // 切换创建表单显示
+	  toggleCreateForm() {
+	    this.showCreateForm = !this.showCreateForm;
+	    this.loadTagList();
+	    // 如果关闭表单，重置回全部队伍列表
+	    if (!this.showCreateForm) {
+	      this.currentTeamType = 'all';
+	      this.getTeamList();
+	    }
+	  },
 	
     // 切换创建表单显示
     toggleCreateForm() {
@@ -470,6 +530,7 @@ export default {
         // 准备提交数据
         const teamData = {
           name: this.teamForm.name,
+		  cover:this.teamForm.cover,
           description: this.teamForm.description,
           themeId: parseInt(this.teamForm.themeId),
           open: this.teamForm.open,
@@ -866,5 +927,27 @@ export default {
   background-color: transparent; /* 透明背景 */
   display: block; /* 确保它是块级元素 */
   pointer-events: none; /* 不接收鼠标事件 */
+}
+.upload-section {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 32rpx;
+}
+
+.upload-btn {
+  background-color: #f0f4ff;
+  color: #2979ff;
+  border: 2rpx dashed #2979ff;
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+.input-title {
+  font-size: 30rpx;
+  margin-bottom: 16rpx;
+  font-weight: 600;
+  color: #2c3e50;
 }
 </style>

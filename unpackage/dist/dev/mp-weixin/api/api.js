@@ -155,11 +155,23 @@ const getAllTags = () => {
 const getListByPage = (num, size) => {
   return api_http.http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`, "d", "GET");
 };
-const getConversionRecord = (conversationId, pageNumber, pageSize) => {
-  return api_http.http(`/message/chat/${conversationId}?pageNumber=${pageNumber}&pageSize=${pageSize}`, "d", "GET");
+const getConversionRecord = (conversationId, lastSelectId, pageSize) => {
+  return api_http.http(`/message/chat/${conversationId}?lastSelectId=${lastSelectId}&pageSize=${pageSize}`, "d", "GET");
 };
 const faQiConversation = (userId) => {
   return api_http.http(`/conversation/create?userId=${userId}`, "d", "POST");
+};
+const faQiDuiWuConversation = (teamId) => {
+  return api_http.http(`/conversation/create?teamId=${teamId}`, "d", "POST");
+};
+const clearUnread = (conversationId) => {
+  return api_http.http(`/conversation/${conversationId}/read`, "d", "POST");
+};
+const getConDetail = (conversationId) => {
+  return api_http.http(`/conversation/${conversationId}`, "d", "GET");
+};
+const searchMessagesApi = (conversationId, data) => {
+  return api_http.http(`/message/chat/${conversationId}/filter`, data, "POST");
 };
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
@@ -167,12 +179,14 @@ exports.applyCreateTag = applyCreateTag;
 exports.applyToJoin = applyToJoin;
 exports.appointBoya = appointBoya;
 exports.cancelAppoint = cancelAppoint;
+exports.clearUnread = clearUnread;
 exports.createNewTeam = createNewTeam;
 exports.deleteBoya = deleteBoya;
 exports.deleteMessage = deleteMessage;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
 exports.faQiConversation = faQiConversation;
+exports.faQiDuiWuConversation = faQiDuiWuConversation;
 exports.feedback = feedback;
 exports.getAllTags = getAllTags;
 exports.getAnnouncementDetails = getAnnouncementDetails;
@@ -180,6 +194,7 @@ exports.getApplicationList = getApplicationList;
 exports.getAppointList = getAppointList;
 exports.getBoyaCourse = getBoyaCourse;
 exports.getBrowse = getBrowse;
+exports.getConDetail = getConDetail;
 exports.getConversionRecord = getConversionRecord;
 exports.getCourseInfo = getCourseInfo;
 exports.getListByPage = getListByPage;
@@ -203,6 +218,7 @@ exports.markMessageRead = markMessageRead;
 exports.modifyTeam = modifyTeam;
 exports.modifyUserInfo = modifyUserInfo;
 exports.processApplication = processApplication;
+exports.searchMessagesApi = searchMessagesApi;
 exports.searchTeam = searchTeam;
 exports.sendVerifyCode = sendVerifyCode;
 exports.signClass = signClass;

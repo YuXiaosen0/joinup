@@ -245,10 +245,27 @@ export const getListByPage=(num,size) => {
 	return http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`,'d' , 'GET')
 }
 //获取会话的聊天记录
-export const getConversionRecord=(conversationId,pageNumber,pageSize) => {
-	return http(`/message/chat/${conversationId}?pageNumber=${pageNumber}&pageSize=${pageSize}`,'d' , 'GET')
+export const getConversionRecord=(conversationId,lastSelectId,pageSize) => {
+	return http(`/message/chat/${conversationId}?lastSelectId=${lastSelectId}&pageSize=${pageSize}`,'d' , 'GET')
 }
 //发起会话
 export const faQiConversation=(userId) => {
 	return http(`/conversation/create?userId=${userId}`,'d' , 'POST')
 }
+//发起会话
+export const faQiDuiWuConversation=(teamId) => {
+	return http(`/conversation/create?teamId=${teamId}`,'d' , 'POST')
+}
+//清零未读信息数目
+export const clearUnread=(conversationId) => {
+	return http(`/conversation/${conversationId}/read`,'d' , 'POST')
+}
+//获取会话详情
+export const getConDetail=(conversationId) => {
+	return http(`/conversation/${conversationId}`,'d' , 'GET')
+}
+//消息记录查询
+export const searchMessagesApi=(conversationId,data) => {
+	return http(`/message/chat/${conversationId}/filter`,data , 'POST')
+}
+

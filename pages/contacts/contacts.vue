@@ -39,13 +39,12 @@
       </view>
     </scroll-view>
   </view>
-  <button @click="sendMessage()">点击</button>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 import { onLoad,onShow } from '@dcloudio/uni-app';
-import {getListByPage} from "../../api/api";
+import {getListByPage,clearUnread} from "../../api/api";
 import { useWebSocket } from '../../utils/useWebSocket.js';
 // 搜索框绑定的值
 const searchQuery = ref('');
@@ -112,7 +111,8 @@ onShow(async() => {
       unreadMessageCount: item.unreadMessageCount,
       type: item.type,
       lastMessage:item.lastMessage,
-      conversation:{"id":item.id,
+      conversation:{
+        "id":item.id,
         "type":item.type,
         "name":item.name,
         "cover":item.cover

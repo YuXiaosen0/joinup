@@ -78,13 +78,11 @@ function loadList(themeId) {
 // 获取主题列表
 function fetchThemes() {
   getThemeList().then(res => {
-    res.forEach(item => {
-      themes.push({
-        name: item.name,
-        id: item.id,
-        description: item.description || '暂无描述'
-      })
-    })
+    themes.splice(0, themes.length, ...res.map(item => ({
+      name: item.name,
+      id: item.id,
+      description: item.description || '暂无描述'
+    })))
 
     if (themes.length > 0) {
       loadList(themes[currentTab.value].id)

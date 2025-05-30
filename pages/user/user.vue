@@ -305,7 +305,7 @@ const chooseFile = async () => {
 
     // 上传文件
     const uploadRes = await uni.uploadFile({
-      url: 'https://joinup.org.cn/api-dev/oss/file/upload', // 替换为实际的上传接口
+      url: 'https://joinup.org.cn/api/oss/file/upload', // 替换为实际的上传接口
       filePath: filePath, // 文件路径
       name: 'file', // 后端接收文件的字段名
       header: {

@@ -95,7 +95,7 @@
 		  <!-- 聊天按钮 -->
 		  <view class="chat-button-wrapper">
 			  <button class="chat-button" @click="goShare">
-			    ⮳
+			    📤
 			  </button> 
 			  <div style="margin: 10px 0;"></div> <!-- 空行 div -->
 				<button class="chat-button" @click="goToChat">
@@ -201,7 +201,7 @@
 		  <!-- 聊天按钮 -->
 			<view class="chat-button-wrapper">
 				<button class="chat-button" @click="goShare">
-				  ⮳
+				  📤
 				</button> 
 				<div style="margin: 10px 0;"></div> <!-- 空行 div -->
 				<button class="chat-button" @click="goToChat">

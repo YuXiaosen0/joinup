@@ -153,39 +153,63 @@
           <view class="avatar" v-else>
             <image :src="msg.sender.avatar" :alt="msg.sender.username" />
           </view>
+          <view style="margin: 8px;"></view> <!-- 设置 20px 的空白间距 -->
           <view class="message-content">
-            <view class="message-bubble bubble-left" v-if="msg.content.teamId==null">
+            <view class="message-bubble bubble-left" v-if="msg.content.text!=null">
               <text class="message-text">{{ msg.content.text }}</text>
               <view class="message-meta">
                 <text class="message-time">{{ formatMessageTime(msg.createTime) }}</text>
               </view>
             </view>
-			<view class="message-bubble bubble-left" v-else @click="addQun(msg)">
+			      <view class="message-bubble bubble-left" v-else-if="msg.content.groupName!=null" @click="addQun(msg)">
               <view class="group-card">
                 <image class="group-cover" :src="msg.content.cover" alt="Group Cover" />
                 <text class="group-name">{{ msg.content.groupName }}</text>
               </view>
               <text class="message-text">点击加入队伍</text>
+            </view>
+            <view  v-else>
+              <image
+                class="cover-image"
+                :src="msg.content.url"
+                mode="aspectFill"
+                :lazy-load="true"
+              />
+              <view class="message-meta">
+                <text class="message-time">{{ formatMessageTime(msg.createTime) }}</text>
+              </view>
             </view>
           </view>
         </template>
         <!-- 右侧消息（自己） -->
         <template v-else>
           <view class="message-content">
-            <view class="message-bubble bubble-right" v-if="msg.content.teamId==null">
+            <view class="message-bubble bubble-right" v-if="msg.content.text!=null">
               <text class="message-text">{{ msg.content.text }}</text>
               <view class="message-meta">
                 <text class="message-time">{{ formatMessageTime(msg.createTime) }}</text>
               </view>
             </view>
-            <view class="message-bubble bubble-left" v-else @click="addQun(msg)">
+            <view class="message-bubble bubble-left" v-else-if="msg.content.groupName!=null" @click="addQun(msg)">
               <view class="group-card">
                 <image class="group-cover" :src="msg.content.cover" alt="Group Cover" />
                 <text class="group-name">{{ msg.content.groupName }}</text>
               </view>
               <text class="message-text">点击加入队伍</text>
             </view>
+            <view  v-else>
+              <image
+                class="cover-image"
+                :src="msg.content.url"
+                mode="aspectFill"
+                :lazy-load="true"
+              />
+              <view class="message-meta">
+                <text class="message-time">{{ formatMessageTime(msg.createTime) }}</text>
+              </view>
+            </view>
           </view>
+          <view style="margin: 8px;"></view> <!-- 设置 20px 的空白间距 -->
           <view class="avatar">
             <image :src="userInfo.avatar" :alt="userInfo.username" />
           </view>
@@ -222,9 +246,9 @@
     </view>
     <!-- 更多工具 -->
     <view class="more-tools" v-if="showMoreTools">
-      <view class="tool-item" @click="openGroupDialog">
+      <view class="tool-item" @click="chooseFile">
         <uni-icons type="location" size="28" color="#7d7e80"></uni-icons>
-        <text>分享群聊</text>
+        <text>上传文件</text>
       </view>
       
         <!-- Group List Dialog -->
@@ -273,9 +297,9 @@
 
 <script setup>
 import { ref, nextTick,computed } from 'vue';
-import { onLoad,onShow } from '@dcloudio/uni-app';
+import { onLoad,onShow,onUnload } from '@dcloudio/uni-app';
 import { getConversionRecord,clearUnread,searchMessagesApi,getListByPage
-  ,getTeamDetails,faQiDuiWuConversation } from "../../api/api";
+  ,getTeamDetails,faQiDuiWuConversation,clearUn } from "../../api/api";
 import { useWebSocket } from '../../utils/useWebSocket.js';
 
 const userInfo = ref(uni.getStorageSync('userInfo'));
@@ -308,11 +332,11 @@ const messageTypes = ref([
   { value: '', label: '全部类型' },
   { value: 'TEXT', label: '文字' }
 ]);
-
 onLoad(async (options) => {
   contact.value = JSON.parse(decodeURIComponent(options.conversation));
   await clearUnread(contact.value.id);
   await loadMessages(String(contact.value.id));
+  // await noticeId(contact.value.id)
   const res=await getListByPage(1, 100);
   console.log("获取联系人列表:", res);
   groupList.value = res.list
@@ -327,19 +351,85 @@ onLoad(async (options) => {
   ws.onMessage(wsMessageListener);
 });
 
+// 处理文件上传
+const chooseFile = async () => {
+  try {
+    // 选择文件
+    const res = await uni.chooseImage({
+      count: 1, // 只允许选择一个文件
+      sizeType: ['compressed'], // 压缩图像
+      sourceType: ['album', 'camera'], // 允许从相册或拍照选择
+    });
+
+    const filePath = res.tempFilePaths[0]; // 获取临时文件路径
+    console.log("选择的文件路径:", filePath);
+
+    // 上传文件
+    const uploadRes = await uni.uploadFile({
+      url: 'https://joinup.org.cn/api/oss/file/upload', // 替换为实际的上传接口
+      filePath: filePath, // 文件路径
+      name: 'file', // 后端接收文件的字段名
+      header: {
+        'Authorization': uni.getStorageSync('token') || '', // 如果需要鉴权，传递 token
+      },
+      formData: {
+        // 如果需要额外的表单数据，可以在这里添加
+        userId: '12345', // 示例：用户 ID
+      },
+    });
+
+    // 处理上传结果
+    if (uploadRes.statusCode === 200) {
+      const data = JSON.parse(uploadRes.data); // 解析返回的数据
+      console.log("上传成功:", data);
+      uni.showToast({
+        title: "上传成功",
+        icon: "success",
+      });
+      // 发送消息
+      const senderNow=ref({id:1,name:2});
+      senderNow.value.id=uni.getStorageSync('userInfo').id;
+      senderNow.value.avatar=uni.getStorageSync('userInfo').avatar;
+      const msgObj = {
+        conversationId: contact.value.id,
+        content: { url:data.data.url,name:data.data.name },
+        type: 'TEXT'
+      };
+      messages.value = [
+        {
+          id: 5,
+          sender: senderNow ,  //
+          content: msgObj.content,
+          createTime: new Date(),
+          type: msgObj.type,
+          receiverId:5,  //
+          conversation:contact,  //
+        },
+        ...messages.value
+      ];
+      // 通过 WebSocket 发送
+      await ws.sendMessage(msgObj);
+      nextTick(scrollToBottom);
+
+    } else {
+      console.error("上传失败，状态码:", uploadRes.statusCode);
+      uni.showToast({
+        title: "上传失败",
+        icon: "none",
+      });
+    }
+  } catch (error) {
+    console.error("文件选择或上传失败:", error);
+    uni.showToast({
+      title: "上传失败",
+      icon: "none",
+    });
+  }
+};
+
 const addQun = async(msg) => {
   const res=await getTeamDetails(msg.content.teamId)
   console.log("res",res)
-  const res1=await faQiDuiWuConversation(msg.content.teamId)
-  console.log("res1",res1)
-  const conversation = {
-		id: res1.id,
-		type: "group",
-		name:res.name,
-		cover:res.cover,
-		members: res.members
-	}
-	console.log("跳转到conversation", conversation);
 	const item={id:
 		 res.id,
 	  };
@@ -348,9 +438,6 @@ const addQun = async(msg) => {
   uni.navigateTo({
       url: `/pages/detail/detail?item=${encodeURIComponent(JSON.stringify(item))}`  // 使用 encodeURIComponent 进行编码
   })
-  // uni.navigateTo({
-  //   url: `/pages/chat/chat?conversation=${conversationStr}`
-  // })
 };
 
 const openGroupDialog = () => {
@@ -1322,7 +1409,11 @@ const goBack = () => {
   font-size: 15px;
   color: #333;
 }
-
+.message-image {
+  max-width: 100%; /* 确保图片不会超出容器宽度 */
+  height: auto; /* 保持图片比例 */
+  border-radius: 5px; /* 可选：为图片添加圆角 */
+}
 .placeholder {
   color: #999;
   font-size: 15px;

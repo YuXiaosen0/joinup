@@ -15,17 +15,10 @@
     "pages/boya/boya",
     "pages/blank/blank",
     "pages/team/team",
-<<<<<<< HEAD
-    "pages/sign/sign",
-    "pages/message/message",
-    "pages/contacts/contacts",
-    "pages/chat/chat"
-=======
     "pages/contacts/contacts",
     "pages/chat/chat",
     "pages/message/message",
     "pages/detail/browseHistory"
->>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
   ],
   "window": {
     "navigationBarTextStyle": "black",

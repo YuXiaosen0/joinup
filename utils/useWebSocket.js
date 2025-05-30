@@ -41,46 +41,101 @@ export function useWebSocket(token) {
       // 判断消息是否是发给当前用户的
       if (data.receiverId == userId) {
         // 如果消息是发给当前用户，显示全局弹窗
-        uni.showToast({
-          title: '你有一条新消息',
-          icon: 'success', // 使用 success 图标，或其他类型如 'none', 'loading'
-          duration: 3000, // 增加弹窗时长，让用户有足够的时间看到
-        });
+        // uni.showToast({
+        //   title: '你有一条新消息',
+        //   icon: 'success', // 使用 success 图标，或其他类型如 'none', 'loading'
+        //   duration: 3000, // 增加弹窗时长，让用户有足够的时间看到
+        // });
+        const currentPage = getCurrentPages().pop().route;
+        if (currentPage !== 'pages/chat/chat') {
+          uni.showModal({
+            title: '新消息通知',
+            content: '你有一条新消息，点击查看。',
+            showCancel: true, // 不显示取消按钮
+            confirmText: '查看',
+            success: (res) => {
+              if (res.confirm) {
+                // 用户点击了确认按钮
+                uni.navigateTo({
+                  url: `/pages/chat/chat?conversation=${JSON.stringify(data.conversation)}` // 修改为你需要跳转的页面路径和参数
+                });
+              }
+            }
+          });
+        }
       }else{
         console.log("no")
       }
     });
   }
 
-  function restart() {
+function restart() {
     // Avoid creating multiple intervals or WebSocket connections
-    if (wss.value && wss.value.readyState !== WebSocket.CLOSED) {
+    if (wss.value && wss.value.readyState !== wss.value.CLOSED) {
       console.log("WebSocket 已经在连接中或已关闭，不重新连接");
       return;
     }
 
     // Start attempting to reconnect
-    time = setInterval(() => {
+    let time = setInterval(() => {
       // Create a new WebSocket if there is no active connection
-      wss.value = new WebSocket(url);
+      wss.value = uni.connectSocket({
+        url,
+        success: () => console.log("WebSocket连接已创建"),
+        fail: (err) => console.error("WebSocket连接失败:", err)
+      });
 
-      // Check if the WebSocket is connecting (readyState === 0)
-      if (wss.value.readyState === WebSocket.CONNECTING) {
-        console.log("WebSocket 正在连接...");
-      } else if (wss.value.readyState === WebSocket.OPEN) {
+      // Check if the WebSocket is connecting
+      wss.value.onOpen(() => {
         clearInterval(time); // Connection established, clear the interval
         time = null;
         isConnected.value = true;
-        // Add event listeners to the new WebSocket
-        wss.value.addEventListener("open", openHandle);
-        wss.value.addEventListener("close", closeHandle);
-        wss.value.addEventListener("message", messageHandle);
-        wss.value.addEventListener("error", errorHandle);
-        console.log("WebSocket 连接成功！");
-      }
-    }, 1000);
-  }
+        console.log("WebSocket连接已打开");
 
+        // Add event listeners to the new WebSocket
+        wss.value.onClose(() => {
+          isConnected.value = false;
+          console.log("WebSocket连接已关闭");
+          restart();
+        });
+
+        wss.value.onError(() => {
+          isConnected.value = false;
+          console.error("WebSocket错误");
+          restart();
+        });
+
+        wss.value.onMessage((event) => {
+          listeners.forEach(fn => fn(event));
+          try {
+            const data = JSON.parse(event.data);
+            console.log("收到消息:", data);
+            const userId = uni.getStorageSync('userInfo').id; 
+            if (data.receiverId == userId) {
+              uni.showToast({
+                title: '你有一条新消息',
+                icon: 'success',
+                duration: 3000,
+              });
+            } else {
+              console.log("no")
+            }
+          } catch (error) {
+            console.error("消息解析失败:", error);
+          }
+        });
+      });
+
+      // Ensure WebSocket connection is open
+      if (wss.value.readyState === wss.value.OPEN) {
+        clearInterval(time); // Connection established, clear the interval
+        time = null;
+        isConnected.value = true;
+        console.log("WebSocket连接成功！");
+      }
+
+    }, 10000); // Set a more reasonable reconnect interval (e.g., 10 seconds)
+}
   // 发送消息
   function sendMessage(conversation) {
     if (isConnected.value && wss.value) {

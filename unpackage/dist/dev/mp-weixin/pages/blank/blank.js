@@ -86,7 +86,7 @@ const _sfc_main = {
         const filePath = res.tempFilePaths[0];
         common_vendor.index.__f__("log", "at pages/blank/blank.vue:290", "选择的文件路径:", filePath);
         const uploadRes = await common_vendor.index.uploadFile({
-          url: "https://joinup.org.cn/api-dev/oss/file/upload",
+          url: "https://joinup.org.cn/api/oss/file/upload",
           filePath,
           name: "file",
           header: {

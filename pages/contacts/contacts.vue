@@ -125,7 +125,8 @@ onShow(async() => {
 // 格式化时间显示
 const formatTime = (time) => {
   if (!(time instanceof Date)) {
-    time = new Date(time);
+    time = new Date();
+    console.log(time)
   }
   
   const now = new Date();

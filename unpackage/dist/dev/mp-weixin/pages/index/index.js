@@ -53,18 +53,16 @@ const _sfc_main = {
     }
     function fetchThemes() {
       api_api.getThemeList().then((res) => {
-        res.forEach((item) => {
-          themes.push({
-            name: item.name,
-            id: item.id,
-            description: item.description || "暂无描述"
-          });
-        });
+        themes.splice(0, themes.length, ...res.map((item) => ({
+          name: item.name,
+          id: item.id,
+          description: item.description || "暂无描述"
+        })));
         if (themes.length > 0) {
           loadList(themes[currentTab.value].id);
         }
       }).catch((error) => {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:93", "获取主题列表失败:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:91", "获取主题列表失败:", error);
       });
     }
     const fetchSwiperList = async () => {
@@ -77,11 +75,11 @@ const _sfc_main = {
             id: item.id
           }));
         } else {
-          common_vendor.index.__f__("warn", "at pages/index/index.vue:109", "轮播图返回的不是数组:", res);
+          common_vendor.index.__f__("warn", "at pages/index/index.vue:107", "轮播图返回的不是数组:", res);
           swiperList.value = [];
         }
       } catch (err) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:113", "请求轮播图接口异常:", err);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:111", "请求轮播图接口异常:", err);
         swiperList.value = [];
       }
     };
@@ -99,7 +97,7 @@ const _sfc_main = {
     }
     const goDetail = (item) => {
       if (!item || !item.id) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:137", "无效的 item 对象", item);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:135", "无效的 item 对象", item);
         return;
       }
       common_vendor.index.navigateTo({
@@ -108,9 +106,9 @@ const _sfc_main = {
       });
     };
     const goAnnouncement = (item) => {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:146", item);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:144", item);
       if (!item || !item.id) {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:148", "无效的 item 对象", item);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:146", "无效的 item 对象", item);
         return;
       }
       common_vendor.index.navigateTo({

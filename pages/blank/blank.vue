@@ -290,7 +290,7 @@ export default {
 	        console.log("选择的文件路径:", filePath);
 	    
 	        const uploadRes = await uni.uploadFile({
-	          url: 'https://joinup.org.cn/api-dev/oss/file/upload',
+	          url: 'https://joinup.org.cn/api/oss/file/upload',
 	          filePath,
 	          name: 'file',
 	          header: {

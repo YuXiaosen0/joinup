@@ -1,7 +1,4 @@
-import http from "./http"
-
-
-
+import http from "./http";
 export const getTeamList = ( themeId ) => {
   return http(`/team/list?themeId=${themeId}`, {
     "pageNo": 1,
@@ -10,8 +7,6 @@ export const getTeamList = ( themeId ) => {
     "sortBy": "name"
 	}, 'POST')
 }
-
-
 // 获取主题列表
 export const getThemeList = () => {
 	return http(`/theme/list`, '', 'GET')
@@ -257,6 +252,7 @@ export const updateToken = async () => {
     console.error('更新token失败:', error)
     return false
   }
+  }
 //分页获取会话列表
 export const getListByPage=(num,size) => {
 	return http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`,'d' , 'GET')
@@ -285,4 +281,12 @@ export const getConDetail=(conversationId) => {
 export const searchMessagesApi=(conversationId,data) => {
 	return http(`/message/chat/${conversationId}/filter`,data , 'POST')
 }
+// //通知后端所在的会话id
+// export const noticeId=(conversationId) => {
+// 	return http(`/conversation/noticeId`,conversationId , 'POST')
+// }
+// //likai
+// export const clearUn=() => {
+// 	return http(`/conversation/exit`,'d' , 'DELETE')
+// }
 

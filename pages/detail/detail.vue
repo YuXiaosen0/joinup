@@ -85,11 +85,14 @@
 		
 		  <view class="creator-btns-row">
 		    <button class="application-btn" @click="goToApplicationList">
-		      📬 查看加入申请
+		      📬 查看申请
 		    </button>
 		    <button class="modify-btn" @click="modifyTeamInfo(teamDetails.name, teamDetails.description, teamDetails.currentMembersCount, teamDetails.cover)">
-		      ✏️ 修改队伍信息
+		      ✏️ 修改队伍
 		    </button>
+			<button class="disband-btn" @click="handleDisbandTeam">
+			    🗑️ 解散队伍
+			  </button>
 		  </view>
 		  
 		  <!-- 聊天按钮 -->
@@ -323,7 +326,8 @@ import {
   uploadBrowse,
 	faQiDuiWuConversation,
 	getConDetail,
-	getListByPage
+	getListByPage,
+	disbandTeam
 } from '../../api/api'
 import ApplyToJoinDialog from '@/components/applyToJoinDialog.vue'
 import { useWebSocket } from '../../utils/useWebSocket.js';
@@ -449,6 +453,35 @@ const modifyTeamInfo = (name, description,currentMembersCount, cover) => {
 
   });
 };
+
+const handleDisbandTeam = async () => {
+  uni.showModal({
+    title: '确认操作',
+    content: '确定要解散该队伍吗？此操作不可恢复。',
+    success: async (res) => {
+      if (res.confirm) {
+        try {
+          await disbandTeam(teamId.value)
+          wx.showToast({
+            title: '已解散',
+            icon: 'success'
+          })
+          // 返回上一页或首页
+          setTimeout(() => {
+            uni.navigateBack()
+          }, 1000)
+        } catch (err) {
+          wx.showToast({
+            title: '解散失败',
+            icon: 'none'
+          })
+          console.error(err)
+        }
+      }
+    }
+  })
+}
+
 
 const contacts=ref();
 const goShare = async() => {
@@ -684,7 +717,6 @@ const formatDate = (dateStr) => {
   margin-right: 20rpx;
 }
 
-
 .member-info {
   flex: 1;
 }
@@ -729,37 +761,39 @@ const formatDate = (dateStr) => {
 }
 
 .apply-btn-wrapper {
-	display: flex;
-	justify-content: center;
-	margin-top: 20rpx;
+  display: flex;
+  justify-content: center;
+  margin-top: 20rpx;
 }
 
 .apply-btn {
-	background: #34d399; /* 绿色到蓝色渐变 */
-	color: #fff;
-	padding: 20rpx 40rpx;
-	border: none;
-	border-radius: 50rpx;
-	font-size: 30rpx;
-	font-weight: bold;
-	transition: all 0.3s ease;
-	box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.1);
+  background: #34d399;
+  color: #fff;
+  padding: 20rpx 40rpx;
+  border: none;
+  border-radius: 50rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.1);
 }
+
 .leave-btn-wrapper {
   display: flex;
   justify-content: center;
   margin-top: 20rpx;
 }
+
 .leave-btn {
-	background: #888; /* 绿色到蓝色渐变 */
-	color: #fff;
-	padding: 20rpx 40rpx;
-	border: none;
-	border-radius: 50rpx;
-	font-size: 30rpx;
-	font-weight: bold;
-	transition: all 0.3s ease;
-	box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.1);
+  background: #888;
+  color: #fff;
+  padding: 20rpx 40rpx;
+  border: none;
+  border-radius: 50rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.1);
 }
 
 .application-btn-wrapper {
@@ -769,7 +803,7 @@ const formatDate = (dateStr) => {
 }
 
 .application-btn {
-  background: linear-gradient(to right, #34d399, #3b82f6); /* 绿色到蓝色渐变 */
+  background: linear-gradient(to right, #34d399, #3b82f6);
   color: #fff;
   padding: 20rpx 40rpx;
   border: none;
@@ -783,7 +817,6 @@ const formatDate = (dateStr) => {
 .application-btn:hover {
   opacity: 0.9;
 }
-
 
 .leave-btn {
   background-color: #007aff;
@@ -811,7 +844,7 @@ const formatDate = (dateStr) => {
 }
 
 .modify-btn {
-  background: #4CAF50; /* 修改按钮的绿色 */
+  background: #4CAF50;
   color: white;
   padding: 20rpx 40rpx;
   border: none;
@@ -825,6 +858,8 @@ const formatDate = (dateStr) => {
 .modify-btn:hover {
   opacity: 0.9;
 }
+
+/* 这里是重点，统一三个按钮样式 */
 .creator-btns-row {
   display: flex;
   justify-content: space-between;
@@ -832,21 +867,37 @@ const formatDate = (dateStr) => {
   margin-top: 30rpx;
 }
 
-.application-btn,
-.modify-btn {
+.creator-btns-row button {
   flex: 1;
   padding: 20rpx;
   font-size: 28rpx;
   border-radius: 12rpx;
-  background-color: #4caf50;
   color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 6rpx 12rpx rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
-.modify-btn {
-  background-color: #2196f3;
+/* 三个按钮不同背景色 */
+.application-btn {
+  background-color: #4caf50; /* 绿色 */
 }
 
+.modify-btn {
+  background-color: #2196f3; /* 蓝色 */
+}
+
+.disband-btn {
+  background-color: #f44336; /* 红色 */
+}
+
+.creator-btns-row button:hover {
+  filter: brightness(0.9);
+}
+
+/* 保持之前聊天按钮样式 */
 .chat-button-wrapper {
   position: fixed;
   bottom: 80rpx;
@@ -871,13 +922,19 @@ const formatDate = (dateStr) => {
   display: none;
 }
 
+/* 模态框 */
 .modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: white;
   border-radius: 8px;
   padding: 20px;
   width: 80%;
   max-height: 80%;
   overflow-y: auto;
+  z-index: 999;
 }
 
 .modal-header {
@@ -908,46 +965,6 @@ const formatDate = (dateStr) => {
   font-size: 18px;
 }
 
-.modal-content {
-  position: fixed; /* Fixed position to make it stay in place */
-  top: 50%; /* Position from the top of the screen */
-  left: 50%; /* Position from the left of the screen */
-  transform: translate(-50%, -50%); /* Translate to center the modal */
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  width: 80%;
-  max-height: 80%;
-  overflow-y: auto;
-  z-index: 999; /* Make sure it's on top */
-}
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.contact-list {
-  margin-top: 10px;
-}
-
-.contact-item {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.contact-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.contact-name {
-  font-size: 18px;
-}
 
 </style>

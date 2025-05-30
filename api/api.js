@@ -98,7 +98,9 @@ export const getBrowse = () => {
 	return http(`/team/browse`, '', 'GET')
 }
 
-
+export const disbandTeam = (teamId) => {
+	return http(`/team/${teamId}`, '', 'DELETE')
+}
 
 
 // 登录
@@ -257,6 +259,7 @@ export const updateToken = async () => {
     console.error('更新token失败:', error)
     return false
   }
+}
 //分页获取会话列表
 export const getListByPage=(num,size) => {
 	return http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`,'d' , 'GET')
@@ -285,4 +288,3 @@ export const getConDetail=(conversationId) => {
 export const searchMessagesApi=(conversationId,data) => {
 	return http(`/message/chat/${conversationId}/filter`,data , 'POST')
 }
-

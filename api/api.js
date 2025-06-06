@@ -255,6 +255,7 @@ export const updateToken = async () => {
     return false
   }
 }
+
 //分页获取会话列表
 export const getListByPage=(num,size) => {
 	return http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`,'d' , 'GET')

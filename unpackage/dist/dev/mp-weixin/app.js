@@ -25,6 +25,7 @@ if (!Math) {
   "./pages/message/message.js";
   "./pages/detail/browseHistory.js";
   "./pages/searchResults/searchResults.js";
+  "./pages/sign/sign.js";
 }
 const _sfc_main = {
   onLaunch: function() {

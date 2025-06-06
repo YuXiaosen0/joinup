@@ -19,7 +19,8 @@
     "pages/chat/chat",
     "pages/message/message",
     "pages/detail/browseHistory",
-    "pages/searchResults/searchResults"
+    "pages/searchResults/searchResults",
+    "pages/sign/sign"
   ],
   "window": {
     "navigationBarTextStyle": "black",

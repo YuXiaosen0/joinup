@@ -75,6 +75,22 @@ const _sfc_main = {
     this.loadTagList();
     this.getTeamList();
   },
+  onShow() {
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:292", "refresh creater");
+    this.getTeamList();
+    const type = common_vendor.index.getStorageSync("blank_type");
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:296", "onShow: type is ???");
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:297", toString(type));
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:298", "onShow: storage is ???");
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:299", common_vendor.index.getStorageSync("blank_type"));
+    if (type) {
+      this.currentTeamType = type;
+      this.getMyTeams(type);
+    } else {
+      showCreateForm = true;
+    }
+    common_vendor.index.removeStorageSync("blank_type");
+  },
   methods: {
     async chooseFile() {
       try {
@@ -84,7 +100,7 @@ const _sfc_main = {
           sourceType: ["album", "camera"]
         });
         const filePath = res.tempFilePaths[0];
-        common_vendor.index.__f__("log", "at pages/blank/blank.vue:290", "选择的文件路径:", filePath);
+        common_vendor.index.__f__("log", "at pages/blank/blank.vue:321", "选择的文件路径:", filePath);
         const uploadRes = await common_vendor.index.uploadFile({
           url: "https://joinup.org.cn/api/oss/file/upload",
           filePath,
@@ -98,16 +114,16 @@ const _sfc_main = {
         });
         if (uploadRes.statusCode === 200) {
           const data = JSON.parse(uploadRes.data);
-          common_vendor.index.__f__("log", "at pages/blank/blank.vue:306", "上传成功:", data);
+          common_vendor.index.__f__("log", "at pages/blank/blank.vue:337", "上传成功:", data);
           this.teamForm.cover = data.data.url;
-          common_vendor.index.__f__("log", "at pages/blank/blank.vue:308", "新封面url:", this.teamForm.cover);
+          common_vendor.index.__f__("log", "at pages/blank/blank.vue:339", "新封面url:", this.teamForm.cover);
           common_vendor.index.showToast({ title: "上传成功", icon: "success" });
         } else {
-          common_vendor.index.__f__("error", "at pages/blank/blank.vue:311", "上传失败，状态码:", uploadRes.statusCode);
+          common_vendor.index.__f__("error", "at pages/blank/blank.vue:342", "上传失败，状态码:", uploadRes.statusCode);
           common_vendor.index.showToast({ title: "上传失败", icon: "none" });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:315", "文件选择或上传失败:", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:346", "文件选择或上传失败:", error);
         common_vendor.index.showToast({ title: "上传失败", icon: "none" });
       }
     },
@@ -131,7 +147,7 @@ const _sfc_main = {
     },
     goDetail(item) {
       if (!item || !item.id) {
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:343", "无效的 item 对象", item);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:374", "无效的 item 对象", item);
         return;
       }
       common_vendor.index.navigateTo({
@@ -159,7 +175,7 @@ const _sfc_main = {
         });
         common_vendor.index.hideLoading();
         this.isLoading = false;
-        common_vendor.index.__f__("log", "at pages/blank/blank.vue:380", response);
+        common_vendor.index.__f__("log", "at pages/blank/blank.vue:411", response);
         if (response) {
           this.teamList = response || [];
         } else {
@@ -176,7 +192,7 @@ const _sfc_main = {
           title: "获取队伍信息失败，请稍后重试",
           icon: "none"
         });
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:398", "获取队伍信息失败:", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:429", "获取队伍信息失败:", error);
         this.teamList = [];
       }
     },
@@ -187,14 +203,14 @@ const _sfc_main = {
         if (response) {
           this.tagList = response || [];
         } else {
-          common_vendor.index.__f__("error", "at pages/blank/blank.vue:411", "获取标签列表失败:", response.msg);
+          common_vendor.index.__f__("error", "at pages/blank/blank.vue:442", "获取标签列表失败:", response.msg);
           common_vendor.index.showToast({
             title: "获取标签列表失败",
             icon: "none"
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:418", "获取标签列表出错", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:449", "获取标签列表出错", error);
         common_vendor.index.showToast({
           title: "获取标签列表出错",
           icon: "none"
@@ -319,7 +335,7 @@ const _sfc_main = {
           title: error || "创建失败，请稍后重试",
           icon: "none"
         });
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:578", "创建组队失败:", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:609", "创建组队失败:", error);
       }
     },
     // 重置表单

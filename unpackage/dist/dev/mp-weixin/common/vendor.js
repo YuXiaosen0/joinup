@@ -9806,6 +9806,7 @@ const createHook = (lifecycle) => (hook, target = getCurrentInstance()) => {
 };
 const onShow = /* @__PURE__ */ createHook(ON_SHOW);
 const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
+const onReady = /* @__PURE__ */ createHook(ON_READY);
 exports._export_sfc = _export_sfc;
 exports.computed = computed;
 exports.createPinia = createPinia;
@@ -9820,6 +9821,7 @@ exports.nextTick$1 = nextTick$1;
 exports.o = o;
 exports.onLoad = onLoad;
 exports.onMounted = onMounted;
+exports.onReady = onReady;
 exports.onShow = onShow;
 exports.p = p;
 exports.r = r;

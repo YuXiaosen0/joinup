@@ -72,18 +72,31 @@
     </view>
 
     <!-- 底部按钮区域 -->
-    <view class="bottom-section">
-      <up-button
-        type="primary" 
-        shape="circle" 
-        @click="openSignListPopup" 
-        class="action-btn"
-        icon="list"
-        color="linear-gradient(to right, #5A7BFF, #3D56F0)"
-      >
-        自动签到打卡列表
-      </up-button>
-    </view>
+     <view class="bottom-section">
+          <view class="button-row">
+            <up-button
+              type="primary" 
+              shape="circle" 
+              @click="openSignListPopup" 
+              class="action-btn half-width"
+              icon="list"
+              color="linear-gradient(to right, #5A7BFF, #3D56F0)"
+            >
+              自动签到打卡列表
+            </up-button>
+            
+            <up-button
+              type="primary" 
+              shape="circle" 
+              @click="goToSignRecord" 
+              class="action-btn half-width"
+              icon="clock"
+              color="linear-gradient(to right, #6A11CB, #2575FC)"
+            >
+              签到记录
+            </up-button>
+          </view>
+        </view>
 
     <!-- 签到打卡列表弹窗 -->
     <up-popup 
@@ -423,6 +436,13 @@ const getStatusClass = (status) => {
     'unsigned': status === '未签到'
   }
 }
+
+const goToSignRecord = () => {
+  uni.navigateTo({
+    url: '/pages/sign/sign'
+  })
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -598,6 +618,22 @@ const getStatusClass = (status) => {
   }
 }
 
+// .bottom-section {
+//   position: fixed;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+//   padding: 24rpx;
+//   background-color: #fff;
+//   box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.04);
+//   z-index: 10;
+  
+//   .action-btn {
+//     height: 88rpx;
+//     font-size: 32rpx;
+//     font-weight: 500;
+//   }
+// }
 .bottom-section {
   position: fixed;
   bottom: 0;
@@ -608,10 +644,19 @@ const getStatusClass = (status) => {
   box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.04);
   z-index: 10;
   
+  .button-row {
+    display: flex;
+    gap: 24rpx;
+  }
+  
   .action-btn {
     height: 88rpx;
     font-size: 32rpx;
     font-weight: 500;
+    
+    &.half-width {
+      flex: 1;
+    }
   }
 }
 

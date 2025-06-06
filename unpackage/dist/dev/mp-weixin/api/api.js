@@ -66,6 +66,9 @@ const uploadBrowse = (teamId) => {
 const getBrowse = () => {
   return api_http.http(`/team/browse`, "", "GET");
 };
+const disbandTeam = (teamId) => {
+  return api_http.http(`/team/${teamId}`, "", "DELETE");
+};
 const login = (code) => {
   return api_http.http("/user/wxLogin", { code }, "POST");
 };
@@ -159,16 +162,16 @@ const getNewToken = () => {
 const updateToken = async () => {
   try {
     const res = await getNewToken();
-    common_vendor.index.__f__("log", "at api/api.js:242", "获取新的token:");
+    common_vendor.index.__f__("log", "at api/api.js:244", "获取新的token:");
     if (res) {
-      common_vendor.index.__f__("log", "at api/api.js:244", res);
+      common_vendor.index.__f__("log", "at api/api.js:246", res);
       common_vendor.index.setStorageSync("token", res.token);
-      common_vendor.index.__f__("log", "at api/api.js:247", "更新token成功:", common_vendor.index.getStorageSync("token"));
+      common_vendor.index.__f__("log", "at api/api.js:249", "更新token成功:", common_vendor.index.getStorageSync("token"));
       return true;
     }
     return false;
   } catch (error) {
-    common_vendor.index.__f__("error", "at api/api.js:252", "更新token失败:", error);
+    common_vendor.index.__f__("error", "at api/api.js:254", "更新token失败:", error);
     return false;
   }
 };
@@ -205,6 +208,7 @@ exports.deleteBoya = deleteBoya;
 exports.deleteMessage = deleteMessage;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
+exports.disbandTeam = disbandTeam;
 exports.faQiConversation = faQiConversation;
 exports.faQiDuiWuConversation = faQiDuiWuConversation;
 exports.feedback = feedback;

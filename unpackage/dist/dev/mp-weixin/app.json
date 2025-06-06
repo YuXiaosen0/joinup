@@ -18,7 +18,8 @@
     "pages/contacts/contacts",
     "pages/chat/chat",
     "pages/message/message",
-    "pages/detail/browseHistory"
+    "pages/detail/browseHistory",
+    "pages/searchResults/searchResults"
   ],
   "window": {
     "navigationBarTextStyle": "black",

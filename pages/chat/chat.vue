@@ -170,10 +170,14 @@
             </view>
             <view  v-else>
               <image
-                class="cover-image"
+                class="chat-image"
                 :src="msg.content.url"
                 mode="aspectFill"
                 :lazy-load="true"
+                :style="{
+                  width: 100 + 'px',
+                  height: 100 + 'px'
+                }"
               />
               <view class="message-meta">
                 <text class="message-time">{{ formatMessageTime(msg.createTime) }}</text>
@@ -199,10 +203,14 @@
             </view>
             <view  v-else>
               <image
-                class="cover-image"
+                class="chat-image"
                 :src="msg.content.url"
                 mode="aspectFill"
                 :lazy-load="true"
+                :style="{
+                  width: 100 + 'px',
+                  height: 100 + 'px'
+                }"
               />
               <view class="message-meta">
                 <text class="message-time">{{ formatMessageTime(msg.createTime) }}</text>
@@ -299,7 +307,7 @@
 import { ref, nextTick,computed } from 'vue';
 import { onLoad,onShow,onUnload } from '@dcloudio/uni-app';
 import { getConversionRecord,clearUnread,searchMessagesApi,getListByPage
-  ,getTeamDetails,faQiDuiWuConversation,clearUn } from "../../api/api";
+  ,getTeamDetails,faQiDuiWuConversation,clearUn,noticeId } from "../../api/api";
 import { useWebSocket } from '../../utils/useWebSocket.js';
 
 const userInfo = ref(uni.getStorageSync('userInfo'));
@@ -330,7 +338,9 @@ const groupList = ref([
 // 消息类型选项
 const messageTypes = ref([
   { value: '', label: '全部类型' },
-  { value: 'TEXT', label: '文字' }
+  { value: 'TEXT', label: '文字' },
+	{ value: 'IMAGE', label: '图片' },
+	{ value: 'TEAM_SHARE', label: '队伍分享' }
 ]);
 onLoad(async (options) => {
   contact.value = JSON.parse(decodeURIComponent(options.conversation));
@@ -350,7 +360,9 @@ onLoad(async (options) => {
   // 注册 WebSocket 消息监听
   ws.onMessage(wsMessageListener);
 });
-
+// onUnload( async()=>{
+//   await clearUn()
+// }  ) 
 // 处理文件上传
 const chooseFile = async () => {
   try {
@@ -393,7 +405,7 @@ const chooseFile = async () => {
       const msgObj = {
         conversationId: contact.value.id,
         content: { url:data.data.url,name:data.data.name },
-        type: 'TEXT'
+        type: 'IMAGE'
       };
       messages.value = [
         {
@@ -460,7 +472,7 @@ const selectGroup = async(group) => {
     conversationId: contact.value.id,
     content: { teamId: group.teamId, conversationId: group.conversationId, 
       groupName: group.groupName, cover: group.cover },
-    type: 'TEXT'
+    type: 'TEAM_SHARE'
   };
   receiverIdNow.value= uni.getStorageSync('userInfo').id;
   messages.value = [
@@ -530,16 +542,20 @@ const searchMessages = async () => {
     const params = {
       senderId:null,
       // messageType: selectedType.value.value,
-      messageType: null,
+      messageType: selectedType.value.value,
       messageDate: searchDate.value,
       messageContent: searchKeyword.value,
       pageNumber:1,
       pageSize:10
     };
-    showResults1.value = true;
+    // showResults1.value = true;
+    console.log('搜索参数:', params);
     const res = await searchMessagesApi( contact.value.id,params);
     console.log('搜索结果:', res.list);
-    filteredMessages.value = res.list;
+    uni.navigateTo({
+      url: `/pages/searchResults/searchResults?data=${encodeURIComponent(JSON.stringify(res.list))}` 
+    });
+    // filteredMessages.value = res.list;
   } catch (error) {
     uni.showToast({
       title: '搜索失败',

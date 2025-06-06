@@ -178,10 +178,17 @@
   box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.04);
   z-index: 10;
 }
+.bottom-section .button-row.data-v-ffd98509 {
+  display: flex;
+  gap: 24rpx;
+}
 .bottom-section .action-btn.data-v-ffd98509 {
   height: 88rpx;
   font-size: 32rpx;
   font-weight: 500;
+}
+.bottom-section .action-btn.half-width.data-v-ffd98509 {
+  flex: 1;
 }
 
 /* 弹窗样式 */

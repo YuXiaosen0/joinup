@@ -74,6 +74,22 @@ const _sfc_main = {
     this.loadTagList();
     this.getTeamList();
   },
+  onShow() {
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:281", "refresh creater");
+    this.getTeamList();
+    const type = common_vendor.index.getStorageSync("blank_type");
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:285", "onShow: type is ???");
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:286", toString(type));
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:287", "onShow: storage is ???");
+    common_vendor.index.__f__("log", "at pages/blank/blank.vue:288", common_vendor.index.getStorageSync("blank_type"));
+    if (type) {
+      this.currentTeamType = type;
+      this.getMyTeams(type);
+    } else {
+      showCreateForm = true;
+    }
+    common_vendor.index.removeStorageSync("blank_type");
+  },
   methods: {
     // 切换创建表单显示
     toggleCreateForm() {
@@ -86,7 +102,7 @@ const _sfc_main = {
     },
     goDetail(item) {
       if (!item || !item.id) {
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:283", "无效的 item 对象", item);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:314", "无效的 item 对象", item);
         return;
       }
       common_vendor.index.navigateTo({
@@ -114,7 +130,7 @@ const _sfc_main = {
         });
         common_vendor.index.hideLoading();
         this.isLoading = false;
-        common_vendor.index.__f__("log", "at pages/blank/blank.vue:320", response);
+        common_vendor.index.__f__("log", "at pages/blank/blank.vue:351", response);
         if (response) {
           this.teamList = response || [];
         } else {
@@ -131,7 +147,7 @@ const _sfc_main = {
           title: "获取队伍信息失败，请稍后重试",
           icon: "none"
         });
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:338", "获取队伍信息失败:", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:369", "获取队伍信息失败:", error);
         this.teamList = [];
       }
     },
@@ -142,14 +158,14 @@ const _sfc_main = {
         if (response) {
           this.tagList = response || [];
         } else {
-          common_vendor.index.__f__("error", "at pages/blank/blank.vue:351", "获取标签列表失败:", response.msg);
+          common_vendor.index.__f__("error", "at pages/blank/blank.vue:382", "获取标签列表失败:", response.msg);
           common_vendor.index.showToast({
             title: "获取标签列表失败",
             icon: "none"
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:358", "获取标签列表出错", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:389", "获取标签列表出错", error);
         common_vendor.index.showToast({
           title: "获取标签列表出错",
           icon: "none"
@@ -273,7 +289,7 @@ const _sfc_main = {
           title: error || "创建失败，请稍后重试",
           icon: "none"
         });
-        common_vendor.index.__f__("error", "at pages/blank/blank.vue:517", "创建组队失败:", error);
+        common_vendor.index.__f__("error", "at pages/blank/blank.vue:548", "创建组队失败:", error);
       }
     },
     // 重置表单

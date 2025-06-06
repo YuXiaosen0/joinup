@@ -257,6 +257,8 @@ export const updateToken = async () => {
     console.error('更新token失败:', error)
     return false
   }
+}
+
 //分页获取会话列表
 export const getListByPage=(num,size) => {
 	return http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`,'d' , 'GET')

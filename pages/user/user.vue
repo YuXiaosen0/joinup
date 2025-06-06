@@ -5,8 +5,8 @@
 			<view class="setbox">
 				<view class="set-left">
 					<!-- 日历图标 -->
-					<uni-icons type="calendar" size="30" color="#fff"></uni-icons>
-					<view class="txt" @click="openSign">签到记录</view>
+					<!-- <uni-icons type="calendar" size="30" color="#fff"></uni-icons>
+					<view class="txt" @click="openSign">签到记录</view> -->
 				</view>
 				<up-popup closeable @close="closeSignPopup" :show="showSignPopup" round="20">
 				  <view class="popup-container">
@@ -133,15 +133,15 @@
 					</view>
 
 					<!-- 加入队伍 -->
-					<view class="u-item">
+					<view class="u-item" @click="goToBlank('MEMBER')">
 						<view class="num">{{ userInfo.joinedTeamCount }}</view>
-						<view class="u-tit">加入队伍</view>
+						<view class="u-tit">已加入的队伍</view>
 					</view>
 
 					<!-- 创建队伍 -->
-					<view class="u-item">
+					<view class="u-item" @click="goToBlank('CREATOR')">
 						<view class="num">{{ userInfo.createdTeamCount }}</view>
-						<view class="u-tit">创建队伍</view>
+						<view class="u-tit">已创建的队伍</view>
 					</view>
 
 				</view>
@@ -432,6 +432,15 @@ const submitFeedback = async() => {
 			url: '/pages/sign/sign' // 跳转到签到记录页面
 		});
 	    // showSignPopup.value = true; // 显示弹窗
+	};
+	
+	const goToBlank = (type) => {
+		uni.setStorageSync('blank_type', type);
+		console.log(uni.getStorageSync('blank_type'));
+		console.log("跳转到blank页面");
+		uni.switchTab({
+			url: '/pages/blank/blank'
+		});
 	};
 	
 	// 关闭签到记录弹窗

@@ -4,7 +4,6 @@ const common_vendor = require("./common/vendor.js");
 const utils_useWebSocket = require("./utils/useWebSocket.js");
 const api_api = require("./api/api.js");
 const uni_modules_uviewPlus_index = require("./uni_modules/uview-plus/index.js");
-const api_api = require("./api/api.js");
 if (!Math) {
   "./pages/index/index.js";
   "./pages/detail/detail.js";
@@ -21,14 +20,11 @@ if (!Math) {
   "./pages/boya/boya.js";
   "./pages/blank/blank.js";
   "./pages/team/team.js";
-  "./pages/sign/sign.js";
-  "./pages/message/message.js";
-  "./pages/contacts/contacts.js";
-  "./pages/chat/chat.js";
   "./pages/contacts/contacts.js";
   "./pages/chat/chat.js";
   "./pages/message/message.js";
   "./pages/detail/browseHistory.js";
+  "./pages/sign/sign.js";
 }
 const _sfc_main = {
   onLaunch: function() {

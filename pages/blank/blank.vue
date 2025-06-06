@@ -265,6 +265,37 @@ export default {
 		
     // 页面加载时获取组队列表
     this.getTeamList();
+	// const type = uni.getStorageSync('blank_type');
+	// console.log("type is ???");
+	// console.log(type);
+	// console.log("storage is ???");
+	// console.log(uni.getStorageSync('blank_type'));
+	// if (type) {
+	// 	this.currentTeamType = type;
+	// 	//uni.removeStorageSync('blank_type'); // 使用后删除
+	//     this.getMyTeams(type);
+	//     uni.removeStorageSync('blank_type'); // 使用后删除
+	// }
+  },
+  onShow() {
+	  console.log("refresh creater");
+	  //showCreateForm = false;
+	this.getTeamList();
+    const type = uni.getStorageSync('blank_type');
+    console.log("onShow: type is ???");
+    console.log(toString(type));
+    console.log("onShow: storage is ???");
+    console.log(uni.getStorageSync('blank_type'));
+    
+    if (type) {
+      this.currentTeamType = type;
+      this.getMyTeams(type);
+      //uni.removeStorageSync('blank_type');
+    } else {
+		showCreateForm = true;
+	}
+	uni.removeStorageSync('blank_type');
+	//showCreateForm = false;
   },
   methods: {
 	

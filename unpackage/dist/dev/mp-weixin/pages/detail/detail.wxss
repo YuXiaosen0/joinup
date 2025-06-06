@@ -257,8 +257,6 @@
 }
 .modify-btn.data-v-eca06f3c {
   background-color: #2196f3;
-<<<<<<< HEAD
-=======
 }
 .chat-button-wrapper.data-v-eca06f3c {
   position: fixed;
@@ -280,5 +278,4 @@
 }
 .chat-button.data-v-eca06f3c::after {
   display: none;
->>>>>>> df91c4910e10a832d1cd4950c9120fa042747557
 }

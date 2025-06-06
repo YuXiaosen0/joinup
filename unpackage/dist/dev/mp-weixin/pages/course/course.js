@@ -73,7 +73,7 @@ const _sfc_main = {
     };
     const getCouInfo = async () => {
       const res = await api_api.getCourseInfo(date.value);
-      common_vendor.index.__f__("log", "at pages/course/course.vue:297", "res", res);
+      common_vendor.index.__f__("log", "at pages/course/course.vue:310", "res", res);
       if (res && Array.isArray(res.result)) {
         courseInfo.value = res.result.map((course) => ({
           id: course.id || "未知ID",
@@ -95,7 +95,7 @@ const _sfc_main = {
         });
         courseInfo.value = [];
       } else {
-        common_vendor.index.__f__("error", "at pages/course/course.vue:320", "获取课程信息失败或数据格式不正确");
+        common_vendor.index.__f__("error", "at pages/course/course.vue:333", "获取课程信息失败或数据格式不正确");
         courseInfo.value = [];
       }
     };
@@ -116,7 +116,7 @@ const _sfc_main = {
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/course/course.vue:343", "添加失败:", error);
+        common_vendor.index.__f__("error", "at pages/course/course.vue:356", "添加失败:", error);
         common_vendor.index.showToast({
           title: "添加失败，请稍后重试",
           icon: "none",
@@ -142,7 +142,7 @@ const _sfc_main = {
           });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/course/course.vue:371", "删除失败:", error);
+        common_vendor.index.__f__("error", "at pages/course/course.vue:384", "删除失败:", error);
         common_vendor.index.showToast({
           title: "删除失败",
           icon: "none",
@@ -191,6 +191,11 @@ const _sfc_main = {
         "signed": status === "已签到",
         "unsigned": status === "未签到"
       };
+    };
+    const goToSignRecord = () => {
+      common_vendor.index.navigateTo({
+        url: "/pages/sign/sign"
+      });
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
@@ -260,115 +265,122 @@ const _sfc_main = {
           icon: "list",
           color: "linear-gradient(to right, #5A7BFF, #3D56F0)"
         }),
-        q: common_vendor.o(closeSignListPopup),
+        q: common_vendor.o(goToSignRecord),
         r: common_vendor.p({
+          type: "primary",
+          shape: "circle",
+          icon: "clock",
+          color: "linear-gradient(to right, #6A11CB, #2575FC)"
+        }),
+        s: common_vendor.o(closeSignListPopup),
+        t: common_vendor.p({
           name: "close"
         }),
-        s: signList.value.length > 0
+        v: signList.value.length > 0
       }, signList.value.length > 0 ? {
-        t: common_vendor.f(signList.value, (item, index, i0) => {
+        w: common_vendor.f(signList.value, (item, index, i0) => {
           return {
-            a: "ffd98509-9-" + i0 + ",ffd98509-7",
+            a: "ffd98509-10-" + i0 + ",ffd98509-8",
             b: common_vendor.t(item.courseId),
-            c: "ffd98509-10-" + i0 + ",ffd98509-7",
+            c: "ffd98509-11-" + i0 + ",ffd98509-8",
             d: common_vendor.t(formatDateTime(item.createTime)),
-            e: "ffd98509-11-" + i0 + ",ffd98509-7",
+            e: "ffd98509-12-" + i0 + ",ffd98509-8",
             f: common_vendor.t(item.status === "RUNNING" ? "进行中" : "已结束"),
             g: item.status === "RUNNING" ? 1 : "",
             h: common_vendor.o(($event) => deleteSignC(item.id), index),
-            i: "ffd98509-12-" + i0 + ",ffd98509-7",
+            i: "ffd98509-13-" + i0 + ",ffd98509-8",
             j: index
           };
         }),
-        v: common_vendor.p({
+        x: common_vendor.p({
           name: "bookmark",
           size: "18",
           color: "#5A7BFF"
         }),
-        w: common_vendor.p({
+        y: common_vendor.p({
           name: "calendar",
           size: "18",
           color: "#5A7BFF"
         }),
-        x: common_vendor.p({
+        z: common_vendor.p({
           name: "setting",
           size: "18",
           color: "#5A7BFF"
         }),
-        y: common_vendor.p({
+        A: common_vendor.p({
           type: "error",
           size: "mini",
           shape: "circle"
         })
       } : {
-        z: common_assets._imports_0
+        B: common_assets._imports_0
       }, {
-        A: common_vendor.o(closeSignListPopup),
-        B: common_vendor.p({
+        C: common_vendor.o(closeSignListPopup),
+        D: common_vendor.p({
           show: showSignListPopup.value,
           mode: "center",
           round: "16"
         }),
-        C: common_vendor.t(selectedCourse.value.courseName),
-        D: common_vendor.o(closePopup),
-        E: common_vendor.p({
+        E: common_vendor.t(selectedCourse.value.courseName),
+        F: common_vendor.o(closePopup),
+        G: common_vendor.p({
           name: "close"
         }),
-        F: common_vendor.p({
+        H: common_vendor.p({
           name: "lock",
           size: "18",
           color: "#5A7BFF"
         }),
-        G: common_vendor.t(selectedCourse.value.courseId),
-        H: common_vendor.p({
+        I: common_vendor.t(selectedCourse.value.courseId),
+        J: common_vendor.p({
           name: "bookmark",
           size: "18",
           color: "#5A7BFF"
         }),
-        I: common_vendor.t(selectedCourse.value.courseType),
-        J: common_vendor.p({
+        K: common_vendor.t(selectedCourse.value.courseType),
+        L: common_vendor.p({
           name: "account-fill",
           size: "18",
           color: "#5A7BFF"
         }),
-        K: common_vendor.t(selectedCourse.value.teacherName),
-        L: common_vendor.p({
+        M: common_vendor.t(selectedCourse.value.teacherName),
+        N: common_vendor.p({
           name: "home-fill",
           size: "18",
           color: "#5A7BFF"
         }),
-        M: common_vendor.t(selectedCourse.value.classroomName),
-        N: common_vendor.p({
+        O: common_vendor.t(selectedCourse.value.classroomName),
+        P: common_vendor.p({
           name: "calendar",
           size: "18",
           color: "#5A7BFF"
         }),
-        O: common_vendor.t(formatDate(selectedCourse.value.classBeginTime)),
-        P: common_vendor.p({
+        Q: common_vendor.t(formatDate(selectedCourse.value.classBeginTime)),
+        R: common_vendor.p({
           name: "clock",
           size: "18",
           color: "#5A7BFF"
         }),
-        Q: common_vendor.t(formatTime(selectedCourse.value.classBeginTime)),
-        R: common_vendor.t(formatTime(selectedCourse.value.classEndTime)),
-        S: common_vendor.t(isSignAdded(selectedCourse.value.courseId) ? "已添加" : "添加自动打卡"),
-        T: common_vendor.o(($event) => addSignC(selectedCourse.value.courseId)),
-        U: common_vendor.p({
+        S: common_vendor.t(formatTime(selectedCourse.value.classBeginTime)),
+        T: common_vendor.t(formatTime(selectedCourse.value.classEndTime)),
+        U: common_vendor.t(isSignAdded(selectedCourse.value.courseId) ? "已添加" : "添加自动打卡"),
+        V: common_vendor.o(($event) => addSignC(selectedCourse.value.courseId)),
+        W: common_vendor.p({
           type: "primary",
           shape: "circle",
           disabled: isSignAdded(selectedCourse.value.courseId),
           color: "linear-gradient(to right, #6A11CB, #2575FC)"
         }),
-        V: common_vendor.t(selectedCourse.value.signStatus === "已签到" ? "已签到" : "立即签到"),
-        W: common_vendor.o(($event) => sign(selectedCourse.value.id)),
-        X: common_vendor.p({
+        X: common_vendor.t(selectedCourse.value.signStatus === "已签到" ? "已签到" : "立即签到"),
+        Y: common_vendor.o(($event) => sign(selectedCourse.value.id)),
+        Z: common_vendor.p({
           type: "primary",
           shape: "circle",
           disabled: selectedCourse.value.signStatus === "已签到",
           color: "linear-gradient(to right, #5A7BFF, #3D56F0)"
         }),
-        Y: common_vendor.o(closePopup),
-        Z: common_vendor.p({
+        aa: common_vendor.o(closePopup),
+        ab: common_vendor.p({
           show: showPopup.value,
           mode: "center",
           round: "16"

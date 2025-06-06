@@ -164,10 +164,12 @@ const _sfc_main = {
       isAsc: true
       // 排序方式（升序/降序）
     });
-    const openSign = async () => {
-      common_vendor.index.navigateTo({
-        url: "/pages/sign/sign"
-        // 跳转到签到记录页面
+    const goToBlank = (type) => {
+      common_vendor.index.setStorageSync("blank_type", type);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:439", common_vendor.index.getStorageSync("blank_type"));
+      common_vendor.index.__f__("log", "at pages/user/user.vue:440", "跳转到blank页面");
+      common_vendor.index.switchTab({
+        url: "/pages/blank/blank"
       });
     };
     const closeSignPopup = () => {
@@ -176,17 +178,17 @@ const _sfc_main = {
     common_vendor.onLoad(async () => {
       common_vendor.index.login({
         success: async (data) => {
-          common_vendor.index.__f__("log", "at pages/user/user.vue:445", "微信登录 code:", data.code);
+          common_vendor.index.__f__("log", "at pages/user/user.vue:454", "微信登录 code:", data.code);
           try {
             const { token } = await api_api.login(data.code);
             common_vendor.index.setStorageSync("token", token);
-            common_vendor.index.__f__("log", "at pages/user/user.vue:449", "登录成功，获取到 token:", token);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:458", "登录成功，获取到 token:", token);
             const res = await api_api.getUserInfo();
             Object.assign(userInfo.value, res);
             common_vendor.index.setStorageSync("userInfo", userInfo);
-            common_vendor.index.__f__("log", "at pages/user/user.vue:455", "用户信息:", userInfo);
+            common_vendor.index.__f__("log", "at pages/user/user.vue:464", "用户信息:", userInfo);
           } catch (error) {
-            common_vendor.index.__f__("error", "at pages/user/user.vue:457", "登录或获取用户信息失败:", error);
+            common_vendor.index.__f__("error", "at pages/user/user.vue:466", "登录或获取用户信息失败:", error);
             common_vendor.index.showToast({
               title: "登录失败，请稍后重试",
               icon: "none"
@@ -194,7 +196,7 @@ const _sfc_main = {
           }
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/user/user.vue:465", "微信登录失败:", err);
+          common_vendor.index.__f__("error", "at pages/user/user.vue:474", "微信登录失败:", err);
           common_vendor.index.showToast({
             title: "微信登录失败",
             icon: "none"
@@ -210,12 +212,12 @@ const _sfc_main = {
         "ssoPassword": userInfo.value.ssoPassword
       };
       const res = await api_api.modifyUserInfo(data);
-      common_vendor.index.__f__("log", "at pages/user/user.vue:484", "modifyUserInfo", res);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:493", "modifyUserInfo", res);
       show.value = false;
     };
     const changeName = (e) => {
       userInfo.value.username = e.detail.value;
-      common_vendor.index.__f__("log", "at pages/user/user.vue:496", "userInfo", userInfo);
+      common_vendor.index.__f__("log", "at pages/user/user.vue:505", "userInfo", userInfo);
     };
     const setFun = () => {
       common_vendor.index.showModal({
@@ -230,88 +232,84 @@ const _sfc_main = {
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
-        a: common_vendor.p({
-          type: "calendar",
-          size: "30",
-          color: "#fff"
-        }),
-        b: common_vendor.o(openSign),
-        c: common_vendor.t(pageQuery.pageNo),
-        d: common_vendor.p({
+        a: common_vendor.t(pageQuery.pageNo),
+        b: common_vendor.p({
           type: "arrowdown",
           size: "14",
           color: "#666"
         }),
-        e: pageQuery.pageNo - 1,
-        f: [1, 2, 3, 4, 5],
-        g: common_vendor.o((e) => pageQuery.pageNo = e.detail.value + 1),
-        h: common_vendor.t(pageQuery.pageSize),
-        i: common_vendor.p({
+        c: pageQuery.pageNo - 1,
+        d: [1, 2, 3, 4, 5],
+        e: common_vendor.o((e) => pageQuery.pageNo = e.detail.value + 1),
+        f: common_vendor.t(pageQuery.pageSize),
+        g: common_vendor.p({
           type: "arrowdown",
           size: "14",
           color: "#666"
         }),
-        j: common_vendor.o((e) => pageQuery.pageSize = e.detail.value + 1),
-        k: [5, 10, 15, 20],
-        l: pageQuery.pageSize / 5 - 1,
-        m: common_vendor.t(pageQuery.isAsc === "true" ? "升序" : "降序"),
-        n: common_vendor.p({
+        h: common_vendor.o((e) => pageQuery.pageSize = e.detail.value + 1),
+        i: [5, 10, 15, 20],
+        j: pageQuery.pageSize / 5 - 1,
+        k: common_vendor.t(pageQuery.isAsc === "true" ? "升序" : "降序"),
+        l: common_vendor.p({
           type: "arrowdown",
           size: "14",
           color: "#666"
         }),
-        o: common_vendor.o((e) => pageQuery.isAsc = e.detail.value),
-        p: ["升序", "降序"],
-        q: pageQuery.isAsc === "true" ? 0 : 1,
-        r: common_vendor.o(getSignList),
-        s: signList.value.length > 0
+        m: common_vendor.o((e) => pageQuery.isAsc = e.detail.value),
+        n: ["升序", "降序"],
+        o: pageQuery.isAsc === "true" ? 0 : 1,
+        p: common_vendor.o(getSignList),
+        q: signList.value.length > 0
       }, signList.value.length > 0 ? {
-        t: common_vendor.f(signList.value, (item, index, i0) => {
+        r: common_vendor.f(signList.value, (item, index, i0) => {
           return {
             a: common_vendor.t(item.courseId),
             b: common_vendor.t(item.success ? "签到成功" : "签到失败"),
             c: common_vendor.n(item.success ? "success" : "fail"),
-            d: "0f7520f0-5-" + i0 + ",0f7520f0-1",
+            d: "0f7520f0-4-" + i0 + ",0f7520f0-0",
             e: common_vendor.t(formatTime(item.createTime)),
             f: index
           };
         }),
-        v: common_vendor.p({
+        s: common_vendor.p({
           type: "calendar",
           size: "14",
           color: "#999"
         })
       } : {}, {
-        w: common_vendor.o(closeSignPopup),
-        x: common_vendor.p({
+        t: common_vendor.o(closeSignPopup),
+        v: common_vendor.p({
           closeable: true,
           show: showSignPopup.value,
           round: "20"
         }),
-        y: common_vendor.p({
+        w: common_vendor.p({
           type: "gear",
           size: "30",
           color: "#fff"
         }),
-        z: !userInfo.value.username
+        x: !userInfo.value.username
       }, !userInfo.value.username ? {} : {
-        A: userInfo.value.avatar,
-        B: common_vendor.t(userInfo.value.username)
+        y: userInfo.value.avatar,
+        z: common_vendor.t(userInfo.value.username)
       }, {
-        C: common_vendor.o(setFun),
-        D: common_vendor.p({
+        A: common_vendor.o(setFun),
+        B: common_vendor.p({
           type: "arrowright",
           size: "30",
           color: "#999"
         }),
-        E: common_vendor.p({
+        C: common_vendor.p({
           type: "star",
           size: "30",
           color: "#FF4D4F"
         }),
-        F: common_vendor.o(goToTechnology),
-        G: common_vendor.t(userInfo.value.joinedTeamCount),
-        H: common_vendor.t(userInfo.value.createdTeamCount),
+        D: common_vendor.o(goToTechnology),
+        E: common_vendor.t(userInfo.value.joinedTeamCount),
+        F: common_vendor.o(($event) => goToBlank("MEMBER")),
+        G: common_vendor.t(userInfo.value.createdTeamCount),
+        H: common_vendor.o(($event) => goToBlank("CREATOR")),
         I: common_vendor.p({
           title: "浏览历史",
           ["is-link"]: true,

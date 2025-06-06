@@ -1,7 +1,7 @@
 "use strict";
 const common_vendor = require("../common/vendor.js");
 require("../stores/user.js");
-let baseUrl = "https://joinup.org.cn/api-dev";
+let baseUrl = "https://joinup.org.cn/api";
 function http(url1, data = {}, method) {
   return new Promise((resolve, reject) => {
     common_vendor.index.request({

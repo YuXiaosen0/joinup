@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const api_api = require("../../api/api.js");
+require("../../utils/useWebSocket.js");
 if (!Array) {
   const _easycom_up_tabs2 = common_vendor.resolveComponent("up-tabs");
   _easycom_up_tabs2();
@@ -15,22 +16,21 @@ const SwiperBanner = () => "../../components/SwiperBanner.js";
 const _sfc_main = {
   __name: "index",
   setup(__props) {
+    common_vendor.index.getStorageSync("token");
     const keyword = common_vendor.ref("");
     const themes = common_vendor.reactive([]);
     const swiperList = common_vendor.ref([]);
     let currentTab = common_vendor.ref(0);
     let flowList = common_vendor.ref([]);
     common_vendor.onShow(() => {
-      var _a;
       fetchSwiperList();
       fetchThemes();
-      loadList((_a = themes[currentTab.value]) == null ? void 0 : _a.id);
+      loadList(0);
     });
     common_vendor.onMounted(() => {
-      var _a;
       fetchSwiperList();
       fetchThemes();
-      loadList((_a = themes[currentTab.value]) == null ? void 0 : _a.id);
+      loadList(0);
     });
     function onTabChange(index) {
       currentTab.value = index.index;
@@ -38,28 +38,26 @@ const _sfc_main = {
       loadList(themeId);
     }
     function loadList(themeId) {
-      common_vendor.index.__f__("log", "at pages/index/index.vue:62", "当前 themeId:", themeId);
+      common_vendor.index.__f__("log", "at pages/index/index.vue:64", "当前 themeId:", themeId);
       api_api.getTeamList(themeId).then((res) => {
         if (res && res.list) {
           flowList.value = res.list || [];
         } else {
-          common_vendor.index.__f__("error", "at pages/index/index.vue:67", "接口返回数据结构不正确:", res);
+          common_vendor.index.__f__("error", "at pages/index/index.vue:69", "接口返回数据结构不正确:", res);
           flowList.value = [];
         }
       }).catch((error) => {
-        common_vendor.index.__f__("error", "at pages/index/index.vue:71", "API 请求失败:", error);
+        common_vendor.index.__f__("error", "at pages/index/index.vue:73", "API 请求失败:", error);
         flowList.value = [];
       });
     }
     function fetchThemes() {
       api_api.getThemeList().then((res) => {
-        res.forEach((item) => {
-          themes.push({
-            name: item.name,
-            id: item.id,
-            description: item.description || "暂无描述"
-          });
-        });
+        themes.splice(0, themes.length, ...res.map((item) => ({
+          name: item.name,
+          id: item.id,
+          description: item.description || "暂无描述"
+        })));
         if (themes.length > 0) {
           loadList(themes[currentTab.value].id);
         }

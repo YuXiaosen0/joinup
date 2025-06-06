@@ -29,7 +29,9 @@ import WaterfallList from '@/components/WaterfallList.vue'
 import SearchBar from '@/components/SearchBar.vue'
 import SwiperBanner from '@/components/SwiperBanner.vue'
 import {onShow} from '@dcloudio/uni-app'
-
+import { useWebSocket } from '../../utils/useWebSocket.js';
+const token = uni.getStorageSync('token');
+const ws = useWebSocket(token);
 const keyword = ref('')
 const themes = reactive([])
 const swiperList = ref([])  // 存储轮播图数据
@@ -39,14 +41,14 @@ let flowList = ref([])
 onShow(() => {
   fetchSwiperList()  // 获取轮播图数据
   fetchThemes()
-  loadList(themes[currentTab.value]?.id)
+  loadList(0)
 })
 
 // 页面加载时触发的逻辑
 onMounted(() => {
 	fetchSwiperList()  // 获取轮播图数据
   fetchThemes()
-  loadList(themes[currentTab.value]?.id)
+  loadList(0)
   
 })
 
@@ -76,13 +78,11 @@ function loadList(themeId) {
 // 获取主题列表
 function fetchThemes() {
   getThemeList().then(res => {
-    res.forEach(item => {
-      themes.push({
-        name: item.name,
-        id: item.id,
-        description: item.description || '暂无描述'
-      })
-    })
+    themes.splice(0, themes.length, ...res.map(item => ({
+      name: item.name,
+      id: item.id,
+      description: item.description || '暂无描述'
+    })))
 
     if (themes.length > 0) {
       loadList(themes[currentTab.value].id)

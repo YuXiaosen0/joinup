@@ -289,3 +289,24 @@
   pointer-events: none;
   /* 不接收鼠标事件 */
 }
+.upload-section {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 32rpx;
+}
+.upload-btn {
+  background-color: #f0f4ff;
+  color: #2979ff;
+  border: 2rpx dashed #2979ff;
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+.input-title {
+  font-size: 30rpx;
+  margin-bottom: 16rpx;
+  font-weight: 600;
+  color: #2c3e50;
+}

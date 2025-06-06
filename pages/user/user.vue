@@ -305,7 +305,7 @@ const chooseFile = async () => {
 
     // 上传文件
     const uploadRes = await uni.uploadFile({
-      url: 'https://joinup.org.cn/api-dev/oss/file/upload', // 替换为实际的上传接口
+      url: 'https://joinup.org.cn/api/oss/file/upload', // 替换为实际的上传接口
       filePath: filePath, // 文件路径
       name: 'file', // 后端接收文件的字段名
       header: {
@@ -449,35 +449,7 @@ const submitFeedback = async() => {
 	};
 	// 页面加载时获取用户信息
 	onLoad(async () => {
-		uni.login({
-		  success: async (data) => {
-			console.log("微信登录 code:", data.code);
-			try {
-			  const { token } = await login(data.code);
-			  uni.setStorageSync('token', token);
-			  console.log("登录成功，获取到 token:", token);
-
-			  // 获取用户信息
-			  const res = await getUserInfo();
-				Object.assign(userInfo.value, res);
-				uni.setStorageSync('userInfo', userInfo);
-			  console.log("用户信息:", userInfo);
-			} catch (error) {
-			  console.error("登录或获取用户信息失败:", error);
-			  uni.showToast({
-				title: '登录失败，请稍后重试',
-				icon: 'none',
-			  });
-			}
-		  },
-		  fail: (err) => {
-			console.error("微信登录失败:", err);
-			uni.showToast({
-			  title: '微信登录失败',
-			  icon: 'none',
-			});
-		  },
-		});
+		userInfo.value=uni.getStorageSync('userInfo')
 	});
 	
 	//提交用户信息，保存到本地存储  TODO

@@ -51,7 +51,7 @@ const _sfc_main = {
         const filePath = res.tempFilePaths[0];
         common_vendor.index.__f__("log", "at pages/user/user.vue:304", "选择的文件路径:", filePath);
         const uploadRes = await common_vendor.index.uploadFile({
-          url: "https://joinup.org.cn/api-dev/oss/file/upload",
+          url: "https://joinup.org.cn/api/oss/file/upload",
           // 替换为实际的上传接口
           filePath,
           // 文件路径
@@ -176,6 +176,7 @@ const _sfc_main = {
       showSignPopup.value = false;
     };
     common_vendor.onLoad(async () => {
+<<<<<<< HEAD
       common_vendor.index.login({
         success: async (data) => {
           common_vendor.index.__f__("log", "at pages/user/user.vue:454", "微信登录 code:", data.code);
@@ -203,6 +204,9 @@ const _sfc_main = {
           });
         }
       });
+=======
+      userInfo.value = common_vendor.index.getStorageSync("userInfo");
+>>>>>>> 658fd298dcf8c1ecd937152d6085fe9b667e96de
     });
     const userSubmit = async () => {
       const data = {
@@ -212,12 +216,20 @@ const _sfc_main = {
         "ssoPassword": userInfo.value.ssoPassword
       };
       const res = await api_api.modifyUserInfo(data);
+<<<<<<< HEAD
       common_vendor.index.__f__("log", "at pages/user/user.vue:493", "modifyUserInfo", res);
+=======
+      common_vendor.index.__f__("log", "at pages/user/user.vue:456", "modifyUserInfo", res);
+>>>>>>> 658fd298dcf8c1ecd937152d6085fe9b667e96de
       show.value = false;
     };
     const changeName = (e) => {
       userInfo.value.username = e.detail.value;
+<<<<<<< HEAD
       common_vendor.index.__f__("log", "at pages/user/user.vue:505", "userInfo", userInfo);
+=======
+      common_vendor.index.__f__("log", "at pages/user/user.vue:468", "userInfo", userInfo);
+>>>>>>> 658fd298dcf8c1ecd937152d6085fe9b667e96de
     };
     const setFun = () => {
       common_vendor.index.showModal({

@@ -85,17 +85,43 @@
 		
 		  <view class="creator-btns-row">
 		    <button class="application-btn" @click="goToApplicationList">
-		      📬 查看加入申请
+		      📬 查看申请
 		    </button>
 		    <button class="modify-btn" @click="modifyTeamInfo(teamDetails.name, teamDetails.description, teamDetails.currentMembersCount, teamDetails.cover)">
-		      ✏️ 修改队伍信息
+		      ✏️ 修改队伍
 		    </button>
+			<button class="disband-btn" @click="handleDisbandTeam">
+			    🗑️ 解散队伍
+			  </button>
 		  </view>
+		  
 		  <!-- 聊天按钮 -->
 		  <view class="chat-button-wrapper">
-		    <button class="chat-button" @click="goToChat">
+			  <button class="chat-button" @click="goShare">
+			    📤
+			  </button> 
+			  <div style="margin: 10px 0;"></div> <!-- 空行 div -->
+				<button class="chat-button" @click="goToChat">
 		      💬
 		    </button>
+				    <!-- Popup Modal with the contact list -->
+					<view>
+						<!-- Popup Modal with the contact list -->
+						<uni-popup v-if="showContactModal" type="custom" @close="closeModal">
+							<view class="modal-content">
+								<view class="modal-header">
+									<text class="modal-title">选择联系人</text>
+									<button class="close-button" @click="closeModal">✖️</button>
+								</view>
+								<view class="contact-list">
+									<view v-for="contact in contacts" :key="contact.id" class="contact-item" @click="selectContact(contact)">
+										<image :src="contact.cover" class="contact-avatar" />
+										<text class="contact-name">{{ contact.name }}</text>
+									</view>
+								</view>
+							</view>
+						</uni-popup>
+					</view>
 		  </view>
 
 
@@ -109,7 +135,11 @@
 		    <view class="team-intro">
 		      <view class="team-header">
 		        <view class="team-info">
-				  <image src="https://joinup.oss-cn-beijing.aliyuncs.com/images/img-0424/11.png" class="cover-img" mode="aspectFill"/>
+				  <image
+				    :src="teamDetails.cover || 'https://joinup.oss-cn-beijing.aliyuncs.com/images/img-0424/11.png'"
+				    class="cover-img"
+				    mode="aspectFill"
+				  />
 		          <view class="team-name">{{ teamDetails.name }}</view>
 		          <view class="team-description">🌟{{ teamDetails.description }}</view>
 		        </view>
@@ -172,11 +202,32 @@
 		    <button class="leave-btn" @click="leaveTeam">退出队伍</button>
 		  </view>
 		  <!-- 聊天按钮 -->
-		  <view class="chat-button-wrapper">
-		    <button class="chat-button" @click="goToChat">
-		      💬
-		    </button>
-		  </view>
+			<view class="chat-button-wrapper">
+				<button class="chat-button" @click="goShare">
+				  📤
+				</button> 
+				<div style="margin: 10px 0;"></div> <!-- 空行 div -->
+				<button class="chat-button" @click="goToChat">
+				  💬
+				</button>
+			  </view>
+			<view>
+				<!-- Popup Modal with the contact list -->
+				<uni-popup v-if="showContactModal" type="custom" @close="closeModal">
+					<view class="modal-content">
+						<view class="modal-header">
+							<text class="modal-title">选择联系人</text>
+							<button class="close-button" @click="closeModal">✖️</button>
+						</view>
+						<view class="contact-list">
+							<view v-for="contact in contacts" :key="contact.id" class="contact-item" @click="selectContact(contact)">
+								<image :src="contact.cover" class="contact-avatar" />
+								<text class="contact-name">{{ contact.name }}</text>
+							</view>
+						</view>
+					</view>
+				</uni-popup>
+			</view>
 	</view>
 	
 	<!-- // 游客 -->
@@ -186,7 +237,11 @@
 		    <view class="team-intro">
 		      <view class="team-header">
 		        <view class="team-info">
-				  <image src="https://joinup.oss-cn-beijing.aliyuncs.com/images/img-0424/11.png" class="cover-img" mode="aspectFill"/>
+				  <image
+				    :src="teamDetails.cover || 'https://joinup.oss-cn-beijing.aliyuncs.com/images/img-0424/11.png'"
+				    class="cover-img"
+				    mode="aspectFill"
+				  />
 		          <view class="team-name">{{ teamDetails.name }}</view>
 		          <view class="team-description">🌟{{ teamDetails.description }}</view>
 		        </view>
@@ -250,7 +305,8 @@
 		  </view>
 		  <ApplyToJoinDialog :show="showInputArea" :teamId="teamDetails?.id" @update:show="showInputArea = $event" />
 	</view>
-	
+
+
 	
 	
   
@@ -267,15 +323,22 @@ import {
   kickMember,
   leaveTeamApi,
 	faQiConversation,
-  uploadBrowse
+  uploadBrowse,
+	faQiDuiWuConversation,
+	getConDetail,
+	getListByPage,
+	disbandTeam
 } from '../../api/api'
 import ApplyToJoinDialog from '@/components/applyToJoinDialog.vue'
-
+import { useWebSocket } from '../../utils/useWebSocket.js';
+const token = uni.getStorageSync('token');
+const ws = useWebSocket(token);
 const teamDetails = ref(null)
 const showInputArea = ref(false)
 const userRole = ref('') // 'creator', 'member', 'visitor'
 const applicationList = ref([])
 const teamId = ref()
+const showContactModal = ref(false);
 
 const defaultAvatar = 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
 
@@ -292,8 +355,10 @@ onLoad(async (opt) => {
 	  await uploadBrowse(item.id)
 	  
       const res = await getTeamDetails(item.id)
+	  console.log("res===================",res)
       if (res) {
         teamDetails.value = res
+		console.log('!!!!!!!',teamDetails.cover)
       }
 
       const roleRes = await judgeRole(item.id)
@@ -349,6 +414,18 @@ const add=async(userId)=> {
 	const res= await faQiConversation(userId)
   console.log('res', res);
 	//TODO 导航到chat页面,传入对应参数
+	const res1=await getConDetail(res.id)
+	const conversation = {
+		id: res.id,
+		type: "private",
+		name:res1.name,
+		cover:res1.cover,
+	}
+	console.log("跳转到聊天页面conversation", conversation);
+  const conversationStr = encodeURIComponent(JSON.stringify(conversation));
+  uni.navigateTo({
+    url: `/pages/chat/chat?conversation=${conversationStr}`
+  })
 }
 
 // 打开弹窗
@@ -377,10 +454,106 @@ const modifyTeamInfo = (name, description,currentMembersCount, cover) => {
   });
 };
 
-const goToChat = () => {
+const handleDisbandTeam = async () => {
+  uni.showModal({
+    title: '确认操作',
+    content: '确定要解散该队伍吗？此操作不可恢复。',
+    success: async (res) => {
+      if (res.confirm) {
+        try {
+          await disbandTeam(teamId.value)
+          wx.showToast({
+            title: '已解散',
+            icon: 'success'
+          })
+          // 返回上一页或首页
+          setTimeout(() => {
+            uni.navigateBack()
+          }, 1000)
+        } catch (err) {
+          wx.showToast({
+            title: '解散失败',
+            icon: 'none'
+          })
+          console.error(err)
+        }
+      }
+    }
+  })
+}
+
+
+const contacts=ref();
+const goShare = async() => {
   if (!teamId.value) return
+	const res=await getListByPage(1, 100);
+  console.log("获取联系人列表:", res);
+  console.log("teamId.value", teamId.value);
+contacts.value = res.list
+  .filter(item => item.teamId !== teamId.value) // Filter out items with the same teamId
+  .map(item => ({
+    id: item.id,
+    name: item.name,
+    cover: item.cover, 
+    lastMessageContent: item.lastMessage?.content?.text || '', 
+    lastTime: item.lastMessage?.createTime,
+    unreadMessageCount: item.unreadMessageCount,
+    type: item.type,
+    lastMessage: item.lastMessage,
+    conversation: {
+      "id": item.id,
+      "type": item.type,
+      "name": item.name,
+      "cover": item.cover
+    }
+  }));
+	showContactModal.value = true;
+}
+
+const closeModal = () => {
+	showContactModal.value = false;
+};
+
+const selectContact = async(contact) => {
+	console.log('Sending message to:', contact);
+	const res=await getTeamDetails(teamId.value)
+	console.log("res",res)
+	const res1=await faQiDuiWuConversation(teamId.value)
+	console.log("res1",res1)
+	const msgObj = {
+    conversationId: contact.id,
+    content: { teamId: teamId.value, conversationId: contact.id, 
+      groupName: res.name, cover: res.cover },
+    type: 'TEXT'
+  };
+  console.log("msgObj",msgObj)
+  await ws.sendMessage(msgObj)
+  uni.showToast({
+    title: '发送成功',
+    icon: 'success', // 可选：'success'/'loading'/'none'
+    duration: 1500   // 显示时长（毫秒）
+  });
+	closeModal(); // Close the modal after selection
+};
+
+const goToChat = async() => {
+  if (!teamId.value) return
+	const res=await getTeamDetails(teamId.value)
+	console.log("res",res)
+	console.log("teamId.value",teamId.value)
+	const res1=await faQiDuiWuConversation(teamId.value)
+	console.log("res1",res1)
+	const conversation = {
+		id: res1.id,
+		type: "group",
+		name:res.name,
+		cover:res.cover,
+		members: res.members
+	}
+	console.log("跳转到聊天页面conversation", conversation);
+  const conversationStr = encodeURIComponent(JSON.stringify(conversation));
   uni.navigateTo({
-    url: `/pages/chat/chat?teamId=${teamId.value}`
+    url: `/pages/chat/chat?conversation=${conversationStr}`
   })
 }
 
@@ -544,7 +717,6 @@ const formatDate = (dateStr) => {
   margin-right: 20rpx;
 }
 
-
 .member-info {
   flex: 1;
 }
@@ -589,37 +761,39 @@ const formatDate = (dateStr) => {
 }
 
 .apply-btn-wrapper {
-	display: flex;
-	justify-content: center;
-	margin-top: 20rpx;
+  display: flex;
+  justify-content: center;
+  margin-top: 20rpx;
 }
 
 .apply-btn {
-	background: #34d399; /* 绿色到蓝色渐变 */
-	color: #fff;
-	padding: 20rpx 40rpx;
-	border: none;
-	border-radius: 50rpx;
-	font-size: 30rpx;
-	font-weight: bold;
-	transition: all 0.3s ease;
-	box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.1);
+  background: #34d399;
+  color: #fff;
+  padding: 20rpx 40rpx;
+  border: none;
+  border-radius: 50rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.1);
 }
+
 .leave-btn-wrapper {
   display: flex;
   justify-content: center;
   margin-top: 20rpx;
 }
+
 .leave-btn {
-	background: #888; /* 绿色到蓝色渐变 */
-	color: #fff;
-	padding: 20rpx 40rpx;
-	border: none;
-	border-radius: 50rpx;
-	font-size: 30rpx;
-	font-weight: bold;
-	transition: all 0.3s ease;
-	box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.1);
+  background: #888;
+  color: #fff;
+  padding: 20rpx 40rpx;
+  border: none;
+  border-radius: 50rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.1);
 }
 
 .application-btn-wrapper {
@@ -629,7 +803,7 @@ const formatDate = (dateStr) => {
 }
 
 .application-btn {
-  background: linear-gradient(to right, #34d399, #3b82f6); /* 绿色到蓝色渐变 */
+  background: linear-gradient(to right, #34d399, #3b82f6);
   color: #fff;
   padding: 20rpx 40rpx;
   border: none;
@@ -643,7 +817,6 @@ const formatDate = (dateStr) => {
 .application-btn:hover {
   opacity: 0.9;
 }
-
 
 .leave-btn {
   background-color: #007aff;
@@ -671,7 +844,7 @@ const formatDate = (dateStr) => {
 }
 
 .modify-btn {
-  background: #4CAF50; /* 修改按钮的绿色 */
+  background: #4CAF50;
   color: white;
   padding: 20rpx 40rpx;
   border: none;
@@ -685,6 +858,8 @@ const formatDate = (dateStr) => {
 .modify-btn:hover {
   opacity: 0.9;
 }
+
+/* 这里是重点，统一三个按钮样式 */
 .creator-btns-row {
   display: flex;
   justify-content: space-between;
@@ -692,21 +867,37 @@ const formatDate = (dateStr) => {
   margin-top: 30rpx;
 }
 
-.application-btn,
-.modify-btn {
+.creator-btns-row button {
   flex: 1;
   padding: 20rpx;
   font-size: 28rpx;
   border-radius: 12rpx;
-  background-color: #4caf50;
   color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 6rpx 12rpx rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
-.modify-btn {
-  background-color: #2196f3;
+/* 三个按钮不同背景色 */
+.application-btn {
+  background-color: #4caf50; /* 绿色 */
 }
 
+.modify-btn {
+  background-color: #2196f3; /* 蓝色 */
+}
+
+.disband-btn {
+  background-color: #f44336; /* 红色 */
+}
+
+.creator-btns-row button:hover {
+  filter: brightness(0.9);
+}
+
+/* 保持之前聊天按钮样式 */
 .chat-button-wrapper {
   position: fixed;
   bottom: 80rpx;
@@ -729,6 +920,78 @@ const formatDate = (dateStr) => {
 
 .chat-button::after {
   display: none;
+}
+
+/* 模态框 */
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 80%;
+  max-height: 80%;
+  overflow-y: auto;
+  z-index: 999;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contact-list {
+  margin-top: 10px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.contact-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.contact-name {
+  font-size: 18px;
+}
+
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contact-list {
+  margin-top: 10px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.contact-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.contact-name {
+  font-size: 18px;
 }
 
 </style>

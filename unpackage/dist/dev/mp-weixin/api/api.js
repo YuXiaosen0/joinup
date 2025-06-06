@@ -159,27 +159,54 @@ const getNewToken = () => {
 const updateToken = async () => {
   try {
     const res = await getNewToken();
+<<<<<<< HEAD
     common_vendor.index.__f__("log", "at api/api.js:247", "获取新的token:");
     if (res) {
       common_vendor.index.__f__("log", "at api/api.js:249", res);
       common_vendor.index.setStorageSync("token", res.token);
       common_vendor.index.__f__("log", "at api/api.js:252", "更新token成功:", common_vendor.index.getStorageSync("token"));
+=======
+    common_vendor.index.__f__("log", "at api/api.js:242", "获取新的token:");
+    if (res) {
+      common_vendor.index.__f__("log", "at api/api.js:244", res);
+      common_vendor.index.setStorageSync("token", res.token);
+      common_vendor.index.__f__("log", "at api/api.js:247", "更新token成功:", common_vendor.index.getStorageSync("token"));
+>>>>>>> 658fd298dcf8c1ecd937152d6085fe9b667e96de
       return true;
     }
     return false;
   } catch (error) {
+<<<<<<< HEAD
     common_vendor.index.__f__("error", "at api/api.js:257", "更新token失败:", error);
+=======
+    common_vendor.index.__f__("error", "at api/api.js:252", "更新token失败:", error);
+>>>>>>> 658fd298dcf8c1ecd937152d6085fe9b667e96de
     return false;
   }
 };
 const getListByPage = (num, size) => {
   return api_http.http(`/conversation/list?type&pageNumber=${num}&pageSize=${size}`, "d", "GET");
 };
-const getConversionRecord = (conversationId, pageNumber, pageSize) => {
-  return api_http.http(`/message/chat/${conversationId}?pageNumber=${pageNumber}&pageSize=${pageSize}`, "d", "GET");
+const getConversionRecord = (conversationId, lastSelectId, pageSize) => {
+  return api_http.http(`/message/chat/${conversationId}?lastSelectId=${lastSelectId}&pageSize=${pageSize}`, "d", "GET");
 };
 const faQiConversation = (userId) => {
   return api_http.http(`/conversation/create?userId=${userId}`, "d", "POST");
+<<<<<<< HEAD
+=======
+};
+const faQiDuiWuConversation = (teamId) => {
+  return api_http.http(`/conversation/create?teamId=${teamId}`, "d", "POST");
+};
+const clearUnread = (conversationId) => {
+  return api_http.http(`/conversation/${conversationId}/read`, "d", "POST");
+};
+const getConDetail = (conversationId) => {
+  return api_http.http(`/conversation/${conversationId}`, "d", "GET");
+};
+const searchMessagesApi = (conversationId, data) => {
+  return api_http.http(`/message/chat/${conversationId}/filter`, data, "POST");
+>>>>>>> 658fd298dcf8c1ecd937152d6085fe9b667e96de
 };
 exports.addMyInterest = addMyInterest;
 exports.addSign = addSign;
@@ -187,12 +214,14 @@ exports.applyCreateTag = applyCreateTag;
 exports.applyToJoin = applyToJoin;
 exports.appointBoya = appointBoya;
 exports.cancelAppoint = cancelAppoint;
+exports.clearUnread = clearUnread;
 exports.createNewTeam = createNewTeam;
 exports.deleteBoya = deleteBoya;
 exports.deleteMessage = deleteMessage;
 exports.deleteMyInterest = deleteMyInterest;
 exports.deleteSign = deleteSign;
 exports.faQiConversation = faQiConversation;
+exports.faQiDuiWuConversation = faQiDuiWuConversation;
 exports.feedback = feedback;
 exports.getAllTags = getAllTags;
 exports.getAnnouncementDetails = getAnnouncementDetails;
@@ -200,6 +229,7 @@ exports.getApplicationList = getApplicationList;
 exports.getAppointList = getAppointList;
 exports.getBoyaCourse = getBoyaCourse;
 exports.getBrowse = getBrowse;
+exports.getConDetail = getConDetail;
 exports.getConversionRecord = getConversionRecord;
 exports.getCourseInfo = getCourseInfo;
 exports.getListByPage = getListByPage;
@@ -223,6 +253,7 @@ exports.markMessageRead = markMessageRead;
 exports.modifyTeam = modifyTeam;
 exports.modifyUserInfo = modifyUserInfo;
 exports.processApplication = processApplication;
+exports.searchMessagesApi = searchMessagesApi;
 exports.searchTeam = searchTeam;
 exports.sendVerifyCode = sendVerifyCode;
 exports.signClass = signClass;

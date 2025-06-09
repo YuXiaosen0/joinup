@@ -111,19 +111,30 @@
         />
       </view>
       
-	  <!--
-      <view class="form-item">
-        <text class="form-label">队伍标签</text>
-        <input 
-          class="form-input" 
-          placeholder="请输入队伍标签ID，多个用逗号分隔(最多10个)" 
-          v-model="teamForm.tagIdsInput"
-        />
-      </view>
-	  -->
+	  <!-- 新增绑定课程部分 -->
+	  <view class="form-item">
+	    <view class="label-container">
+	      <text class="form-label">绑定课程</text>
+	      <text class="bind-course" @tap="goToBindCourse">选择课程</text>
+		  <text class="unbind-course" @tap="showUnbindOptions" v-if="teamForm.boundCourses && teamForm.boundCourses.length > 0">取消绑定</text>
+	    </view>
+	    <view v-if="teamForm.boundCourses && teamForm.boundCourses.length > 0" class="bound-courses">
+	      <view 
+	        v-for="course in teamForm.boundCourses" 
+	        :key="course.id"
+	        class="course-item"
+	      >
+	        {{ course.name }}
+	      </view>
+	    </view>
+	    <view v-else class="no-courses">
+	      <text>暂未绑定课程</text>
+	    </view>
+	  </view>
 	  
 	  <view class="form-item">
 	    <text class="form-label">队伍标签</text>
+		<text class="create-tag" @tap="goToCreateTag">新建标签</text>
 	    <view v-if="tagList.length > 0" class="tag-options">
 	      <view 
 	        v-for="tag in tagList" 
@@ -213,6 +224,7 @@ export default {
         open: true,
         maxMembers: '',
         tagIdsInput: '', // 用于输入，后续会转换为数组
+		boundCourses: [], // 用于存储绑定的课程
       },
 	  
 	  // 添加主题选项数组
@@ -287,8 +299,17 @@ export default {
 	//     this.getMyTeams(type);
 	//     uni.removeStorageSync('blank_type'); // 使用后删除
 	// }
+	
+	// 添加事件监听器
+	  uni.$on('courseSelected', this.handleCourseSelected)
+  },
+  onUnload() {
+    // 移除事件监听器
+    uni.$off('courseSelected', this.handleCourseSelected)
   },
   onShow() {
+	  // 获取标签列表
+	  this.loadTagList();
 	  console.log("refresh creater");
 	  //showCreateForm = false;
 	this.getTeamList();
@@ -309,6 +330,50 @@ export default {
 	//showCreateForm = false;
   },
   methods: {
+	  // 显示解绑选项
+	    showUnbindOptions() {
+	      const that = this;
+	      wx.showActionSheet({
+	        itemList: this.teamForm.boundCourses.map(course => course.name),
+	        success(res) {
+	          const selectedIndex = res.tapIndex;
+	          const selectedCourse = that.teamForm.boundCourses[selectedIndex];
+	          that.confirmUnbind(selectedCourse);
+	        },
+	        fail(res) {
+	          console.log(res.errMsg);
+	        }
+	      });
+	    },
+	    
+	    // 确认解绑
+	    confirmUnbind(course) {
+	      const that = this;
+	      wx.showModal({
+	        title: '提示',
+	        content: `确定要解绑课程: ${course.name}?`,
+	        success(res) {
+	          if (res.confirm) {
+	            // 执行解绑操作
+	            that.teamForm.boundCourses = that.teamForm.boundCourses.filter(
+	              item => item.id !== course.id
+	            );
+	            wx.showToast({
+	              title: '解绑成功',
+	              icon: 'success'
+	            });
+	          }
+	        }
+	      });
+	    },
+
+	  // 添加处理接收课程的方法
+	    handleCourseSelected(course) {
+	      if (!this.teamForm.boundCourses) {
+	        this.teamForm.boundCourses = []
+	      }
+	      this.teamForm.boundCourses.push(course)
+	    },
 	  async chooseFile() {
 	      try {
 	        const res = await uni.chooseImage({
@@ -348,16 +413,16 @@ export default {
 	      }
 	    },
 	  
-	  // 切换创建表单显示
-	  toggleCreateForm() {
-	    this.showCreateForm = !this.showCreateForm;
-	    this.loadTagList();
-	    // 如果关闭表单，重置回全部队伍列表
-	    if (!this.showCreateForm) {
-	      this.currentTeamType = 'all';
-	      this.getTeamList();
-	    }
-	  },
+	  // // 切换创建表单显示
+	  // toggleCreateForm() {
+	  //   this.showCreateForm = !this.showCreateForm;
+	  //   this.loadTagList();
+	  //   // 如果关闭表单，重置回全部队伍列表
+	  //   if (!this.showCreateForm) {
+	  //     this.currentTeamType = 'all';
+	  //     this.getTeamList();
+	  //   }
+	  // },
 	
     // 切换创建表单显示
     toggleCreateForm() {
@@ -494,12 +559,14 @@ export default {
     // 获取队伍状态文本
     getStatusText(status) {
       switch(status) {
-        case 'DISBANDED':
+        case '已解散':
           return '已解散';
-        case 'BANNED':
-          return '已封禁';
+        case '封禁':
+          return '封禁';
+		case '正常':
+		  return '正常';	
         default:
-          return '正常';
+          return '未知';
       }
     },
     
@@ -666,7 +733,26 @@ export default {
       uni.navigateTo({
         url: `/pages/detail/detail{item.id}`
       });
-    }
+    },
+	
+	
+	goToCreateTag() {
+	    uni.navigateTo({
+	      url: '/pages/detail/createTag'
+	    });
+	},
+	
+	// 添加新方法
+	goToBindCourse() {
+		uni.navigateTo({
+			url: '/pages/course/bindCourse'
+		});
+	},
+	  
+	// 添加用于接收绑定课程返回数据的方法
+	onCourseSelected(courses) {
+		this.teamForm.boundCourses = courses;
+	}
   }
 };
 </script>
@@ -981,4 +1067,67 @@ export default {
   font-weight: 600;
   color: #2c3e50;
 }
+.label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.create-tag {
+  font-size: 14px;
+  color: #007AFF;
+}
+
+.label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.bind-course {
+  font-size: 14px;
+  color: #007AFF;
+}
+
+.bound-courses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.course-item {
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.no-courses {
+  color: #999;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.unbind-section {
+  margin-top: 20rpx;
+  padding: 20rpx;
+}
+
+.bind-options {
+  display: flex;
+  align-items: center;
+}
+
+.bind-course {
+  color: #007aff;
+  margin-right: 20rpx;
+}
+
+.unbind-course {
+  color: #ff3b30;
+}
+
 </style>

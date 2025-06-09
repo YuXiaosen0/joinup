@@ -144,6 +144,14 @@
 				"navigationBarTitleText" : ""
 			}
 		}
+		,
+		{
+			"path" : "pages/course/bindCourse",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		}
 	],
 	"easycom": {
 		"autoscan": true,

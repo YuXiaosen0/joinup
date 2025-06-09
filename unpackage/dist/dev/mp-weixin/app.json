@@ -19,7 +19,8 @@
     "pages/chat/chat",
     "pages/message/message",
     "pages/detail/browseHistory",
-    "pages/sign/sign"
+    "pages/sign/sign",
+    "pages/course/bindCourse"
   ],
   "window": {
     "navigationBarTextStyle": "black",

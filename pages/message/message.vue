@@ -185,6 +185,8 @@ export default {
           if (index >= 0 && index < messageList.value.length) {
             messageList.value[index].read = true
           }
+		  //page.value = 1
+			//await getMessages(true)
           
           uni.showToast({
             title: '已确认',
@@ -221,6 +223,8 @@ export default {
                   title: '删除成功',
                   icon: 'success'
                 })
+				//page.value = 1
+				//await getMessages(true)
               } else {
                 uni.showToast({
                   title: res?.msg || '删除失败',
@@ -238,6 +242,7 @@ export default {
         }
       })
     }
+	
     
     // 加载更多
     const loadMore = () => {

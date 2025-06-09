@@ -29,7 +29,19 @@ const submitTag = async () => {
 
   try {
     await applyCreateTag(tagName.value, tagDescription.value)
-    uni.showToast({ title: '提交申请成功', icon: 'success' })
+    uni.showToast({ title: '提交申请成功', icon: 'success' ,
+      success: () => {
+        setTimeout(() => {
+          uni.navigateBack({
+            delta: 1,
+            success: () => {
+              uni.redirectTo({
+                url: '/pages/blank/blank?showCreateForm=true'
+              })
+            }
+          })
+        }, 1000) // 延迟1秒以便用户看到成功提示
+      }})
     tagName.value = ''
     tagDescription.value = ''
   } catch (err) {

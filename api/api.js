@@ -284,11 +284,11 @@ export const getConDetail=(conversationId) => {
 export const searchMessagesApi=(conversationId,data) => {
 	return http(`/message/chat/${conversationId}/filter`,data , 'POST')
 }
-// //通知后端所在的会话id
-// export const noticeId=(conversationId) => {
-// 	return http(`/conversation/noticeId`,conversationId , 'POST')
-// }
-// //likai
-// export const clearUn=() => {
-// 	return http(`/conversation/exit`,'d' , 'DELETE')
-// }
+//通知后端所在的会话id
+export const noticeId=(conversationId) => {
+	return http(`/conversation/${conversationId}/enter`,'d' , 'POST')
+}
+//likai
+export const clearUn=() => {
+	return http(`/conversation/exit`,'d' , 'DELETE')
+}

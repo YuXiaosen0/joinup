@@ -3,7 +3,7 @@ import { useWebSocket } from '@/utils/useWebSocket.js'
 import { getUserInfo, login, modifyUserInfo, getSignRecord, feedback, uploadFile } from "@/api/api"
 export default {
   onLaunch: function() {
-    uni.setEnableDebug({ enableDebug: true });
+    uni.setEnableDebug({ enableDebug: false});
     console.log('App Launch');
 
     uni.login({

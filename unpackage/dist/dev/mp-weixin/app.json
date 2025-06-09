@@ -20,7 +20,8 @@
     "pages/message/message",
     "pages/detail/browseHistory",
     "pages/sign/sign",
-    "pages/course/bindCourse"
+    "pages/course/bindCourse",
+    "pages/searchResults/searchResults"
   ],
   "window": {
     "navigationBarTextStyle": "black",

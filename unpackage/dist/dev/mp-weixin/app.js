@@ -24,12 +24,13 @@ if (!Math) {
   "./pages/chat/chat.js";
   "./pages/message/message.js";
   "./pages/detail/browseHistory.js";
+  "./pages/searchResults/searchResults.js";
   "./pages/sign/sign.js";
   "./pages/course/bindCourse.js";
 }
 const _sfc_main = {
   onLaunch: function() {
-    common_vendor.index.setEnableDebug({ enableDebug: true });
+    common_vendor.index.setEnableDebug({ enableDebug: false });
     common_vendor.index.__f__("log", "at App.vue:7", "App Launch");
     common_vendor.index.login({
       success: async (data) => {

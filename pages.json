@@ -138,6 +138,13 @@
 			}
 		},
 		{
+			"path" : "pages/searchResults/searchResults",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
 			"path" : "pages/sign/sign",
 			"style" : 
 			{
